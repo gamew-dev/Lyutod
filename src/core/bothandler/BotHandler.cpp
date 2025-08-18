@@ -141,4 +141,4 @@ void BotHandler::updatePresence(dpp::cluster& bot) {
     bot.set_presence(presence[dist(gen)]);
 }
 
-
+void BotHandler::preRegSlash(dpp::cluster& bot)

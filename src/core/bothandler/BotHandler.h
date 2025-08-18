@@ -31,11 +31,11 @@ class BotHandler
 
 
 
-        void //regBot             (      dpp::cluster& bot)             , // todo: moved to config
+        void //preRegBot             (      dpp::cluster& bot)             , // todo: moved to config
 
-             //regSlash           (      dpp::cluster& bot)             , // for slash command declaration
+             preRegSlash           (      dpp::cluster& bot)             , // for slash command declaration
 
-             //delSlash           (      dpp::cluster& bot)             ,
+             preDelSlash           (      dpp::cluster& bot)             ,
 
              handleSlash        (      dpp::cluster& bot,
                                  const dpp::slashcommand_t& event)    , // for handling slash command
