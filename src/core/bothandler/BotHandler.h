@@ -35,7 +35,7 @@ class BotHandler
 
              preRegSlash           (      dpp::cluster& bot)             , // for slash command declaration
 
-             preDelSlash           (      dpp::cluster& bot)             ,
+             //preDelSlash           (      dpp::cluster& bot)             ,
 
              handleSlash        (      dpp::cluster& bot,
                                  const dpp::slashcommand_t& event)    , // for handling slash command
@@ -58,7 +58,12 @@ class BotHandler
             dpp::presence(dpp::ps_idle , dpp::at_watching  , "you..."),
             dpp::presence(dpp::ps_idle , dpp::at_competing , "lomba turu"),
             dpp::presence(dpp::ps_idle , dpp::at_listening , "your scream"),
-            dpp::presence(dpp::ps_idle , dpp::at_streaming , "onlyAirConditioner")
+            dpp::presence(dpp::ps_idle , dpp::at_streaming , "onlyAirConditioner"),
+
+            dpp::presence(dpp::ps_idle , dpp::at_watching  , "the world is ending"),
+            dpp::presence(dpp::ps_idle , dpp::at_competing , "gooning tournament"),
+            dpp::presence(dpp::ps_idle , dpp::at_listening , "burning pc"),
+            dpp::presence(dpp::ps_idle , dpp::at_streaming , "a")
 
         };
 

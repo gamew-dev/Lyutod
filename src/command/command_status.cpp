@@ -1,6 +1,6 @@
 #include "base_commands.h"
 
-void Commands::command_status(const std::time_t& start, const dpp::cluster& bot, const dpp::slashcommand_t& event) {
+void Commands::command_status(const std::time_t& start, dpp::cluster& bot, const dpp::slashcommand_t& event) {
     std::string title = "Lyudya " + Responses::emoteReact();
     dpp::embed status = dpp::embed()
         .set_color(dpp::colors::red_blood)

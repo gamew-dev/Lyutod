@@ -102,6 +102,15 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
     if (command == "status") {
         Commands::command_status(start, bot, event);
     }
+
+    else if (command == "server_info") {
+        Commands::command_server_info(bot, event);
+    }
+
+    else if (command == "say") {
+        Commands::command_say(bot, event);
+    }
+
 }
 
 void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_add_t& event) {
@@ -141,4 +150,20 @@ void BotHandler::updatePresence(dpp::cluster& bot) {
     bot.set_presence(presence[dist(gen)]);
 }
 
-void BotHandler::preRegSlash(dpp::cluster& bot)
+
+/**
+TESTING ONLY, HARDCODED COMMAND
+*/
+void BotHandler::preRegSlash(dpp::cluster& bot) {
+
+    for (auto& [key, cmd] : Commands::commands_list) {
+        bot.guild_command_create(cmd, Config::guildID, [](const dpp::confirmation_callback_t& cb) {
+            if (cb.is_error()) {
+                std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
+            } else {
+                std::cout << "Command diregister!\n";
+            }
+            sleep(1);
+        });
+    }
+}

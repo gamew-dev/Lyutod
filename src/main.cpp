@@ -67,10 +67,11 @@ int main() {
                       << "has auto  : " << (Config::autoRoleEnabled ? "true" : "false") << "\n"
                       << "auto id   : " << Config::autoRoleID << std::endl;
 
+            //handler.preRegSlash(bot);
         }
 
         // presence setting and output message when online
-
+        bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_watching  , "you..."));
 
         bot.start_timer([&bot, &handler](const dpp::timer& timer){
 
