@@ -167,3 +167,8 @@ void BotHandler::preRegSlash(dpp::cluster& bot) {
         });
     }
 }
+
+void BotHandler::preDelSlash(dpp::cluster& bot) {
+    bot.guild_bulk_command_delete(Config::guildID);
+}
+

@@ -7,7 +7,7 @@ class Config
 {
     public:
 
-    static inline std::string path = "src/core/config/config.json";
+    static inline std::string path = "data/client/config.json";
 
     static inline std::string autoRoleID = "",
                               autoRoleName = "",

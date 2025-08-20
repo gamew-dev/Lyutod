@@ -2,4 +2,4 @@ bin/
 bot6*
 obj/
 src/dpp/
-src/core/token.txt
+data/client/token*

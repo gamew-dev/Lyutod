@@ -35,7 +35,7 @@ class BotHandler
 
              preRegSlash           (      dpp::cluster& bot)             , // for slash command declaration
 
-             //preDelSlash           (      dpp::cluster& bot)             ,
+             preDelSlash           (      dpp::cluster& bot)             ,
 
              handleSlash        (      dpp::cluster& bot,
                                  const dpp::slashcommand_t& event)    , // for handling slash command

@@ -17,7 +17,7 @@ int main() {
 
     // find and open the token file
     // token get stored in string variable
-    std::ifstream getToken("src/core/token.txt");
+    std::ifstream getToken("data/client/token.txt");
     std::string token;
 
     if (getToken) {
@@ -71,7 +71,7 @@ int main() {
         }
 
         // presence setting and output message when online
-        bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_watching  , "you..."));
+        bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
 
         bot.start_timer([&bot, &handler](const dpp::timer& timer){
 
