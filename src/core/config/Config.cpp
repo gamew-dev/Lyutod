@@ -1,6 +1,6 @@
 #include "Config.h"
 
-void Config::loadConfig() {
+void Config::clientLoadConfig() {
 
     std::ifstream file(path);
     if (file) {
@@ -18,12 +18,12 @@ void Config::loadConfig() {
     }
     else {
         std::cout << "creating new bot config..." << std::endl;
-        saveConfig();
+        clientSaveConfig();
     }
 
 }
 
-void Config::saveConfig() {
+void Config::clientSaveConfig() {
 
     nlohmann::json filejson;
     filejson["ownerID"] = ownerID;
@@ -36,4 +36,10 @@ void Config::saveConfig() {
     std::ofstream file(path);
     file << filejson.dump(4);
 
+}
+
+
+void Config::guildCreateConfig(const std::string& guild_id) {
+
+    nlohmann::json
 }

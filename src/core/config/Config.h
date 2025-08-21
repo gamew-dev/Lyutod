@@ -5,9 +5,14 @@
 
 class Config
 {
-    public:
 
-    static inline std::string path = "data/client/config.json";
+    private:
+
+
+    static inline std::string clientPath = "data/client/config.json";
+    static inline std::string guildPath = "data/guild/";
+
+    public:
 
     static inline std::string autoRoleID = "",
                               autoRoleName = "",
@@ -18,8 +23,14 @@ class Config
 
     static inline bool autoRoleEnabled = false;
 
-    static void loadConfig(),
-                saveConfig();
+    static void clientLoadConfig (),
+                clientSaveConfig ();
+
+    static void guildCreateConfig(const std::string& guild_id),
+                guildRemoveConfig(const std::string& guild_id),
+                guildSaveConfig  (const std::string& guild_id);
+
+    static nlohmann::json guildLoadConfig(const std::string& guild_id);
 };
 
 #endif // CONFIG_H
