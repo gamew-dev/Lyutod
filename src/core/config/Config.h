@@ -32,8 +32,8 @@ class Config
     static void clientLoadConfig (),
                 clientSaveConfig ();
 
-    static void guildCreateConfig(const dpp::guild_create_t& event),
-                guildRemoveConfig(const std::string& guild_id),
+    static bool guildCreateConfig(const dpp::guild_create_t& event);
+    static void guildRemoveConfig(const std::string& guild_id),
                 guildSaveConfig  (const std::string& guild_id);
 
     static GC guildLoadConfig(const std::string& guild_id);

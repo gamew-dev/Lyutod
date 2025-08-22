@@ -29,7 +29,7 @@ void Config::clientSaveConfig() {
 }
 
 
-void Config::guildCreateConfig(const dpp::guild_create_t& event) {
+bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
     std::cout << "[INFO] Checking guild cache" <<std::endl;
     std::string id = std::to_string(static_cast<uint64_t>(event.created.id));
@@ -38,7 +38,7 @@ void Config::guildCreateConfig(const dpp::guild_create_t& event) {
     std::ifstream file(path);
     if(file.good()) {
         std::cout << "[ + ] " << id << " is ready\n";
-        return;
+        return false;
     }
     else {
 
@@ -57,14 +57,12 @@ void Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
 
 
-
+        std::ofstream file(path);
         file << filejson.dump(4);
 
+        std::cout << "[ + ] Creating config: " << id << std::endl;
 
-        std::string repl = Responses::makeMsg("invite", bot.me, false);
-        bot.message_create(dpp::message(event.created.system_channel_id, repl));
-
-        std::cout << "[ + ] Creating config: " << id << endl;
+        return true;
     }
 }
 

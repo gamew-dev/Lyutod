@@ -20,7 +20,7 @@ class Responses
     }
 
     static std::string makeMsg(const std::string& keyword, const dpp::user& user, bool mention) {
-        std::cout << "log: keyword = " << keyword << std::endl;
+        //std::cout << "log: keyword = " << keyword << std::endl;
 
         auto cari = Responses::pilihan.find(keyword);
         if (cari == Responses::pilihan.end() || cari->second.empty()) {
