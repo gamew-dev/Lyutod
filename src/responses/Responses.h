@@ -96,6 +96,10 @@ class Responses
         {"bobok", {
             "nggih monggo", "turu turu", "nanggung begadang ae",
             "mnding mabaw", "<:turu:1370067202635595817>"
+        }},
+        {"invite", {
+            "hai sayank", "aku datang", "<:y_y:1370304542914383924>",
+            "p", "peace be upon you <:lup:1370432773814227014>"
         }}
     };
     // this is for react

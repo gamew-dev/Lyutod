@@ -5,7 +5,7 @@
 BotHandler::BotHandler() {
     // assign the bot time start value when creating object
     start = std::time(nullptr);
-    Config::loadConfig();
+    Config::clientLoadConfig();
 }
 
 void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& event) {
@@ -118,9 +118,6 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
     const dpp::user& tokoh = *(event.added.get_user());
     const dpp::snowflake server = event.added.guild_id;
 
-
-
-
     bot.guild_get(server, [&bot, &tokoh](const dpp::confirmation_callback_t& cb) {
         if (!cb.is_error()) {
             auto g = std::get<dpp::guild>(cb.value);
@@ -129,17 +126,22 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
         }
     });
 
-    if (Config::autoRoleEnabled) {
-        bot.guild_member_add_role(server, tokoh.id, Config::autoRoleID, [](const dpp::confirmation_callback_t& callback) {
+    auto guildConfig = Config::guildLoadConfig(std::to_string(static_cast<uint64_t>(server)));
+
+    std::cout << "[LOG]New member in server: " << guildConfig.name << std::endl;
+
+    if (guildConfig.autoRoleEnabled) {
+        bot.guild_member_add_role(server, tokoh.id, guildConfig.autoRoleID, [&guildConfig](const dpp::confirmation_callback_t& callback) {
             if (callback.is_error()) {
-                std::cerr << "Gagal memberikan role: " << callback.get_error().message << "\n";
+                std::cerr << "\e[0;31m"<<"[ERR]" << "\e[0m"<< " Can't given the role: " << callback.get_error().message << "\n";
             } else {
-                std::cout << "Berhasil memberikan autorole!\n";
+                std::cout << "[LOG] Successfully given the role: " << guildConfig.autoRoleName << std::endl;
             }
         });
 
     }
 }
+
 
 void BotHandler::updatePresence(dpp::cluster& bot) {
 
@@ -148,6 +150,7 @@ void BotHandler::updatePresence(dpp::cluster& bot) {
     std::uniform_int_distribution<> dist(0, presence.size() - 1);
 
     bot.set_presence(presence[dist(gen)]);
+    std::cout << "[LOG] Updating presence status..." << std::endl;
 }
 
 
@@ -157,7 +160,7 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        bot.guild_command_create(cmd, Config::guildID, [](const dpp::confirmation_callback_t& cb) {
+        bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
             } else {
@@ -169,6 +172,8 @@ void BotHandler::preRegSlash(dpp::cluster& bot) {
 }
 
 void BotHandler::preDelSlash(dpp::cluster& bot) {
-    bot.guild_bulk_command_delete(Config::guildID);
+    bot.guild_bulk_command_delete(1270735247922692177);
 }
+
+
 

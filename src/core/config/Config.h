@@ -3,6 +3,19 @@
 
 #include "dpp/dpp.h"
 
+struct GC {
+    std::string name ,
+                id,
+                ownerID;
+
+    bool autoRoleEnabled;
+    std::string autoRoleName,
+                autoRoleID;
+
+};
+
+
+
 class Config
 {
 
@@ -14,23 +27,16 @@ class Config
 
     public:
 
-    static inline std::string autoRoleID = "",
-                              autoRoleName = "",
-                              ownerID = "",
-                              ownerName = "",
-                              guildID = "",
-                              guildName = "";
-
-    static inline bool autoRoleEnabled = false;
+    static inline std::string botOwner = "";
 
     static void clientLoadConfig (),
                 clientSaveConfig ();
 
-    static void guildCreateConfig(const std::string& guild_id),
+    static void guildCreateConfig(const dpp::guild_create_t& event),
                 guildRemoveConfig(const std::string& guild_id),
                 guildSaveConfig  (const std::string& guild_id);
 
-    static nlohmann::json guildLoadConfig(const std::string& guild_id);
+    static GC guildLoadConfig(const std::string& guild_id);
 };
 
 #endif // CONFIG_H

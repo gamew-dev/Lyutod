@@ -57,17 +57,7 @@ int main() {
 
         if (dpp::run_once<struct register_bot_commands>()) {
 
-
-            //handler.regSlash(bot);
-
-            std::cout << "config..." << "\n"
-                      << "logging as: " << bot.me.username << "\n"
-                      << "owner id  : " << Config::ownerID << "\n"
-                      << "guild id  : " << Config::guildID << "\n"
-                      << "has auto  : " << (Config::autoRoleEnabled ? "true" : "false") << "\n"
-                      << "auto id   : " << Config::autoRoleID << std::endl;
-
-            //handler.preRegSlash(bot);
+            std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
         }
 
         // presence setting and output message when online
@@ -118,8 +108,16 @@ int main() {
     });
 
 
+    bot.on_guild_create([&bot](const dpp::guild_create_t& event) {
+
+
+        Config::guildCreateConfig(event);
+
+    });
+
 
     // Start the bot
     bot.start(dpp::st_wait);
 }
+
 
