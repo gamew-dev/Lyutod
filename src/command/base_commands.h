@@ -24,11 +24,17 @@ class Commands {
 
             {"3", dpp::slashcommand("say", "Bot says icixiwir echo", 0)
                   .add_option(dpp::command_option(dpp::co_string, "pesan", "textny..", true))
-                  .add_option(dpp::command_option(dpp::co_channel, "channel", "Channel tujuan", true))},
+                  .add_option(dpp::command_option(dpp::co_channel, "channel", "Channel tujuan", true))
+            },
 
             {"4", dpp::slashcommand("set_autorole", "setting autorole server", 0)
                   .add_option(dpp::command_option(dpp::co_boolean, "set", "true/false", true))
-                  .add_option(dpp::command_option(dpp::co_role, "role", "pilih role", false))}
+                  .add_option(dpp::command_option(dpp::co_role, "role", "pilih role", false))
+            },
+
+            {"5", dpp::slashcommand("user_info", "lihat profil user", 0)
+                  .add_option(dpp::command_option(dpp::co_user, "user", "pilih satu", true))
+            }
 
         };
 };

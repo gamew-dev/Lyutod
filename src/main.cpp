@@ -34,14 +34,14 @@ int main() {
     // initialize bot object and its intents
     dpp::cluster bot(token, dpp::i_all_intents);
 
-    bot.on_log(dpp::utility::cout_logger());
-    /*
+    //bot.on_log(dpp::utility::cout_logger());
+
     bot.on_log([](const dpp::log_t& event) {
         if (event.severity == dpp::ll_info) {
                 std::cout << "[INFO] " << event.message << std::endl;
             }
     });
-    */
+
 
     // initialize the object of InputHandler class and
     // register the bot config, identity, and slash
@@ -56,10 +56,9 @@ int main() {
     // set the bot presence status
     bot.on_ready([&bot, &handler](const dpp::ready_t& event) {
 
-        if (dpp::run_once<struct register_bot_commands>()) {
+        std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
 
-            std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
-        }
+        handler.preRegSlash(bot);
 
         // presence setting and output message when online
         bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
@@ -111,6 +110,10 @@ int main() {
 
     bot.on_guild_create([&bot](const dpp::guild_create_t& event) {
 
+
+        if (dpp::run_once<struct logging>()) {
+            std::cout << "[INFO] Checking guild cache" <<std::endl;
+        }
 
         if (Config::guildCreateConfig(event)) {
             std::string repl = Responses::makeMsg("invite", bot.me, false);

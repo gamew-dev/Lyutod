@@ -31,18 +31,18 @@ void Config::clientSaveConfig() {
 
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
-    std::cout << "[INFO] Checking guild cache" <<std::endl;
+    ;
     std::string id = std::to_string(static_cast<uint64_t>(event.created.id));
+    std::string name = event.created.name;
     std::string path = guildPath + id + ".json";
 
     std::ifstream file(path);
     if(file.good()) {
-        std::cout << "[ + ] " << id << " is ready\n";
+        std::cout << "[ + ] " << name << " is ready\n";
         return false;
     }
     else {
 
-        std::string name = event.created.name;
         std::string owner = std::to_string(static_cast<uint64_t>(event.created.owner_id));
 
         nlohmann::json filejson;
