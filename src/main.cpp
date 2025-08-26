@@ -45,10 +45,7 @@ int main() {
 
     // initialize the object of InputHandler class and
     // register the bot config, identity, and slash
-    /** old
-    InputHandler handler;
-    handler.regBot(bot);
-    */
+
     BotHandler handler;
 
     // when the bot successfully connects to Discord,

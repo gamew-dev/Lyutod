@@ -99,6 +99,8 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
     std::string command = event.command.get_command_name();
 
+    std::cout << "[LOG] Menerima command: " << command << std::endl;
+
     if (command == "status") {
         Commands::command_status(start, bot, event);
     }
@@ -109,6 +111,11 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
     else if (command == "say") {
         Commands::command_say(bot, event);
+    }
+
+    else if (command == "user_info") {
+        std::cout << "[DEBUG] Entry user info" << std::endl;
+        Commands::command_user_info(bot, event);
     }
 
 }

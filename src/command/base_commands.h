@@ -15,7 +15,9 @@ class Commands {
                                      const dpp::slashcommand_t& event),
                 command_say         (      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_set_autorole(const dpp::slashcommand_t& event);
+                command_set_autorole(const dpp::slashcommand_t& event),
+                command_user_info   (      dpp::cluster& bot,
+                                     const dpp::slashcommand_t& event);
 
     static inline std::map<std::string, dpp::slashcommand> commands_list {
             {"1", dpp::slashcommand("status", "Info bot", 0)},
@@ -33,7 +35,7 @@ class Commands {
             },
 
             {"5", dpp::slashcommand("user_info", "lihat profil user", 0)
-                  .add_option(dpp::command_option(dpp::co_user, "user", "pilih satu", true))
+                  .add_option(dpp::command_option(dpp::co_user, "user", "pilih satu", false))
             }
 
         };
