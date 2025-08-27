@@ -28,7 +28,8 @@ void Commands::command_user_info(dpp::cluster& bot, const dpp::slashcommand_t& e
     std::string created = "<t:" + std::to_string(timestamp) + ">";
     std::string imgURL = user.get_avatar_url(4096, dpp::i_png, true);
     std::cout << "[Debug] img url: " << imgURL << std::endl;
-    //user.
+
+
     dpp::embed embed = dpp::embed()
         .set_color(dpp::colors::red_blood)
         .set_title("User Info")

@@ -15,7 +15,8 @@ class Commands {
                                      const dpp::slashcommand_t& event),
                 command_say         (      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_set_autorole(const dpp::slashcommand_t& event),
+                command_set_autorole(      dpp::cluster& bot,
+                                     const dpp::slashcommand_t& event),
                 command_user_info   (      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event);
 
