@@ -113,6 +113,11 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
         Commands::command_say(bot, event);
     }
 
+    else if (command == "set_autorole") {
+        std::cout << "[DEBUG] Selecting autorole" << std::endl;
+        Commands::command_set_autorole(bot, event);
+    }
+
     else if (command == "user_info") {
         std::cout << "[DEBUG] Entry user info" << std::endl;
         Commands::command_user_info(bot, event);
@@ -167,7 +172,7 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        bot.guild_command_create(cmd, 1404412516779429958, [](const dpp::confirmation_callback_t& cb) {
+        bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
             } else {
