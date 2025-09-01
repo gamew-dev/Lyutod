@@ -112,7 +112,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //std::cout << "[Debug] Final Payload: " << postdata << std::endl;
 
 
-    std::string auth = "Bearer " + OPENAIKEY;
+    std::string auth = "Bearer " + Config::gptToken;
 
     dpp::http_headers headers;
     headers.emplace("Authorization", auth);

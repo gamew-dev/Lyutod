@@ -1,7 +1,7 @@
 #include "Config.h"
 
 
-void Config::clientLoadConfig() {
+bool Config::clientLoadConfig() {
 
     std::ifstream file(clientPath);
     if (file) {
@@ -9,24 +9,27 @@ void Config::clientLoadConfig() {
         nlohmann::json fileJson;
         file >> fileJson;
         botOwner = fileJson.value("botOwner", "");
+        botToken = fileJson.value("botToken", "");
+        gptToken = fileJson.value("gptToken", "");
+
+        return true;
 
     }
     else {
         std::cout << "[INFO] Creating new bot config..." << std::endl;
-        clientSaveConfig();
+        nlohmann::json filejson;
+        filejson["botOwner"] = "";
+        filejson["botToken"] = "";
+        filejson["gptToken"] = "";
+
+        std::ofstream file(clientPath);
+        file << filejson.dump(4);
+
+        return false;
     }
 
 }
 
-void Config::clientSaveConfig() {
-
-    nlohmann::json filejson;
-    filejson["botOwner"] = "";
-
-    std::ofstream file(clientPath);
-    file << filejson.dump(4);
-
-}
 
 
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {

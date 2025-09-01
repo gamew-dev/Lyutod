@@ -20,9 +20,9 @@ int main() {
     std::ifstream getToken("data/client/token.txt");
     std::string token;
 
-    if (getToken) {
-        getToken >> token;
-        getToken.close();
+    if (Config::clientLoadConfig()) {
+        dpp::cluster bot(Config::botToken, dpp::i_all_intents);
+
     }
 
     // terminate the program if token unavailable or invalid
@@ -30,9 +30,6 @@ int main() {
         std::cout << "no token" << std::endl;
         return 1;
     }
-
-    // initialize bot object and its intents
-    dpp::cluster bot(token, dpp::i_all_intents);
 
     //bot.on_log(dpp::utility::cout_logger());
 

@@ -56,8 +56,6 @@ class BotHandler
 
         std::time_t start                               ; // get bot start time
 
-        std::string OPENAIKEY = "H";
-
         std::vector <dpp::presence> presence {
 
             dpp::presence(dpp::ps_idle , dpp::at_watching  , "you..."),
