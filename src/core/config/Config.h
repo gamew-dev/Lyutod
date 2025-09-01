@@ -34,7 +34,9 @@ class Config
 
     static bool guildCreateConfig(const dpp::guild_create_t& event);
     static void guildRemoveConfig(const std::string& guild_id),
-                guildSaveConfig  (const std::string& guild_id);
+                guildSaveAutoRole(const std::string& guild_id,
+                                  const bool&        autorole,
+                                  const std::string& role_id);
 
     static GC guildLoadConfig(const std::string& guild_id);
 };

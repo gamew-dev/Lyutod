@@ -56,6 +56,27 @@ std::string Utils::getPing(const dpp::cluster& bot) {
     return (std::to_string(int(bot.rest_ping * 100)) + " ms");
 }
 
+std::string Utils::clearMention(const std::string& message, const std::string& id) {
+    std::string content = message;
+
+    // Pola mention bisa <@id> atau <@!id>
+    std::string mention1 = "<@" + id + ">";
+    std::string mention2 = "<@!" + id + ">";
+
+    size_t pos;
+    while ((pos = content.find(mention1)) != std::string::npos) {
+        content.erase(pos, mention1.length());
+    }
+    while ((pos = content.find(mention2)) != std::string::npos) {
+        content.erase(pos, mention2.length());
+    }
+
+    // Hilangkan spasi berlebih
+    if (!content.empty() && content.front() == ' ')
+        content.erase(0, content.find_first_not_of(" "));
+
+    return content;
+}
 
 
 
@@ -71,4 +92,18 @@ int Utils::getDay() {
 
     // (0 = minggu, 6 = sabtu)
     return hari->tm_wday;
+}
+
+bool Utils::isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
+
+
+    for (const auto& user_mention : event.msg.mentions) {
+            if (user_mention.first.id == bot.me.id) {
+                return true;
+                std::cout << "bot mentioned" << std::endl;
+            }
+    }
+
+
+    return false;
 }

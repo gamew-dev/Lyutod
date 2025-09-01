@@ -13,7 +13,7 @@ void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t
     dpp::snowflake role;
     auto param = event.get_parameter("role");
 
-    if (param.valueless_by_exception() == 0) {
+    if (param.index() == 0) {
         role = 0;
     } else {
         role = std::get<dpp::snowflake>(event.get_parameter("role"));
@@ -24,16 +24,18 @@ void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t
 
     if (!autorole) {
         event.reply("Autorole berhasil **dinonaktifkan**.");
+        role = 0;
     }
 
     else if (autorole && role == 0) {
         event.reply("Anda harus memilih **role** untuk mengaktifkan autorole.");
+        return;
     }
 
     else if (autorole && role != 0) {
         event.reply("Autorole berhasil diaktifkan dengan role: <@&" + std::to_string(role) + ">.");
     }
 
-    event.reply("womp womp");
+    Config::guildSaveAutoRole(std::to_string(guild_id), autorole, std::to_string(role));
     std::cout << "[DEBUG] End of line" << std::endl;
 }

@@ -11,9 +11,13 @@ class Utils
 
                     getTime(const std::time_t& time)    , // get online time
 
-                    getPing(const dpp::cluster& bot)    ; // get latency
+                    getPing(const dpp::cluster& bot)    , // get latency
 
-        static int  getDay()                            ; // get day (0 - 6) format
+                    clearMention(const std::string& message, const std::string& id);
+
+    static int  getDay()                            ; // get day (0 - 6) format
+
+    static bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event);
 
 };
 

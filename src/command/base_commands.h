@@ -2,6 +2,7 @@
 #define COMMANDS_H
 
 #include "dpp/dpp.h"
+#include "Config.h"
 #include "Responses.h"
 #include "Utils.h"
 
@@ -33,6 +34,7 @@ class Commands {
             {"4", dpp::slashcommand("set_autorole", "setting autorole server", 0)
                   .add_option(dpp::command_option(dpp::co_boolean, "set", "true/false", true))
                   .add_option(dpp::command_option(dpp::co_role, "role", "pilih role", false))
+                  .set_default_permissions(dpp::p_administrator)
             },
 
             {"5", dpp::slashcommand("user_info", "lihat profil user", 0)

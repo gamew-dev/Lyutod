@@ -43,6 +43,9 @@ class BotHandler
              handleMessage      (      dpp::cluster& bot,
                                  const dpp::message_create_t& event)  , // for message type event
 
+             handleAiRequest    (      dpp::cluster& bot,
+                                 const dpp::message_create_t& event)   ,
+
              handleGuildNewMem  (      dpp::cluster& bot,
                                  const dpp::guild_member_add_t& event), // when someone join server
 
@@ -52,6 +55,8 @@ class BotHandler
     private:
 
         std::time_t start                               ; // get bot start time
+
+        std::string OPENAIKEY = "H";
 
         std::vector <dpp::presence> presence {
 

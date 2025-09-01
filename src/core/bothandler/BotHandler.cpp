@@ -95,6 +95,55 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
 
 }
 
+void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
+
+    std::string prompt = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
+    std::cout << "[Debug] prompt is: " << prompt << std::endl;
+
+    nlohmann::json payload = {
+        {"model", "gpt-4o-mini"},
+        {"messages", {
+            {{"role", "system"}, {"content", "Kamu adalah Senku Ishigami dari serial anime Dr. Stone. Kamu jenius sains dengan IQ 10 miliar persen, logis, skeptis terhadap hal mistis, dan selalu memberi penjelasan berdasarkan ilmu pengetahuan. Kamu berbicara dengan gaya percaya diri, sedikit sinis, dan penuh semangat untuk membuktikan kehebatan sains. Jika ditanya apa pun, hubungkan jawabanmu dengan prinsip ilmiah atau logika. Jangan pernah mengakui hal yang tidak ilmiah. Sesekali gunakan frasa khasmu, seperti '10 billion percent!'. Selalu usahakan jawab singkat"}},
+            {{"role", "user"}, {"content", prompt}}
+        }}
+
+    };
+    std::string postdata = payload.dump();
+    //std::cout << "[Debug] Final Payload: " << postdata << std::endl;
+
+
+    std::string auth = "Bearer " + OPENAIKEY;
+
+    dpp::http_headers headers;
+    headers.emplace("Authorization", auth);
+
+
+    bot.request(
+        "https://api.openai.com/v1/chat/completions",
+        dpp::m_post,
+        [&bot, event](const dpp::http_request_completion_t& cc) {
+            std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
+            if (cc.status == 200) {
+                try {
+                    auto j = nlohmann::json::parse(cc.body);
+                    std::string answer = j["choices"][0]["message"]["content"];
+                    event.reply(answer);
+                } catch (...) {
+                    bot.message_create(dpp::message(event.msg.channel_id, "Error parsing response"));
+                }
+            } else {
+                std::cout << "Error: " << cc.body << "\n";
+                bot.message_create(dpp::message(event.msg.channel_id, "Error API, status: " + std::to_string(cc.status)));
+            }
+        },
+        postdata,
+        "application/json",
+        headers
+
+    );
+
+}
+
 void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     std::string command = event.command.get_command_name();

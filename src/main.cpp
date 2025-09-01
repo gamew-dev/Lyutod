@@ -81,7 +81,13 @@ int main() {
         std::cout << event.msg.author.global_name << ": " << event.msg.content << std::endl;
 
         // Throw the event for InputHandler to manage
-        handler.handleMessage(bot, event);
+
+        if (Utils::isMentioned(bot, event)) {
+            std::cout << "bot Mentioned" << std::endl;
+            handler.handleAiRequest(bot, event);
+        } else {
+            handler.handleMessage(bot, event);
+        }
 
 
     }); // baca-bales chat

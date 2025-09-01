@@ -66,6 +66,36 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
     }
 }
 
+void Config::guildSaveAutoRole(const std::string& guild_id, const bool& autorole, const std::string& role_id) {
+
+    std::string path = guildPath + guild_id + ".json";
+
+    std::ifstream file(path);
+
+    nlohmann::json filejson;
+
+    if (file.is_open()) {
+        file >> filejson;
+        file.close();
+    }
+    else {
+        std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
+        return;
+    }
+
+    std::string role_name = "<@" + role_id + ">";
+
+    filejson["autoRoleEnabled"] = autorole;
+    filejson["autoRoleID"] = role_id;
+    filejson["autoRoleName"] = role_name;
+
+    std::ofstream out(path);
+    out << filejson.dump(4);
+    out.close();
+
+}
+
+
 GC Config::guildLoadConfig(const std::string& guild_id) {
 
     std::string path = guildPath + guild_id + ".json";
@@ -89,3 +119,4 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
 
     return data;
 }
+

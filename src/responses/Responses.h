@@ -54,6 +54,7 @@ class Responses
         return jawab;
     }
 
+
     private:
 
     static inline std::unordered_map<std::string, std::vector<std::string>> pilihan = {

@@ -1,8 +1,8 @@
 {
     "ID": "1404412516779429958",
     "Name": "TRAIN PRODUCTION",
-    "autoRoleEnabled": false,
-    "autoRoleID": "",
-    "autoRoleName": "",
+    "autoRoleEnabled": true,
+    "autoRoleID": "1410895811222568981",
+    "autoRoleName": "<@1410895811222568981>",
     "ownerID": "465096085224947722"
 }
