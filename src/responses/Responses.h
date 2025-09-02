@@ -101,6 +101,11 @@ class Responses
         {"invite", {
             "hai sayank", "aku datang", "<:y_y:1370304542914383924>",
             "p", "peace be upon you <:lup:1370432773814227014>"
+        }},
+        { "prohibited", {
+            "hmm", "sok asik", "luwh siapa", "wleee",
+            "anda tidak memiliki ijin untuk menjalankan perintah tersebut, hal ini akan dilaporkan ke pihak developer",
+            "<:y_y:1370304542914383924>", "<:apalah:1370304744316469249>"
         }}
     };
     // this is for react

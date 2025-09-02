@@ -21,8 +21,7 @@ int main() {
     std::string token;
 
     if (Config::clientLoadConfig()) {
-        dpp::cluster bot(Config::botToken, dpp::i_all_intents);
-
+        token = Config::botToken;
     }
 
     // terminate the program if token unavailable or invalid
@@ -32,6 +31,7 @@ int main() {
     }
 
     //bot.on_log(dpp::utility::cout_logger());
+    dpp::cluster bot(token, dpp::i_all_intents);
 
     bot.on_log([](const dpp::log_t& event) {
         if (event.severity == dpp::ll_info) {

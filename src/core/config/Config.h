@@ -27,11 +27,11 @@ class Config
 
     public:
 
-    static std::string botOwner,
-                       botToken,
-                       gptToken;
+    static inline std::string botOwner,
+                              botToken,
+                              gptToken;
 
-    static bool clientLoadConfig ();
+    static bool clientLoadConfig();
 
     static bool guildCreateConfig(const dpp::guild_create_t& event);
     static void guildRemoveConfig(const std::string& guild_id),

@@ -92,6 +92,28 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
             bot.message_create(dpp::message(event.msg.channel_id, repl));
         }
 
+    if (
+        text == "shutdown" || text == "turn off")
+        {
+            if (std::to_string(tokoh.id) == Config::botOwner) {
+                dpp::message aaa(event.msg.channel_id, "<:turu:1370067202635595817>");
+
+                bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
+
+                repl = Responses::makeMsg("bobok", tokoh, false);
+                bot.message_create(dpp::message(event.msg.channel_id, repl));
+
+                bot.shutdown();
+
+            }
+            else {
+                repl = Responses::makeMsg("prohibited", tokoh, false);
+                bot.message_create(dpp::message(event.msg.channel_id, repl));
+
+            }
+
+    	}
+
 
 }
 
