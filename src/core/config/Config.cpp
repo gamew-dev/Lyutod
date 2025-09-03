@@ -10,6 +10,7 @@ bool Config::clientLoadConfig() {
         file >> fileJson;
         botOwner = fileJson.value("botOwner", "");
         botToken = fileJson.value("botToken", "");
+        botVersi = fileJson.value("botVersi", "");
         gptToken = fileJson.value("gptToken", "");
 
         return true;
@@ -20,6 +21,7 @@ bool Config::clientLoadConfig() {
         nlohmann::json filejson;
         filejson["botOwner"] = "";
         filejson["botToken"] = "";
+        filejson["botVersi"] = "";
         filejson["gptToken"] = "";
 
         std::ofstream file(clientPath);

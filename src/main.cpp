@@ -99,6 +99,10 @@ int main() {
     }); //slash command
 
 
+    bot.on_button_click([&bot, &handler] (const dpp::button_click_t& event) {
+
+        handler.handleButtonEvent(bot, event);
+    });
 
     // When a new member shows up
 

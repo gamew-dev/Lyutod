@@ -32,7 +32,7 @@ void Commands::command_status(const std::time_t& start, dpp::cluster& bot, const
         //.set_image("https://dpp.dev/DPP-Logo.png")
         .set_footer(
             dpp::embed_footer()
-            .set_text("Version: 0.6 [25M7D19]")
+            .set_text(Config::botVersi)
             .set_icon("https://cdn.discordapp.com/attachments/1270735248472277004/1370083495313145916/42802-givelove.png?ex=681e3530&is=681ce3b0&hm=dde61ba938af5ce6e8934dfd54b023570c983a1bfdb944d56adcaa2c838d6595&")
         )
 

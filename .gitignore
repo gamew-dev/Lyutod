@@ -2,4 +2,4 @@ bin/
 bot6*
 obj/
 src/dpp/
-data/client/config.json
+data/

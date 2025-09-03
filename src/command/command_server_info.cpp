@@ -3,29 +3,40 @@
 void Commands::command_server_info (dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     std::string owner = dpp::user().get_mention(event.command.get_guild().owner_id);
+    std::string id = std::to_string(event.command.guild_id);
+
+    uint64_t timestamp = static_cast<uint64_t>(event.command.get_guild().get_creation_time());
+    std::string created = "<t:" + std::to_string(timestamp) + "> " + "<t:" + std::to_string(timestamp) + ":R>";
 
     dpp::embed status = dpp::embed()
         .set_color(dpp::colors::antique_bronze)
         .set_title(event.command.get_guild().name)
         .set_url("https://discord.gg/ntStxHH9gS")
         //.set_author("Server Invite", "https://discord.gg/ntStxHH9gS", event.command.get_guild().icon)
-        .set_description(event.command.get_guild().description)
         //.set_thumbnail(event.command.get_guild().icon)
+        .set_description(event.command.get_guild().description)
+
         .add_field(
-            "Owner",
-            owner
+            "Server Owner",
+            owner,
+            true
         )
+
+        .add_field(
+            "Server ID",
+            id,
+            true
+        )
+
 
         .add_field(
             "Member",
-            std::to_string(event.command.get_guild().member_count),
-            true
+            std::to_string(event.command.get_guild().member_count)
         )
 
         .add_field(
-            "nth isi aap",
-            "e",
-            true
+            "Created",
+            created
         )
 
         .set_footer(

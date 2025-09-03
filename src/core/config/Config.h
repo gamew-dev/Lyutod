@@ -29,6 +29,7 @@ class Config
 
     static inline std::string botOwner,
                               botToken,
+                              botVersi,
                               gptToken;
 
     static bool clientLoadConfig();

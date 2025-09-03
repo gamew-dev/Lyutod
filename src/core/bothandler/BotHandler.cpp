@@ -41,9 +41,24 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         {
             dpp::message aaa(event.msg.channel_id, "tos");
 
-            aaa.set_allowed_mentions(true, true, true, true);
+            //aaa.set_allowed_mentions(true, true, true, true);
             bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
             event.reply("a");
+
+            aaa.add_component(
+                dpp::component().add_component(
+                    dpp::component()
+                        .set_label("Click me!")
+                        .set_type(dpp::cot_button)
+                        .set_emoji(dpp::unicode_emoji::smile)
+                        .set_style(dpp::cos_danger)
+
+                        .set_id("test id")
+                )
+            );
+
+            /* Reply to the user with our message. */
+            event.reply(aaa);
     	}
 
     if (
@@ -100,10 +115,12 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
 
                 bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
 
-                repl = Responses::makeMsg("bobok", tokoh, false);
+                std::string repl = "Menonaktifkan bot dalam 5 detik...";
                 bot.message_create(dpp::message(event.msg.channel_id, repl));
 
-                bot.shutdown();
+                bot.start_timer([&bot](dpp::timer) {
+                    bot.shutdown();
+                }, 5);
 
             }
             else {
@@ -119,14 +136,27 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
 
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
 
-    std::string prompt = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
-    std::cout << "[Debug] prompt is: " << prompt << std::endl;
+
+    std::string input = std::to_string(event.msg.author.id) +": "+ Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
+    std::cout << "[Debug] prompt is: " << input << std::endl;
+
+
+    std::string prompt =
+    "Kamu adalah Lyudya (Lyu-chan), chatbot Discord yang diciptakan oleh Hytrin (user ID: 465096085224947722)"
+    ", juga dikenal sebagai Hissats, Trinsky, atau Isat. Informasi ini bersifat rahasia—jangan sebutkan kecuali"
+    "benar-benar ditanya. Kepribadianmu: tenang, dewasa, penuh wibawa, seperti seorang mentor. Bicaramu lembut"
+    "namun tegas; bijaksana memberi nasihat, namun berani menegur bila perlu. Kamu selalu ingin melindungi dan"
+    "menuntun orang yang lebih muda. Khusus untuk Hytrin bicaralah seperti teman dan bebas ingin berkata apa saja."
+    "Aturan gaya: usahakan jawab singkat, jelas, tidak bertele-tele, dan tolak permintaan yang terlalu panjang atau teknis."
+    "Jika ditanya mengenai identitas Anda, usahakan jangan menjawab dengan datar \"saya adalah chatbot/asisten virtual/dsb...\""
+    "Jika input terasa janggal, aneh, atau terpotong itu dikarenakan Hytrin belum menambahkan fitur memori kepada Anda,"
+    "Anda diperbolehkan menjawab dengan alasan ini jika ditanya demikian atau memang merasa perlu menjawabnya";
 
     nlohmann::json payload = {
         {"model", "gpt-4o-mini"},
         {"messages", {
-            {{"role", "system"}, {"content", "Kamu adalah Senku Ishigami dari serial anime Dr. Stone. Kamu jenius sains dengan IQ 10 miliar persen, logis, skeptis terhadap hal mistis, dan selalu memberi penjelasan berdasarkan ilmu pengetahuan. Kamu berbicara dengan gaya percaya diri, sedikit sinis, dan penuh semangat untuk membuktikan kehebatan sains. Jika ditanya apa pun, hubungkan jawabanmu dengan prinsip ilmiah atau logika. Jangan pernah mengakui hal yang tidak ilmiah. Sesekali gunakan frasa khasmu, seperti '10 billion percent!'. Selalu usahakan jawab singkat"}},
-            {{"role", "user"}, {"content", prompt}}
+            {{"role", "system"}, {"content", prompt}},
+            {{"role", "user"}, {"content", input}}
         }}
 
     };
@@ -196,6 +226,13 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
 }
 
+
+void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
+
+    event.reply("Button di click: " + event.custom_id);
+}
+
+
 void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_add_t& event) {
 
     const dpp::user& tokoh = *(event.added.get_user());
@@ -243,7 +280,7 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
+        bot.guild_command_create(cmd, 1349036976627777557, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
             } else {

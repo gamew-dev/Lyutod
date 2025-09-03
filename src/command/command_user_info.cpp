@@ -25,7 +25,7 @@ void Commands::command_user_info(dpp::cluster& bot, const dpp::slashcommand_t& e
     std::cout << "[Debug] creating embed message" << std::endl;
 
     uint64_t timestamp = static_cast<uint64_t>(user.get_creation_time());
-    std::string created = "<t:" + std::to_string(timestamp) + ">";
+    std::string created = "<t:" + std::to_string(timestamp) + "> " + "<t:" + std::to_string(timestamp) + ":R>";
     std::string imgURL = user.get_avatar_url(4096, dpp::i_png, true);
     std::cout << "[Debug] img url: " << imgURL << std::endl;
 

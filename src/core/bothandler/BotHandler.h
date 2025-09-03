@@ -48,6 +48,8 @@ class BotHandler
 
              handleGuildNewMem  (      dpp::cluster& bot,
                                  const dpp::guild_member_add_t& event), // when someone join server
+             handleButtonEvent  (      dpp::cluster& bot,
+                                 const dpp::button_click_t& event)     ,
 
              updatePresence     (      dpp::cluster& bot);
 
