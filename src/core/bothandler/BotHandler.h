@@ -56,6 +56,13 @@ class BotHandler
 
     private:
 
+        struct UserSession {
+            std::string memory;
+            std::chrono::steady_clock::time_point last_activity;
+        };
+
+        std::unordered_map<dpp::snowflake, UserSession> Sessions;
+
         std::time_t start                               ; // get bot start time
 
         std::vector <dpp::presence> presence {
@@ -71,6 +78,8 @@ class BotHandler
             dpp::presence(dpp::ps_idle , dpp::at_streaming , "a")
 
         };
+
+
 
 };
 

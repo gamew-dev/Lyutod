@@ -15,9 +15,6 @@
 
 int main() {
 
-    // find and open the token file
-    // token get stored in string variable
-    std::ifstream getToken("data/client/token.txt");
     std::string token;
 
     if (Config::clientLoadConfig()) {

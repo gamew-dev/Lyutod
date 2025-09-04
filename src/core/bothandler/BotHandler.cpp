@@ -8,6 +8,9 @@ BotHandler::BotHandler() {
     Config::clientLoadConfig();
 }
 
+
+
+
 void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     // Initialize variables for the msg author and it's content
@@ -39,16 +42,15 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
     if (
         text == "test" || text == "tes")
         {
-            dpp::message aaa(event.msg.channel_id, "tos");
+            dpp::message aaa(event.msg.channel_id, "p");
 
             //aaa.set_allowed_mentions(true, true, true, true);
             bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
-            event.reply("a");
 
             aaa.add_component(
                 dpp::component().add_component(
                     dpp::component()
-                        .set_label("Click me!")
+                        .set_label("Tes")
                         .set_type(dpp::cot_button)
                         .set_emoji(dpp::unicode_emoji::smile)
                         .set_style(dpp::cos_danger)
@@ -137,6 +139,13 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
 
 
+
+    if (Sessions.find(event.msg.author.id) != Sessions.end()) {
+        std::cout << "User sudah ada!\n";
+    } else {
+        BotHandler::Sessions[event.msg.author.id] = UserSession{"", std::chrono::steady_clock::now()};
+    }
+
     std::string input = std::to_string(event.msg.author.id) +": "+ Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::cout << "[Debug] prompt is: " << input << std::endl;
 
@@ -144,18 +153,29 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string prompt =
     "Kamu adalah Lyudya (Lyu-chan), chatbot Discord yang diciptakan oleh Hytrin (user ID: 465096085224947722)"
     ", juga dikenal sebagai Hissats, Trinsky, atau Isat. Informasi ini bersifat rahasia—jangan sebutkan kecuali"
-    "benar-benar ditanya. Kepribadianmu: tenang, dewasa, penuh wibawa, seperti seorang mentor. Bicaramu lembut"
+    "benar-benar ditanya. Karena saya membuat input anda dengan format id: konten, usahakan cek id user itu terlebih dahulu"
+    " apakah anda memiliki data mengenai id tersebut (id ternyata owner, id ternyata user ini, dsb"
+    "Kepribadianmu: tenang, dewasa, penuh wibawa, seperti seorang mentor. Bicaramu lembut"
     "namun tegas; bijaksana memberi nasihat, namun berani menegur bila perlu. Kamu selalu ingin melindungi dan"
-    "menuntun orang yang lebih muda. Khusus untuk Hytrin bicaralah seperti teman dan bebas ingin berkata apa saja."
+    "menuntun orang yang lebih muda."
     "Aturan gaya: usahakan jawab singkat, jelas, tidak bertele-tele, dan tolak permintaan yang terlalu panjang atau teknis."
     "Jika ditanya mengenai identitas Anda, usahakan jangan menjawab dengan datar \"saya adalah chatbot/asisten virtual/dsb...\""
-    "Jika input terasa janggal, aneh, atau terpotong itu dikarenakan Hytrin belum menambahkan fitur memori kepada Anda,"
-    "Anda diperbolehkan menjawab dengan alasan ini jika ditanya demikian atau memang merasa perlu menjawabnya";
+    "Jangan menambahkan pertanyaan balik atau ajakan tambahan di akhir jawaban, kecuali diminta secara eksplisit."
+    "Hindari penutup bernuansa formal atau pelayanan seperti “apakah ada hal lain...”, “semoga membantu...”, atau “saya di sini untuk...”."
+    "Jawablah secara alami, ekspresif, dan singkat, seolah-olah kamu manusia yang sedang berbincang, bukan asisten."
+    "Fokus pada isi percakapan, jangan memanjangkan topik secara teknis atau mendalam kecuali diminta."
+    "Saya juga akan memberi anda memory mengenai user yang sedang berbincang kepada anda saat ini (memory bisa saja kosong):";
+
+
+    auto& session = Sessions[event.msg.author.id];
+    std::string memory = session.memory;
+
+
 
     nlohmann::json payload = {
         {"model", "gpt-4o-mini"},
         {"messages", {
-            {{"role", "system"}, {"content", prompt}},
+            {{"role", "system"}, {"content", prompt + "\n\n[MEMORY]\n" + memory}},
             {{"role", "user"}, {"content", input}}
         }}
 
@@ -189,6 +209,74 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
             }
         },
         postdata,
+        "application/json",
+        headers
+
+    );
+
+
+    // memory
+    std::string promptMemory =
+    "Anda adalah sistem manajemen memori chatbot.\n"
+    "Tugas Anda: ringkas percakapan user menjadi memori singkat untuk disimpan.\n"
+    "Aturan:\n"
+    "- Hanya catat informasi penting tentang user (hobi, kesukaan, kebiasaan, fakta baru).\n"
+    "- Jangan tulis obrolan biasa, basa-basi, atau detail yang tidak relevan.\n"
+    "- Gunakan bahasa singkat, seperti catatan.\n"
+    "- Maksimal 1 kalimat atau poin.\n"
+    "- Jika tidak ada informasi penting, tulis: null.\n"
+    "Contoh:\n"
+    "User: Aku suka sate ayam\n"
+    "Output: suka sate ayam\n"
+    "User: Besok aku ujian matematika\n"
+    "Output: akan ujian matematika besok\n"
+    "User: Halo bot\n"
+    "Output: null\n"
+    "Saya akan memberikan rangkuman anda sebelumnya untuk orang ini, karena hasilnya akan langsung menimpa file lama"
+    "anda langsung saja tambahkan hal baru dibawahnya dan tetap tulis hal lama (atau hapus hal lama juga bisa)";
+
+
+    nlohmann::json payloadMemory = {
+        {"model", "gpt-4o-mini"},
+        {"messages", {
+            {{"role", "system"}, {"content", promptMemory + "\n\n[MEMORY]\n" + memory}},
+            {{"role", "user"}, {"content", input}}
+        }}
+
+    };
+
+    std::string postdataMemory = payloadMemory.dump();
+
+
+    bot.request(
+        "https://api.openai.com/v1/chat/completions",
+        dpp::m_post,
+        [&](const dpp::http_request_completion_t& cc) {
+            std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
+            if (cc.status == 200) {
+                try {
+                    auto j = nlohmann::json::parse(cc.body);
+                    std::string answer = j["choices"][0]["message"]["content"];
+                    auto& session = Sessions[event.msg.author.id]; // ambil referensi ke session user
+                    if (answer != "null") {
+                        if (!session.memory.empty()) {
+                            session.memory += "\n" + answer;
+                        } else {
+                            session.memory = answer;
+                        }
+                    }
+                    session.last_activity = std::chrono::steady_clock::now();
+
+                    std::cout << "updated memory: " << answer << std::endl;
+                } catch (...) {
+                    std::cout << "Error parsing response for memory" << std::endl;
+                }
+            } else {
+                std::cout << "Error: " << cc.body << "\n";
+                bot.message_create(dpp::message(event.msg.channel_id, "Error API Memory, status: " + std::to_string(cc.status)));
+            }
+        },
+        postdataMemory,
         "application/json",
         headers
 
@@ -229,7 +317,12 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
 void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
 
-    event.reply("Button di click: " + event.custom_id);
+    if (std::to_string(event.command.usr.id) == Config::botOwner) {
+        event.reply(dpp::ir_update_message, "Tos <:owo:1370082279006666802>");
+    } else {
+        std::string repl = Responses::makeMsg("prohibited", event.command.usr, false);
+        event.reply(dpp::ir_update_message, repl);
+    }
 }
 
 
