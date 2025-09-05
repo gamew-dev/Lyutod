@@ -113,7 +113,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         text == "shutdown" || text == "turn off")
         {
             if (std::to_string(tokoh.id) == Config::botOwner) {
-                dpp::message aaa(event.msg.channel_id, "<:turu:1370067202635595817>");
+                checkSessions();
 
                 bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
 
@@ -143,7 +143,8 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     if (Sessions.find(event.msg.author.id) != Sessions.end()) {
         std::cout << "User sudah ada!\n";
     } else {
-        BotHandler::Sessions[event.msg.author.id] = UserSession{"", std::chrono::steady_clock::now()};
+        std::string memoryRead = Config::userReadMemory(std::to_string(event.msg.author.id));
+        BotHandler::Sessions[event.msg.author.id] = UserSession{memoryRead, std::chrono::steady_clock::now()};
     }
 
     std::string input = std::to_string(event.msg.author.id) +": "+ Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
@@ -323,6 +324,8 @@ void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t&
         std::string repl = Responses::makeMsg("prohibited", event.command.usr, false);
         event.reply(dpp::ir_update_message, repl);
     }
+
+
 }
 
 
@@ -390,3 +393,27 @@ void BotHandler::preDelSlash(dpp::cluster& bot) {
 
 
 
+
+
+
+
+
+//private
+
+void BotHandler::checkSessions() {
+    auto now = std::chrono::steady_clock::now();
+    for (auto it = Sessions.begin(); it != Sessions.end(); ) {
+        auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
+        if (elapsed.count() >= 5) {
+            std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
+            std::string id = std::to_string(it->first);
+            std::string memory = it->second.memory;
+
+            Config::userUpdateMemory(id, memory);
+
+            it = Sessions.erase(it); // hapus session
+        } else {
+            ++it;
+        }
+    }
+}

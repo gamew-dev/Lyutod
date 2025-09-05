@@ -32,7 +32,59 @@ bool Config::clientLoadConfig() {
 
 }
 
+std::string Config::userReadMemory(const std::string id) {
 
+    std::string path = userPath + id + ".json";
+    std::string memory;
+
+    std::ifstream file(path);
+    if (file) {
+        std::cout << "[INFO] Reading user memory for: "<< id <<std::endl;
+
+        nlohmann::json fileJson;
+        file >> fileJson;
+        memory = fileJson.value("memory", "");
+    }
+    else {
+        std::cout << "[INFO] Creating user memory for: "<< id << std::endl;
+        nlohmann::json filejson;
+        filejson["memory"] = "";
+
+        std::ofstream out(path);
+        out << filejson.dump(4);
+
+        memory = "";
+    }
+
+    return memory;
+}
+
+
+void Config::userUpdateMemory(const std::string id,
+                              const std::string memory) {
+
+    std::string path = userPath + id + ".json";
+
+    std::ifstream file(path);
+
+    nlohmann::json filejson;
+
+    if (file.is_open()) {
+        file >> filejson;
+        file.close();
+    }
+    else {
+        std::cout << "[ERROR] no user memory found for: " << id << std::endl;
+        return;
+    }
+
+    filejson["memory"] = memory;
+
+    std::ofstream out(path);
+    out << filejson.dump(4);
+    out.close();
+
+}
 
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
@@ -71,7 +123,9 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
     }
 }
 
-void Config::guildSaveAutoRole(const std::string& guild_id, const bool& autorole, const std::string& role_id) {
+void Config::guildSaveAutoRole(const std::string& guild_id,
+                               const bool& autorole,
+                               const std::string& role_id) {
 
     std::string path = guildPath + guild_id + ".json";
 

@@ -54,6 +54,8 @@ class BotHandler
              updatePresence     (      dpp::cluster& bot);
 
 
+    void checkSessions();
+
     private:
 
         struct UserSession {
@@ -64,6 +66,9 @@ class BotHandler
         std::unordered_map<dpp::snowflake, UserSession> Sessions;
 
         std::time_t start                               ; // get bot start time
+
+
+
 
         std::vector <dpp::presence> presence {
 

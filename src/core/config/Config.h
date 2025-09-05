@@ -23,6 +23,7 @@ class Config
 
 
     static inline std::string clientPath = "data/client/config.json";
+    static inline std::string userPath = "data/user/";
     static inline std::string guildPath = "data/guild/";
 
     public:
@@ -33,6 +34,9 @@ class Config
                               gptToken;
 
     static bool clientLoadConfig();
+
+    static void userUpdateMemory(const std::string id, const std::string memory);
+    static std::string userReadMemory(const std::string id);
 
     static bool guildCreateConfig(const dpp::guild_create_t& event);
     static void guildRemoveConfig(const std::string& guild_id),
