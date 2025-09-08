@@ -86,6 +86,35 @@ void Config::userUpdateMemory(const std::string id,
 
 }
 
+
+
+std::vector<std::string> Config::serverReadMemory(const std::string id) {
+
+    std::string path = serverPath + id + ".json";
+    std::vector<std::string> history;
+
+    std::ifstream file(path);
+    if (file) {
+        std::cout << "[INFO] Reading server history for: " << id << std::endl;
+        std::string line;
+        while (std::getline(file, line)) {
+            if (!line.empty()) {
+                history.push_back(line);
+            }
+        }
+    } else {
+        std::cout << "[INFO] Creating server history for: " << id << std::endl;
+        std::ofstream out(path);
+        history.push_back("---End of History---");
+        // file baru -> kosong
+    }
+
+    return history;
+}
+
+
+
+
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
     ;

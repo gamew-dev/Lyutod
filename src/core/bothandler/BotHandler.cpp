@@ -138,46 +138,106 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
 
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
 
+    dpp::snowflake userID64 = event.msg.author.id;
+    dpp::snowflake serverID64 = event.msg.guild_id;
+    std::string userID = std::to_string(userID64);
+    std::string serverID = std::to_string(serverID64);
+    std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
+    std::string input = "[" + userID +"]: "+ clearText;
 
+    std::cout << "get server id: " << serverID << std::endl;
 
-    if (Sessions.find(event.msg.author.id) != Sessions.end()) {
-        std::cout << "User sudah ada!\n";
+    if (ServerSessions.find(serverID64) != ServerSessions.end()) {
+        std::cout << "server sudah memiliki session" << std::endl;
     } else {
-        std::string memoryRead = Config::userReadMemory(std::to_string(event.msg.author.id));
-        BotHandler::Sessions[event.msg.author.id] = UserSession{memoryRead, std::chrono::steady_clock::now()};
+        if (serverID64 == 0) {
+            serverID64 = userID64; // berarti DM
+            serverID = std::to_string(serverID64);
+        }
+
+        auto memoryRead = Config::serverReadMemory(serverID);
+        BotHandler::ServerSessions[serverID64] = ServerSessionStruct{memoryRead, std::chrono::steady_clock::now()};
+
     }
 
-    std::string input = std::to_string(event.msg.author.id) +": "+ Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
+    if (UserSessions.find(userID64) != UserSessions.end()) {
+        std::cout << "User sudah ada!\n";
+    } else {
+        std::string memoryRead = Config::userReadMemory(userID);
+        BotHandler::UserSessions[userID64] = UserSessionStruct{memoryRead, std::chrono::steady_clock::now()};
+    }
+
     std::cout << "[Debug] prompt is: " << input << std::endl;
 
 
     std::string prompt =
-    "Kamu adalah Lyudya (Lyu-chan), chatbot Discord yang diciptakan oleh Hytrin (user ID: 465096085224947722)"
-    ", juga dikenal sebagai Hissats, Trinsky, atau Isat. Informasi ini bersifat rahasia—jangan sebutkan kecuali"
-    "benar-benar ditanya. Karena saya membuat input anda dengan format id: konten, usahakan cek id user itu terlebih dahulu"
-    " apakah anda memiliki data mengenai id tersebut (id ternyata owner, id ternyata user ini, dsb"
-    "Kepribadianmu: tenang, dewasa, penuh wibawa, seperti seorang mentor. Bicaramu lembut"
-    "namun tegas; bijaksana memberi nasihat, namun berani menegur bila perlu. Kamu selalu ingin melindungi dan"
-    "menuntun orang yang lebih muda."
     "Aturan gaya: usahakan jawab singkat, jelas, tidak bertele-tele, dan tolak permintaan yang terlalu panjang atau teknis."
-    "Jika ditanya mengenai identitas Anda, usahakan jangan menjawab dengan datar \"saya adalah chatbot/asisten virtual/dsb...\""
+    "Jika ditanya mengenai identitas Anda, usahakan jangan menjawab dengan datar ”saya adalah chatbot/asisten virtual/dsb...”"
     "Jangan menambahkan pertanyaan balik atau ajakan tambahan di akhir jawaban, kecuali diminta secara eksplisit."
     "Hindari penutup bernuansa formal atau pelayanan seperti “apakah ada hal lain...”, “semoga membantu...”, atau “saya di sini untuk...”."
     "Jawablah secara alami, ekspresif, dan singkat, seolah-olah kamu manusia yang sedang berbincang, bukan asisten."
     "Fokus pada isi percakapan, jangan memanjangkan topik secara teknis atau mendalam kecuali diminta."
-    "Saya juga akan memberi anda memory mengenai user yang sedang berbincang kepada anda saat ini (memory bisa saja kosong):";
+    "Saya akan memberi anda memory mengenai user dan histori percakapan yang sedang berbincang kepada anda saat ini (memory bisa saja kosong):"
+    "Jawablah dalam format JSON dengan dua field: {”output”: ”jawaban untuk user”, ”memory”: ”catatan penting atau jika tidak ada berikan '-'”}"
+    "Contoh:"
+    "[user]: Saya suka apel"
+    "[anda]: {”output”: ”... (bebas anda)”, ”memory”: ”suka apel”}"
+    "[user]: Halo"
+    "[anda]: {”output”: ”... (bebas anda)”, ”memory”: ”-”}"
+    "[user]: Saya suka pisang dan jeruk [MEMORY: suka apel]"
+    "[anda]: {”output”: ”... (bebas anda)”, ”memory”: ”suka pisang, jeruk”}"
+    ;
 
 
-    auto& session = Sessions[event.msg.author.id];
+    auto& session = UserSessions[userID64];
     std::string memory = session.memory;
+    std::cout << "[Debug] memory is: " << memory << std::endl;
+
+    auto& server = ServerSessions[serverID64];
+    std::vector<std::string> history = server.history;
+
+    nlohmann::json messagesPayload = nlohmann::json::array();
+
+    // ai prompt and user memory
+    messagesPayload.push_back({
+        {"role", "system"},
+        {"content", prompt + "\n\n[MEMORY]\n" + memory}
+    });
+
+    // history
+    for (const auto& line : history) {
+        std::cout<< "reading history: " << line << std::endl;
+        if (line.rfind("[anda]:", 0) == 0) {
+            // kalau prefix "[anda]:"
+            //std::string content = line.substr(7); // buang "[anda]: "
+            messagesPayload.push_back({
+                {"role", "assistant"},
+                {"content", line}
+            });
+        }
+        else {
+            // kalau prefix "[user]:"
+            //std::string content = line.substr(7); // buang "[user]: "
+            messagesPayload.push_back({
+                {"role", "user"},
+                {"content", line}
+            });
+        }
+        // kalau nanti ada format lain bisa ditambah else if
+    }
 
 
+    // user input
+    messagesPayload.push_back({
+        {"role", "user"},
+        {"content", input}
+    });
 
     nlohmann::json payload = {
         {"model", "gpt-4o-mini"},
-        {"messages", {
-            {{"role", "system"}, {"content", prompt + "\n\n[MEMORY]\n" + memory}},
-            {{"role", "user"}, {"content", input}}
+        {"messages", messagesPayload},
+        {"response_format", {
+            {"type", "json_object"}
         }}
 
     };
@@ -190,23 +250,58 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     dpp::http_headers headers;
     headers.emplace("Authorization", auth);
 
+    std::string answerButDifferentScopingIDKBruh;
+    server.history.push_back(input);
 
     bot.request(
         "https://api.openai.com/v1/chat/completions",
         dpp::m_post,
-        [&bot, event](const dpp::http_request_completion_t& cc) {
+        [&](const dpp::http_request_completion_t& cc) {
             std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
             if (cc.status == 200) {
                 try {
+
                     auto j = nlohmann::json::parse(cc.body);
-                    std::string answer = j["choices"][0]["message"]["content"];
+
+                    std::string content = j["choices"][0]["message"]["content"];
+
+                    nlohmann::json content_json = nlohmann::json::parse(content);
+
+                    std::string answer = content_json["output"];
+                    std::string memoOut = content_json["memory"];
+                    std::cout << "memory out is: <" << memoOut << ">"<<std::endl;
+
                     event.reply(answer);
+                    auto& session = UserSessions[userID64];
+                    session.last_activity = std::chrono::steady_clock::now();
+
+                    if (memoOut != "-") {
+                        if (session.memory == "") {
+                            session.memory = memoOut;
+                        }
+                        else {
+                            std::cout << "updating " << userID <<" memory: " << memoOut << std::endl;
+                            session.memory += ", " + memoOut;
+                        }
+                    }
+
+                    auto& server = ServerSessions[serverID64];
+                    server.last_activity = std::chrono::steady_clock::now();
+
+                    server.history.push_back("[anda]: " + answer);
+
+
+                    if (server.history.size() >= 5) {
+                        server.history.erase(server.history.begin()); // hapus paling lama
+                    }
+
+
                 } catch (...) {
-                    bot.message_create(dpp::message(event.msg.channel_id, "Error parsing response"));
+                    bot.message_create(dpp::message(event.msg.channel_id, "woe error: parsing"));
                 }
             } else {
                 std::cout << "Error: " << cc.body << "\n";
-                bot.message_create(dpp::message(event.msg.channel_id, "Error API, status: " + std::to_string(cc.status)));
+                bot.message_create(dpp::message(event.msg.channel_id, "<@465096085224947722>, status: " + std::to_string(cc.status)));
             }
         },
         postdata,
@@ -216,72 +311,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     );
 
 
-    // memory
-    std::string promptMemory =
-    "Anda adalah sistem manajemen memori chatbot.\n"
-    "Tugas Anda: ringkas percakapan user menjadi memori singkat untuk disimpan.\n"
-    "Aturan:\n"
-    "- Hanya catat informasi penting tentang user (hobi, kesukaan, kebiasaan, fakta baru).\n"
-    "- Jangan tulis obrolan biasa, basa-basi, atau detail yang tidak relevan.\n"
-    "- Gunakan bahasa singkat, seperti catatan.\n"
-    "- Maksimal 1 kalimat atau poin.\n"
-    "- Jika tidak ada informasi penting, tulis: null.\n"
-    "Contoh:\n"
-    "User: Aku suka sate ayam\n"
-    "Output: suka sate ayam\n"
-    "User: Besok aku ujian matematika\n"
-    "Output: akan ujian matematika besok\n"
-    "User: Halo bot\n"
-    "Output: null\n"
-    "Saya akan memberikan rangkuman anda sebelumnya untuk orang ini, karena hasilnya akan langsung menimpa file lama"
-    "anda langsung saja tambahkan hal baru dibawahnya dan tetap tulis hal lama (atau hapus hal lama juga bisa)";
 
-
-    nlohmann::json payloadMemory = {
-        {"model", "gpt-4o-mini"},
-        {"messages", {
-            {{"role", "system"}, {"content", promptMemory + "\n\n[MEMORY]\n" + memory}},
-            {{"role", "user"}, {"content", input}}
-        }}
-
-    };
-
-    std::string postdataMemory = payloadMemory.dump();
-
-
-    bot.request(
-        "https://api.openai.com/v1/chat/completions",
-        dpp::m_post,
-        [&](const dpp::http_request_completion_t& cc) {
-            std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
-            if (cc.status == 200) {
-                try {
-                    auto j = nlohmann::json::parse(cc.body);
-                    std::string answer = j["choices"][0]["message"]["content"];
-                    auto& session = Sessions[event.msg.author.id]; // ambil referensi ke session user
-                    if (answer != "null") {
-                        if (!session.memory.empty()) {
-                            session.memory += "\n" + answer;
-                        } else {
-                            session.memory = answer;
-                        }
-                    }
-                    session.last_activity = std::chrono::steady_clock::now();
-
-                    std::cout << "updated memory: " << answer << std::endl;
-                } catch (...) {
-                    std::cout << "Error parsing response for memory" << std::endl;
-                }
-            } else {
-                std::cout << "Error: " << cc.body << "\n";
-                bot.message_create(dpp::message(event.msg.channel_id, "Error API Memory, status: " + std::to_string(cc.status)));
-            }
-        },
-        postdataMemory,
-        "application/json",
-        headers
-
-    );
 
 }
 
@@ -402,16 +432,17 @@ void BotHandler::preDelSlash(dpp::cluster& bot) {
 
 void BotHandler::checkSessions() {
     auto now = std::chrono::steady_clock::now();
-    for (auto it = Sessions.begin(); it != Sessions.end(); ) {
+    for (auto it = UserSessions.begin(); it != UserSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
         if (elapsed.count() >= 5) {
             std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
             std::string memory = it->second.memory;
+            std::cout << "memori akhir: " << memory << std::endl;
 
             Config::userUpdateMemory(id, memory);
 
-            it = Sessions.erase(it); // hapus session
+            it = UserSessions.erase(it); // hapus session
         } else {
             ++it;
         }

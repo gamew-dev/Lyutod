@@ -58,12 +58,18 @@ class BotHandler
 
     private:
 
-        struct UserSession {
+        struct UserSessionStruct {
             std::string memory;
             std::chrono::steady_clock::time_point last_activity;
         };
 
-        std::unordered_map<dpp::snowflake, UserSession> Sessions;
+        struct ServerSessionStruct {
+            std::vector<std::string> history;
+            std::chrono::steady_clock::time_point last_activity;
+        };
+
+        std::unordered_map<dpp::snowflake, UserSessionStruct> UserSessions;
+        std::unordered_map<dpp::snowflake, ServerSessionStruct> ServerSessions;
 
         std::time_t start                               ; // get bot start time
 
