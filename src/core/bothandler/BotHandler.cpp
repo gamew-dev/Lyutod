@@ -447,4 +447,20 @@ void BotHandler::checkSessions() {
             ++it;
         }
     }
+
+    for (auto it = ServerSessions.begin(); it != ServerSessions.end(); ) {
+        auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
+        if (elapsed.count() >= 5) {
+            std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;
+            std::string id = std::to_string(it->first);
+            std::vector<std::string> history = it->second.history;
+            //std::cout << "memori akhir: " << memory << std::endl;
+
+            Config::serverUpdateHistory(id, history);
+
+            it = ServerSessions.erase(it); // hapus session
+        } else {
+            ++it;
+        }
+    }
 }

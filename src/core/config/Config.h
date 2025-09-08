@@ -36,10 +36,10 @@ class Config
 
     static bool clientLoadConfig();
 
-    static void userUpdateMemory(const std::string id, const std::string memory);
+    static void userUpdateMemory(const std::string& id, const std::string& memory);
     static std::string userReadMemory(const std::string id);
 
-    static void serverUpdateMemory(const std::string id, const std::string memory);
+    static void serverUpdateHistory(const std::string& id, const std::vector<std::string>& history);
     static std::vector<std::string> serverReadMemory(const std::string id);
 
     static bool guildCreateConfig(const dpp::guild_create_t& event);

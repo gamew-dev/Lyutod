@@ -60,8 +60,8 @@ std::string Config::userReadMemory(const std::string id) {
 }
 
 
-void Config::userUpdateMemory(const std::string id,
-                              const std::string memory) {
+void Config::userUpdateMemory(const std::string& id,
+                              const std::string& memory) {
 
     std::string path = userPath + id + ".json";
 
@@ -90,7 +90,7 @@ void Config::userUpdateMemory(const std::string id,
 
 std::vector<std::string> Config::serverReadMemory(const std::string id) {
 
-    std::string path = serverPath + id + ".json";
+    std::string path = serverPath + id + ".txt";
     std::vector<std::string> history;
 
     std::ifstream file(path);
@@ -113,6 +113,15 @@ std::vector<std::string> Config::serverReadMemory(const std::string id) {
 }
 
 
+void Config::serverUpdateHistory(const std::string& id, const std::vector<std::string>& history) {
+    std::string path = serverPath + id + ".txt";
+    std::ofstream out(path);
+    if (out) {
+        for (const auto& line : history) {
+            out << line << "\n";
+        }
+    }
+}
 
 
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
