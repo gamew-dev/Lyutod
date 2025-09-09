@@ -109,29 +109,61 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
             bot.message_create(dpp::message(event.msg.channel_id, repl));
         }
 
-    if (
-        text == "shutdown" || text == "turn off")
-        {
-            if (std::to_string(tokoh.id) == Config::botOwner) {
-                checkSessions();
+    if (text.rfind("shutdown", 0) == 0) {
+        if (std::to_string(tokoh.id) == Config::botOwner) {
 
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
+            std::string arg = text.substr(8);
+            std::stringstream ss(arg);
+            std::string option;
+            ss >> option;
 
-                std::string repl = "Menonaktifkan bot dalam 5 detik...";
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
-
-                bot.start_timer([&bot](dpp::timer) {
-                    bot.shutdown();
-                }, 5);
-
+            int countdown = 60;
+            if (option == "now") {
+                countdown = 0;
             }
-            else {
-                repl = Responses::makeMsg("prohibited", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+            else if (!option.empty()) {
+                try {
 
+                    char unit = option.back();
+                    int value = std::stoi(option.substr(0, option.size()-1));
+
+                    if (unit == 's') {
+                        countdown = value;
+                    }
+                    else if (unit == 'm') {
+                        countdown = value * 60;
+                    }
+                    else {
+                        // detik brrti
+                        countdown = std::stoi(option);
+                    }
+                } catch (...) {
+                    // balek ke default klo gaje
+                    countdown = 60;
+                }
             }
 
-    	}
+            Config::isShutingDown = true;
+            checkSessions(bot, true);
+
+            bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
+
+            std::string repl;
+            if (countdown == 0) repl = "Menonaktifkan bot sekarang...";
+            else repl = "Menonaktifkan bot dalam " + std::to_string(countdown) + " detik...";
+
+            bot.message_create(dpp::message(event.msg.channel_id, repl));
+
+            bot.start_timer([&bot](dpp::timer) {
+                bot.shutdown();
+            }, countdown);
+
+        } else {
+            repl = Responses::makeMsg("prohibited", tokoh, false);
+            bot.message_create(dpp::message(event.msg.channel_id, repl));
+        }
+    }
+
 
 
 }
@@ -140,8 +172,12 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
     dpp::snowflake userID64 = event.msg.author.id;
     dpp::snowflake serverID64 = event.msg.guild_id;
+
     std::string userID = std::to_string(userID64);
     std::string serverID = std::to_string(serverID64);
+
+    dpp::snowflake channel = event.msg.channel_id;
+
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::string input = "[" + userID +"]: "+ clearText;
 
@@ -154,6 +190,8 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
             serverID64 = userID64; // berarti DM
             serverID = std::to_string(serverID64);
         }
+
+        event.reply("Sesi Chat dimulai, sesi akan berakhir setelah > 5 menit tidak ada pesan baru");
 
         auto memoryRead = Config::serverReadMemory(serverID);
         BotHandler::ServerSessions[serverID64] = ServerSessionStruct{memoryRead, std::chrono::steady_clock::now()};
@@ -171,22 +209,23 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
 
     std::string prompt =
-    "Aturan gaya: usahakan jawab singkat, jelas, tidak bertele-tele, dan tolak permintaan yang terlalu panjang atau teknis."
-    "Jika ditanya mengenai identitas Anda, usahakan jangan menjawab dengan datar ”saya adalah chatbot/asisten virtual/dsb...”"
-    "Jangan menambahkan pertanyaan balik atau ajakan tambahan di akhir jawaban, kecuali diminta secara eksplisit."
-    "Hindari penutup bernuansa formal atau pelayanan seperti “apakah ada hal lain...”, “semoga membantu...”, atau “saya di sini untuk...”."
+    "Aturan dan Gaya ngobrol: santai, singkat, jelas, nggak usah terlalu formal. "
+    "Boleh campur bahasa sehari-hari biar lebih manusiawi. Usahakan jawab pendek, jangan monoton. "
+    "Selalu cek Memory dahulu sebelum membuat jawaban, apakah user memiliki custom prompt atau jawaban dan konteks ada di memory"
+    "Jangan jawab datar dengan ”saya adalah chatbot/asisten”, lu itu temen ngobrol biasa. "
     "Jawablah secara alami, ekspresif, dan singkat, seolah-olah kamu manusia yang sedang berbincang, bukan asisten."
-    "Fokus pada isi percakapan, jangan memanjangkan topik secara teknis atau mendalam kecuali diminta."
-    "Saya akan memberi anda memory mengenai user dan histori percakapan yang sedang berbincang kepada anda saat ini (memory bisa saja kosong):"
+    "Hindari penutup formal kayak ”semoga membantu” atau ”apakah ada hal lain”. "
+    "Fokus ke isi obrolan, jangan jelasin teknis panjang lebar kecuali diminta. "
+    "Kalau ada hal sepele, jawab sepele juga, boleh bercanda dikit. "
+    "Saya bakal kasih memory tentang user dan histori obrolan (kadang kosong). "
     "Jawablah dalam format JSON dengan dua field: {”output”: ”jawaban untuk user”, ”memory”: ”catatan penting atau jika tidak ada berikan '-'”}"
     "Contoh:"
     "[user]: Saya suka apel"
-    "[anda]: {”output”: ”... (bebas anda)”, ”memory”: ”suka apel”}"
+    "[anda]: {”output”: ”ohh suka apel toh” (atau) ”ywdh sih”, ”memory”: ”suka apel”}"
     "[user]: Halo"
-    "[anda]: {”output”: ”... (bebas anda)”, ”memory”: ”-”}"
+    "[anda]: {”output”: ”halo bro” (atau) ”iyaa”, ”memory”: ”-”}"
     "[user]: Saya suka pisang dan jeruk [MEMORY: suka apel]"
-    "[anda]: {”output”: ”... (bebas anda)”, ”memory”: ”suka pisang, jeruk”}"
-    ;
+    "[anda]: {”output”: ”emang enak sih”, ”memory”: ”suka pisang, jeruk”}";
 
 
     auto& session = UserSessions[userID64];
@@ -208,22 +247,19 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     for (const auto& line : history) {
         std::cout<< "reading history: " << line << std::endl;
         if (line.rfind("[anda]:", 0) == 0) {
-            // kalau prefix "[anda]:"
-            //std::string content = line.substr(7); // buang "[anda]: "
+
             messagesPayload.push_back({
                 {"role", "assistant"},
                 {"content", line}
             });
         }
         else {
-            // kalau prefix "[user]:"
-            //std::string content = line.substr(7); // buang "[user]: "
             messagesPayload.push_back({
                 {"role", "user"},
                 {"content", line}
             });
         }
-        // kalau nanti ada format lain bisa ditambah else if
+
     }
 
 
@@ -264,6 +300,8 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                     auto j = nlohmann::json::parse(cc.body);
 
                     std::string content = j["choices"][0]["message"]["content"];
+                    int inputToken = j["usage"]["prompt_tokens"].get<int>();
+                    int outputToken = j["usage"]["completion_tokens"].get<int>();
 
                     nlohmann::json content_json = nlohmann::json::parse(content);
 
@@ -287,12 +325,15 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
                     auto& server = ServerSessions[serverID64];
                     server.last_activity = std::chrono::steady_clock::now();
+                    server.lastChannel = channel;
+                    server.inputUsage += inputToken;
+                    server.outputUsage += outputToken;
 
                     server.history.push_back("[anda]: " + answer);
 
 
                     if (server.history.size() >= 5) {
-                        server.history.erase(server.history.begin()); // hapus paling lama
+                        server.history.erase(server.history.begin());
                     }
 
 
@@ -430,11 +471,11 @@ void BotHandler::preDelSlash(dpp::cluster& bot) {
 
 //private
 
-void BotHandler::checkSessions() {
+void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     auto now = std::chrono::steady_clock::now();
     for (auto it = UserSessions.begin(); it != UserSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
-        if (elapsed.count() >= 5) {
+        if (elapsed.count() >= 5 || forced) {
             std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
             std::string memory = it->second.memory;
@@ -442,7 +483,11 @@ void BotHandler::checkSessions() {
 
             Config::userUpdateMemory(id, memory);
 
-            it = UserSessions.erase(it); // hapus session
+            if (!Config::isShutingDown) {
+                it = UserSessions.erase(it);
+            } else {
+                ++it;
+            }
         } else {
             ++it;
         }
@@ -450,15 +495,32 @@ void BotHandler::checkSessions() {
 
     for (auto it = ServerSessions.begin(); it != ServerSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
-        if (elapsed.count() >= 5) {
+        if (elapsed.count() >= 5 || forced) {
+
+            //std::cout << "Token usage: " << it->second.tokenUsage << std::endl;
+            std::cout << "Last channel: " << it->second.lastChannel << std::endl;
+
+            std::string inputToken = std::to_string(it->second.inputUsage),
+                        outputToken = std::to_string(it->second.outputUsage),
+                        totalToken = std::to_string(it->second.inputUsage + it->second.outputUsage);
+
+            std::string closing = (forced) ? "Sesi diakhiri untuk saat ini, anda masih bisa melanjutkan percakapan tetapi tidak akan tersimpan" : "sesi telah berakhir untuk membebaskan memory, anda bisa memulainya lagi kapan saja";
+            std::string repl =  closing + "\n"
+                               "||jngn kseringan open close yh bilek ntr hdd w mledak||\n"
+                               "token usage: " + inputToken + " : " + outputToken + " : " + totalToken;
+            bot.message_create(dpp::message(it->second.lastChannel, repl));
+
             std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
             std::vector<std::string> history = it->second.history;
-            //std::cout << "memori akhir: " << memory << std::endl;
 
             Config::serverUpdateHistory(id, history);
 
-            it = ServerSessions.erase(it); // hapus session
+            if (!Config::isShutingDown) {
+                it = ServerSessions.erase(it);
+            } else {
+                ++it;
+            }
         } else {
             ++it;
         }

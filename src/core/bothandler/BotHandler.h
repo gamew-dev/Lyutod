@@ -54,9 +54,11 @@ class BotHandler
              updatePresence     (      dpp::cluster& bot);
 
 
-    void checkSessions();
+    void checkSessions(dpp::cluster& bot, const bool& forced);
+
 
     private:
+
 
         struct UserSessionStruct {
             std::string memory;
@@ -66,6 +68,9 @@ class BotHandler
         struct ServerSessionStruct {
             std::vector<std::string> history;
             std::chrono::steady_clock::time_point last_activity;
+            dpp::snowflake lastChannel;
+            int inputUsage = 0;
+            int outputUsage = 0;
         };
 
         std::unordered_map<dpp::snowflake, UserSessionStruct> UserSessions;

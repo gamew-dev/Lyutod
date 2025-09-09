@@ -29,6 +29,8 @@ class Config
 
     public:
 
+    static inline bool isShutingDown = false;
+
     static inline std::string botOwner,
                               botToken,
                               botVersi,
