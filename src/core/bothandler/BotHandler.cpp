@@ -1,16 +1,37 @@
+/**
+ *  InputHandler.cpp
+ *
+ *  @brief Definition of public functions from the InputHandler class.
+ *
+ *  This file defines functions to process and assign each input accordingly.
+ *
+ *  @author Hissats
+ */
+
+
+
 #include "BotHandler.h"
 
 
-//ctor
+///ctor
+// only assign time value
 BotHandler::BotHandler() {
     // assign the bot time start value when creating object
     start = std::time(nullptr);
-    Config::clientLoadConfig();
 }
 
 
-
-
+/**
+ *  handleMessage
+ *
+ *  This function take care of message type input and sort them
+ *  into their respective type accordingly to create an answer.
+ *  See also: Responses.h
+ *
+ *  @param the bot itself to be able replying
+ *  @param message event class that has who sends it, what its content, etc etc
+ *
+ */
 void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     // Initialize variables for the msg author and it's content
@@ -21,6 +42,8 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
     // Lowercasing the message
     std::transform(text.begin(), text.end(), text.begin(), ::tolower);
 
+
+    // i think i should've used else if instead of all if, we'll do that later ^_^
     if (
         text == "halo" || text == "hai"  ||
         text == "woi"  || text == "hi"    )
@@ -39,12 +62,12 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         }
 
 
+    // yet another hardcoded experiment
     if (
         text == "test" || text == "tes")
         {
             dpp::message aaa(event.msg.channel_id, "p");
 
-            //aaa.set_allowed_mentions(true, true, true, true);
             bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
 
             aaa.add_component(
@@ -59,7 +82,6 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
                 )
             );
 
-            /* Reply to the user with our message. */
             event.reply(aaa);
     	}
 
@@ -109,15 +131,27 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
             bot.message_create(dpp::message(event.msg.channel_id, repl));
         }
 
+    /// Shutdown command
+    //  this one is unique, instead of using slash command Im using this, why? well its cool tho
+    //  the function is still experiment and i dont know hos stable it is
+    //  usage: shutdown <option>
+    //  ex: shutdown now, shutdown 30s, shutdown 5m, other than that it will be treated as default: 60s
     if (text.rfind("shutdown", 0) == 0) {
+
+        /// Bot owner
+        //  only bot owner who has access to it
+        //  see also: config.h/cpp
         if (std::to_string(tokoh.id) == Config::botOwner) {
 
+            // cut the shutdown string
             std::string arg = text.substr(8);
             std::stringstream ss(arg);
             std::string option;
             ss >> option;
 
+            // set the default value here
             int countdown = 60;
+
             if (option == "now") {
                 countdown = 0;
             }
@@ -134,19 +168,27 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
                         countdown = value * 60;
                     }
                     else {
-                        // detik brrti
+                        // if there are no timer flag (minutes or second)
+                        // then it will be second for default value
                         countdown = std::stoi(option);
                     }
                 } catch (...) {
-                    // balek ke default klo gaje
+                    // treated as default if all of the option are invalid
                     countdown = 60;
                 }
             }
 
+            // a global variabel (static) that... that uh..
             Config::isShutingDown = true;
+
+            // check if there are still active chatbot sessions
+            // the last parameter (true) is set to force save the
+            // session as soon as the shutdown command given instead
+            // of default 5 minutes
             checkSessions(bot, true);
 
             bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
+
 
             std::string repl;
             if (countdown == 0) repl = "Menonaktifkan bot sekarang...";
@@ -158,18 +200,32 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
                 bot.shutdown();
             }, countdown);
 
-        } else {
+        }
+
+        // of course there are some ppl that would try this
+        else {
             repl = Responses::makeMsg("prohibited", tokoh, false);
             bot.message_create(dpp::message(event.msg.channel_id, repl));
         }
     }
-
-
-
 }
+
+
+
+/**
+ *  handleAiRequest
+ *
+ *  This function manages the chatbot session, input and output and most importanly,
+ *  chatGPT API: header, payload, etc.
+ *
+ *  @param the bot itself to be able replying
+ *  @param message event class contain the message/prompt for the ai
+ *
+ */
 
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
 
+    /// basic variable
     dpp::snowflake userID64 = event.msg.author.id;
     dpp::snowflake serverID64 = event.msg.guild_id;
 
@@ -181,13 +237,22 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::string input = "[" + userID +"]: "+ clearText;
 
-    std::cout << "get server id: " << serverID << std::endl;
+
+    /// Session availability
+    //  below is used for checking is the user/server already has an active session or not
+    //  the code will create a new Session variable by checking the id and call the readExternal
+    //  files function and will create an external files if there was nowhere to be found
+    //  (see also: config.h/cpp)
+    //
+    //  if the id for serverID is 0 that mean it is a DM
+    //  though there's a possibility that the id of an user and a server is same, or not.. idk
+    //  anywayy... what are the chances right??? ^_^
 
     if (ServerSessions.find(serverID64) != ServerSessions.end()) {
         std::cout << "server sudah memiliki session" << std::endl;
     } else {
         if (serverID64 == 0) {
-            serverID64 = userID64; // berarti DM
+            serverID64 = userID64;
             serverID = std::to_string(serverID64);
         }
 
@@ -208,15 +273,17 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::cout << "[Debug] prompt is: " << input << std::endl;
 
 
+    /// Ai prompt
+    //  the brainwasing spell magic
     std::string prompt =
-    "Aturan dan Gaya ngobrol: santai, singkat, jelas, nggak usah terlalu formal. "
-    "Boleh campur bahasa sehari-hari biar lebih manusiawi. Usahakan jawab pendek, jangan monoton. "
-    "Selalu cek Memory dahulu sebelum membuat jawaban, apakah user memiliki custom prompt atau jawaban dan konteks ada di memory"
+    "Aturan dan Gaya ngobrol: santai, singkat, jelas, gak usah trlalu formal. "
+    "Boleh campur bahasa sehari2 biar lebih manusiawi. ushakan jwb pendek, jngan monoton. "
+    "Selalu cek Memory sbelum mmbuat jawaban, apakah user memiliki custom prompt/ jawaban dan konteks ada di memory"
     "Jangan jawab datar dengan ”saya adalah chatbot/asisten”, lu itu temen ngobrol biasa. "
     "Jawablah secara alami, ekspresif, dan singkat, seolah-olah kamu manusia yang sedang berbincang, bukan asisten."
-    "Hindari penutup formal kayak ”semoga membantu” atau ”apakah ada hal lain”. "
+    "Hindari pnutup formal kayak ”semoga membantu” atau ”apakah ada hal lain”. "
     "Fokus ke isi obrolan, jangan jelasin teknis panjang lebar kecuali diminta. "
-    "Kalau ada hal sepele, jawab sepele juga, boleh bercanda dikit. "
+    "Kalau ada hal sepele, jawab sepele juga, boleh bercanda dikit. ikuti perkembangan jaman juga, gunakan emot nangis buat ketawa"
     "Saya bakal kasih memory tentang user dan histori obrolan (kadang kosong). "
     "Jawablah dalam format JSON dengan dua field: {”output”: ”jawaban untuk user”, ”memory”: ”catatan penting atau jika tidak ada berikan '-'”}"
     "Contoh:"
@@ -228,6 +295,11 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     "[anda]: {”output”: ”emang enak sih”, ”memory”: ”suka pisang, jeruk”}";
 
 
+    /// History & Memory fetch
+    //  call the session with the given id and store it.
+    //  the user memory usage is as simple as concantenate it
+    //  while the history vector would need a bit of looping
+    //  for make it a good use
     auto& session = UserSessions[userID64];
     std::string memory = session.memory;
     std::cout << "[Debug] memory is: " << memory << std::endl;
@@ -235,6 +307,11 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     auto& server = ServerSessions[serverID64];
     std::vector<std::string> history = server.history;
 
+
+    /// JSON payload for the API request.
+    //  contains message info, chat history, prompt, and user memory.
+    //  this will be merged into the main payload later and send to
+    //  the API Request (see variable below).
     nlohmann::json messagesPayload = nlohmann::json::array();
 
     // ai prompt and user memory
@@ -243,7 +320,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
         {"content", prompt + "\n\n[MEMORY]\n" + memory}
     });
 
-    // history
+    // chat history
     for (const auto& line : history) {
         std::cout<< "reading history: " << line << std::endl;
         if (line.rfind("[anda]:", 0) == 0) {
@@ -269,26 +346,37 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
         {"content", input}
     });
 
+
+    /// Json Payload variable
+    //  here it is, the payload variable that what we gonna send to the API
+    //  in here it contains the model of the ai that we are using, messages
+    //  from the logic above, and a response format
     nlohmann::json payload = {
         {"model", "gpt-4o-mini"},
         {"messages", messagesPayload},
         {"response_format", {
             {"type", "json_object"}
         }}
-
     };
+
+    /// convert json payload into string
     std::string postdata = payload.dump();
-    //std::cout << "[Debug] Final Payload: " << postdata << std::endl;
 
 
+    /// Request headers
     std::string auth = "Bearer " + Config::gptToken;
-
     dpp::http_headers headers;
     headers.emplace("Authorization", auth);
 
-    std::string answerButDifferentScopingIDKBruh;
+    /// History
+    //  push the user input/question into the history vector
+    //  since we already used it in above has no purpose now
+    //  might aswell save it now
     server.history.push_back(input);
 
+
+    /// Request
+    //  here it will do the thing, that and something
     bot.request(
         "https://api.openai.com/v1/chat/completions",
         dpp::m_post,
@@ -296,20 +384,36 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
             std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
             if (cc.status == 200) {
                 try {
-
+                    /// Success
+                    //  if the callback completion status is 200 or success
+                    //  we got the ai answer. however, the content is still in
+                    //  json form and we still need to parse it
                     auto j = nlohmann::json::parse(cc.body);
 
+                    /// Parsing
+                    //  string content has the value of the ai message output, but...
+                    //  in the brainwashing prompt above, we ask the output to be formated in json
+                    //  "{output: chat, memory: -}", therefore we need to parse it again
+                    //  while the int token, well.. hold the token usage value
                     std::string content = j["choices"][0]["message"]["content"];
                     int inputToken = j["usage"]["prompt_tokens"].get<int>();
                     int outputToken = j["usage"]["completion_tokens"].get<int>();
 
+                    // parse the string content
                     nlohmann::json content_json = nlohmann::json::parse(content);
-
                     std::string answer = content_json["output"];
                     std::string memoOut = content_json["memory"];
                     std::cout << "memory out is: <" << memoOut << ">"<<std::endl;
 
+                    /// Reply
+                    //  now, since we got the answer that we wanted, we can reply the original
+                    //  chat with this event.reply()
                     event.reply(answer);
+
+                    /// Session update
+                    //  update the user and server session, we use auto& to automaticly change
+                    //  the original value.
+                    //  most of the logic below this are self explanatory
                     auto& session = UserSessions[userID64];
                     session.last_activity = std::chrono::steady_clock::now();
 
@@ -331,7 +435,8 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
                     server.history.push_back("[anda]: " + answer);
 
-
+                    /// Todo: change into config for better control
+                    //  well, its a max size of history that we gonna send
                     if (server.history.size() >= 5) {
                         server.history.erase(server.history.begin());
                     }
@@ -355,6 +460,17 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
 
 }
+
+/**
+ *  handleSlash
+ *
+ *  It just a wrapper, throw it again into command file
+ *  See also: Base_commands.h
+ *
+ *  @param the bot itself to be able replying
+ *  @param slashcommand event class
+ *
+ */
 
 void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
@@ -386,6 +502,15 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
 }
 
+/**
+ *  handleButtonEvent
+ *
+ *  Currrently just testing and hardcoded for test chat
+ *
+ *  @param the bot itself
+ *  @param button click event class
+ *
+ */
 
 void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
 
@@ -399,12 +524,27 @@ void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t&
 
 }
 
+/**
+ *  handleGuildNewMem
+ *
+ *  Manage new user that joined, currently paired with
+ *  autoRole command and greet chat
+ *
+ *  @param the bot itself to be able replying and assign role
+ *  @param guild member add event class
+ *
+ */
 
 void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_add_t& event) {
 
+    /// Basic variable
     const dpp::user& tokoh = *(event.added.get_user());
     const dpp::snowflake server = event.added.guild_id;
 
+    /// Greet
+    //  honestly, there are other way to get the guild/server using
+    //  event.adding_guild, idk why i didn't used it in the first time
+    //  probably leftover when experimenting, but hey... it work tho
     bot.guild_get(server, [&bot, &tokoh](const dpp::confirmation_callback_t& cb) {
         if (!cb.is_error()) {
             auto g = std::get<dpp::guild>(cb.value);
@@ -413,6 +553,8 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
         }
     });
 
+    /// Get guild config
+    //  is the guild using autorole?
     auto guildConfig = Config::guildLoadConfig(std::to_string(static_cast<uint64_t>(server)));
 
     std::cout << "[LOG]New member in server: " << guildConfig.name << std::endl;
@@ -429,6 +571,15 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
     }
 }
 
+/**
+ *  updatePresence
+ *
+ *  presence setting, randomly select one from Presence vector
+ *  see also: BotHandler.h
+ *
+ *  @param the bot itself
+ *
+ */
 
 void BotHandler::updatePresence(dpp::cluster& bot) {
 
@@ -462,17 +613,30 @@ void BotHandler::preDelSlash(dpp::cluster& bot) {
     bot.guild_bulk_command_delete(1270735247922692177);
 }
 
-
-
-
-
-
-
-
-//private
+/**
+ *  checkSessions
+ *
+ *  checking the chatbot session every 5 minutes (since bot online), for every
+ *  session that has "last time chatted" more that 5 minutes would be closed and
+ *  saved externally
+ *  see also: Config.h/cpp
+ *
+ *  @param the bot itself
+ *  @param is forced to stop boolean value
+ *
+ */
 
 void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
+    /// Time getter
     auto now = std::chrono::steady_clock::now();
+
+    /// Checking every user that has an active session
+    //  there are 2 modes for closing session, which is normal and forced
+    //  both are controled using the forced parameter
+    //
+    //  normal: sessions are written externally and cleared from memory
+    //  forced: (e.g., on shutdown) sessions are saved but not cleared,
+    //  but new messages are no longer recorded.
     for (auto it = UserSessions.begin(); it != UserSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
         if (elapsed.count() >= 5 || forced) {
@@ -493,11 +657,12 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
         }
     }
 
+    /// Server session
+    //  same with user session but with more variable logic
     for (auto it = ServerSessions.begin(); it != ServerSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
         if (elapsed.count() >= 5 || forced) {
 
-            //std::cout << "Token usage: " << it->second.tokenUsage << std::endl;
             std::cout << "Last channel: " << it->second.lastChannel << std::endl;
 
             std::string inputToken = std::to_string(it->second.inputUsage),
@@ -508,6 +673,8 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
             std::string repl =  closing + "\n"
                                "||jngn kseringan open close yh bilek ntr hdd w mledak||\n"
                                "token usage: " + inputToken + " : " + outputToken + " : " + totalToken;
+
+            /// Announce the closing
             bot.message_create(dpp::message(it->second.lastChannel, repl));
 
             std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;

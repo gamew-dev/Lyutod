@@ -1,8 +1,7 @@
-
 /**
- * Bapenikov
+ * Lyudya
  *
- * Discord random reply chat bot
+ * Discord multipurpose bot
  * A bot written to have some fun and spice up chat
  *
  * @author Hissats
@@ -10,26 +9,36 @@
 
 
 #include "BotHandler.h"
-//#include "Terminal.h"
-
 
 int main() {
 
+    // Local variabel to save the token
+    // I know it's bad conduct but whatever, later i fix it lol
+    // TODO: maybe throw exception
     std::string token;
 
+    // Load bot config, the function return true if the config valid
     if (Config::clientLoadConfig()) {
         token = Config::botToken;
     }
-
-    // terminate the program if token unavailable or invalid
     else {
-        std::cout << "no token" << std::endl;
+        std::cout << "no token files found" << std::endl;
         return 1;
     }
 
-    //bot.on_log(dpp::utility::cout_logger());
+    // Initialize the bot object
     dpp::cluster bot(token, dpp::i_all_intents);
+    // Initialize custom class Bothandler object
+    // the BotHandler class is a event handler designed to process the input
+    // given by the event, more on it in the file @BotHandler.h/cpp
+    BotHandler handler;
 
+
+    // From now on, you are gonna see most bot event logic "bot.on_something".
+    // Each function is called an event listener and works asynchronously.
+    // Every supported event is handled here and passed to the BotHandler class.
+
+    // D++ built in log system, though in this function i only filtered the [Info] only
     bot.on_log([](const dpp::log_t& event) {
         if (event.severity == dpp::ll_info) {
                 std::cout << "[INFO] " << event.message << std::endl;
@@ -37,26 +46,25 @@ int main() {
     });
 
 
-    // initialize the object of InputHandler class and
-    // register the bot config, identity, and slash
-
-    BotHandler handler;
-
-    // when the bot successfully connects to Discord,
-    // it will initialize the slash command declaration once and,
-    // set the bot presence status
+    // When the bot started active
     bot.on_ready([&bot, &handler](const dpp::ready_t& event) {
 
         std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
 
+        // Registering slash command
+        // keep in mind as far as now, this code is still testing
+        // and some of the code is still hardcoded including this one
         handler.preRegSlash(bot);
 
-        // presence setting and output message when online
+        // First time startup resence setting
         bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
 
+        // Bot timer, for every 5 minutes bot is changing presence status
+        // and checking chatbot sessions
         bot.start_timer([&bot, &handler](const dpp::timer& timer){
 
             handler.updatePresence(bot);
+
             if (!Config::isShutingDown) {
                 handler.checkSessions(bot, false);
             }
@@ -74,11 +82,12 @@ int main() {
         // Avoid bot self reply
         if (event.msg.author.id == bot.me.id) return;
 
-        // A simple logger for checking messagge content and who sends it
+
         std::cout << event.msg.author.global_name << ": " << event.msg.content << std::endl;
 
         // Throw the event for InputHandler to manage
-
+        // for every message that mentions the bot, it
+        // will be treat as chatbot for ai
         if (Utils::isMentioned(bot, event)) {
             std::cout << "bot Mentioned" << std::endl;
             handler.handleAiRequest(bot, event);
@@ -87,7 +96,7 @@ int main() {
         }
 
 
-    }); // baca-bales chat
+    }); // chat
 
 
 
@@ -99,26 +108,36 @@ int main() {
     }); //slash command
 
 
+    // Button clicked...
     bot.on_button_click([&bot, &handler] (const dpp::button_click_t& event) {
 
         handler.handleButtonEvent(bot, event);
     });
 
-    // When a new member shows up
 
+    // When a new member shows up
     bot.on_guild_member_add([&bot, &handler](const dpp::guild_member_add_t& event) {
 
         handler.handleGuildNewMem(bot, event);
     });
 
 
+    // This logic is a bit annoying tbh, this one called for
+    // every bot startup and when joined new server/guild.
+    // Since this bot use multi config for each guild (see Config.h/cpp)
+    // and we dont want it to be rewriten every bot startup, we can
+    // use the built in dpp::run_once<>
     bot.on_guild_create([&bot](const dpp::guild_create_t& event) {
 
 
+        // yet again, for now this code only hardcoded for my log status
+        // see issues and to do for further info
         if (dpp::run_once<struct logging>()) {
             std::cout << "[INFO] Checking guild cache" <<std::endl;
         }
 
+        // Call the guild create config function and return true if succes
+        // send a greeting/join chat in server system channel
         if (Config::guildCreateConfig(event)) {
             std::string repl = Responses::makeMsg("invite", bot.me, false);
             bot.message_create(dpp::message(event.created.system_channel_id, repl));
