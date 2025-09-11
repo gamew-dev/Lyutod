@@ -59,7 +59,7 @@ std::string Utils::getPing(const dpp::cluster& bot) {
 std::string Utils::clearMention(const std::string& message, const std::string& id) {
     std::string content = message;
 
-    // Pola mention bisa <@id> atau <@!id>
+
     std::string mention1 = "<@" + id + ">";
     std::string mention2 = "<@!" + id + ">";
 
@@ -71,7 +71,6 @@ std::string Utils::clearMention(const std::string& message, const std::string& i
         content.erase(pos, mention2.length());
     }
 
-    // Hilangkan spasi berlebih
     if (!content.empty() && content.front() == ' ')
         content.erase(0, content.find_first_not_of(" "));
 

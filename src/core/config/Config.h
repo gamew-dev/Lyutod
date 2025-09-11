@@ -7,20 +7,13 @@
  * configs, memory, history, and server setting.
  *
  * Responsibilities include:
- * - Loading client configuration (tokens, version, etc.)
- * - Updating and reading user memory for chatbot sessions
- * - Updating and reading server chat history
- * - Creating, loading, and removing guild-specific configurations
- * - Managing guild auto-role settings
+ * - load client(bot) configs: tokens, version, etc.
+ * - updating and reading user memory and server history for chatbot sessions
+ * - manage guild-specific configurations
  *
- * The GC struct (Guild Config) stores guild-specific data such as
- * IDs, owner information, and auto-role settings.
- *
- * @note All members are static since configuration is shared across the bot.
- *
+ * @note All members are static since configuration is shared across the program.
  * @author Hissats
  *
- * i used chatgpt for the docs :')
  */
 
 #ifndef CONFIG_H
@@ -30,6 +23,8 @@
 
 
 /// Guild config struct
+//  The GC struct (Guild Config) stores guild-specific data such as
+//  IDs, owner information, and auto-role settings.
 struct GC {
     std::string name ,
                 id,

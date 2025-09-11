@@ -145,7 +145,6 @@ int main() {
 
     });
 
-
     // Start the bot
     bot.start(dpp::st_wait);
 }

@@ -1,5 +1,24 @@
+/**
+ *  Config.cpp
+ *
+ *  @brief Implementation of static class Config
+ *
+ *  This file defines functions to process and assign each input accordingly.
+ *
+ *  @author Hissats
+ */
+
 #include "Config.h"
 
+/**
+*   ClientLoadConfig
+*
+*   Load the bot config, if found and valid then load and return true
+*   While the file nowhere to be found then create new one and return
+*   false which mean terminate the program
+*   See also: main.cpp
+*
+*/
 
 bool Config::clientLoadConfig() {
 
@@ -32,6 +51,18 @@ bool Config::clientLoadConfig() {
 
 }
 
+/**
+ *  userReadMemory
+ *
+ *  This function read external files for chatbot user memory. given by the parameter,
+ *  the program automatically search based on the id, if there was none to be found it
+ *  will return empty string and create a new file
+ *
+ *  @param user id
+ *  @return user id memory string
+ *
+ */
+
 std::string Config::userReadMemory(const std::string id) {
 
     std::string path = userPath + id + ".json";
@@ -59,6 +90,16 @@ std::string Config::userReadMemory(const std::string id) {
     return memory;
 }
 
+/**
+ *  userUpdateMemory
+ *
+ *  As the name subject, this methods update the user memory. The program would
+ *  overwrite the old memory
+ *
+ *  @param user id
+ *  @param user memory
+ *
+ */
 
 void Config::userUpdateMemory(const std::string& id,
                               const std::string& memory) {
@@ -86,7 +127,16 @@ void Config::userUpdateMemory(const std::string& id,
 
 }
 
-
+/**
+ *  serverReadMemory
+ *
+ *  Same as userRead, but with vector/array of string. Each server only has 1 file,
+ *  while dm chatbot use the user id for server id
+ *
+ *  @param server id
+ *  @return server id history string vector
+ *
+ */
 
 std::vector<std::string> Config::serverReadMemory(const std::string id) {
 
@@ -112,6 +162,15 @@ std::vector<std::string> Config::serverReadMemory(const std::string id) {
     return history;
 }
 
+/**
+ *  serverUpdateHistory
+ *
+ *  Work the same as userUpdate...
+ *
+ *  @param server id
+ *  @param server chat history
+ *
+ */
 
 void Config::serverUpdateHistory(const std::string& id, const std::vector<std::string>& history) {
     std::string path = serverPath + id + ".txt";
@@ -123,10 +182,21 @@ void Config::serverUpdateHistory(const std::string& id, const std::vector<std::s
     }
 }
 
+/**
+ *  guildCreateConfig
+ *
+ *  Called when bot invited to new server or bot startup, bot will run a lop for every server
+ *  or guild that it joined. If the filename already exist it would just return and will be skipped
+ *  However, if the file is none to be found or, the bot just joined a new server of course...
+ *  it will create a new file
+ *
+ *  @param guild create event
+ *
+ */
 
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
-    ;
+
     std::string id = std::to_string(static_cast<uint64_t>(event.created.id));
     std::string name = event.created.name;
     std::string path = guildPath + id + ".json";
@@ -160,6 +230,18 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
         return true;
     }
 }
+
+/**
+ *  guildSaveAutoRole
+ *
+ *  A function to be paired with autorole command, pretty much self explanotary
+ *  Todo: find a better way
+ *
+ *  @param guild id
+ *  @param is autorole enabled? dunno lol
+ *  @param the role selected id
+ *
+ */
 
 void Config::guildSaveAutoRole(const std::string& guild_id,
                                const bool& autorole,
