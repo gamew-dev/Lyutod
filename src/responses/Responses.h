@@ -45,10 +45,12 @@ class Responses
 
         // Tambahan reaksi hari Sabtu & Minggu
         int hari = Utils::getDay();
-        if (hari == 6) { // Sabtu
+        if (hari == 6 && !Config::cooldownBsok) { // Sabtu
             jawab += "\nbsok minggu <a:a_nice:1370082910991945778>";
-        } else if (hari == 0) { // Minggu
+            Config::cooldownBsok = true;
+        } else if (hari == 0 && !Config::cooldownBsok) { // Minggu
             jawab += "\nbsok senin <:mengsedih:1370066473959297024>";
+            Config::cooldownBsok = true;
         }
 
         return jawab;

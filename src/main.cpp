@@ -64,6 +64,7 @@ int main() {
         bot.start_timer([&bot, &handler](const dpp::timer& timer){
 
             handler.updatePresence(bot);
+            Config::cooldownBsok = false;
 
             if (!Config::isShutingDown) {
                 handler.checkSessions(bot, false);

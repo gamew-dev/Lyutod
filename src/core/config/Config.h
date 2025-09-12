@@ -52,6 +52,7 @@ class Config
     public:
 
     static inline bool isShutingDown = false;
+    static inline bool cooldownBsok = false;
 
     static inline std::string botOwner,
                               botToken,
