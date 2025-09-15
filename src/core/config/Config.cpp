@@ -196,10 +196,10 @@ void Config::serverUpdateHistory(const std::string& id, const std::vector<std::s
 
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
-
-    std::string id = std::to_string(static_cast<uint64_t>(event.created.id));
+    dpp::snowflake id = event.created.id;
+    std::string idstr = std::to_string(id);
     std::string name = event.created.name;
-    std::string path = guildPath + id + ".json";
+    std::string path = guildPath + idstr + ".json";
 
     std::ifstream file(path);
     if(file.good()) {
@@ -213,12 +213,15 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
         nlohmann::json filejson;
 
         filejson["Name"] = name;
-        filejson["ID"] = id;
+        filejson["ID"] = idstr;
         filejson["ownerID"] = owner;
 
         filejson["autoRoleEnabled"] = false;
         filejson["autoRoleName"] = "";
         filejson["autoRoleID"] = "";
+
+        filejson["memberCountEnabled"] = false;
+        filejson["memberCount"] = event.created.member_count;
 
 
 
@@ -245,9 +248,10 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
 void Config::guildSaveAutoRole(const std::string& guild_id,
                                const bool& autorole,
-                               const std::string& role_id) {
+                               const dpp::snowflake& role_id) {
 
     std::string path = guildPath + guild_id + ".json";
+    std::string role_id_str = std::to_string(role_id);
 
     std::ifstream file(path);
 
@@ -262,10 +266,10 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
         return;
     }
 
-    std::string role_name = "<@" + role_id + ">";
+    std::string role_name = "<@" + role_id_str + ">";
 
     filejson["autoRoleEnabled"] = autorole;
-    filejson["autoRoleID"] = role_id;
+    filejson["autoRoleID"] = role_id_str;
     filejson["autoRoleName"] = role_name;
 
     std::ofstream out(path);
@@ -288,11 +292,13 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
 
         data.name = fileJson.value("Name", "");
         if (data.name != "") std::cout << "opening " << data.name << " config" << std::endl;
-        data.id = fileJson.value("ID", "");
-        data.ownerID = fileJson.value("ownerID", "");
+        data.id = std::stoull(fileJson.value("ID", "0"));
+        data.ownerID = std::stoull(fileJson.value("ownerID", "0"));
         data.autoRoleEnabled = fileJson.value("autoRoleEnabled", false);
         data.autoRoleName = fileJson.value("autoRoleName", "");
-        data.autoRoleID = fileJson.value("autoRoleID", "");
+        data.autoRoleID = std::stoull(fileJson.value("autoRoleID", "0"));
+        data.memberCountEnabled = fileJson.value("autoRoleEnabled", false);
+        //data.memberCount = fileJson
 
     }
 

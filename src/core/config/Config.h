@@ -26,13 +26,16 @@
 //  The GC struct (Guild Config) stores guild-specific data such as
 //  IDs, owner information, and auto-role settings.
 struct GC {
-    std::string name ,
-                id,
+    std::string name;
+    dpp::snowflake id,
                 ownerID;
 
     bool autoRoleEnabled;
-    std::string autoRoleName,
-                autoRoleID;
+    std::string autoRoleName;
+    dpp::snowflake autoRoleID;
+
+    bool memberCountEnabled;
+    int memberCount;
 
 };
 
@@ -77,7 +80,7 @@ class Config
     static void guildRemoveConfig(const std::string& guild_id),
                 guildSaveAutoRole(const std::string& guild_id,
                                   const bool&        autorole,
-                                  const std::string& role_id);
+                                  const dpp::snowflake& role_id);
 
     /// Server config getter
     //  i need to find an other way

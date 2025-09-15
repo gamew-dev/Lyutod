@@ -238,6 +238,8 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string input = "[" + userID +"]: "+ clearText;
 
 
+
+
     /// Session availability
     //  below is used for checking is the user/server already has an active session or not
     //  the code will create a new Session variable by checking the id and call the readExternal
