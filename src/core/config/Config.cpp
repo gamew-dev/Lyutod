@@ -297,8 +297,8 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
         data.autoRoleEnabled = fileJson.value("autoRoleEnabled", false);
         data.autoRoleName = fileJson.value("autoRoleName", "");
         data.autoRoleID = std::stoull(fileJson.value("autoRoleID", "0"));
-        data.memberCountEnabled = fileJson.value("autoRoleEnabled", false);
-        //data.memberCount = fileJson
+        data.memberCountEnabled = fileJson.value("memberCountEnabled", false);
+        data.memberCount = fileJson.value("memberCount", 0);
 
     }
 

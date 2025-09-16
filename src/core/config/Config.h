@@ -80,7 +80,8 @@ class Config
     static void guildRemoveConfig(const std::string& guild_id),
                 guildSaveAutoRole(const std::string& guild_id,
                                   const bool&        autorole,
-                                  const dpp::snowflake& role_id);
+                                  const dpp::snowflake& role_id),
+                guildMemberCount (const std::string& guild_id);
 
     /// Server config getter
     //  i need to find an other way

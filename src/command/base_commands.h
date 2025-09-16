@@ -19,6 +19,8 @@ class Commands {
                 command_set_autorole(      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
                 command_user_info   (      dpp::cluster& bot,
+                                     const dpp::slashcommand_t& event),
+                command_member_count(      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event);
 
     static inline std::map<std::string, dpp::slashcommand> commands_list {
