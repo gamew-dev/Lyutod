@@ -37,6 +37,7 @@ struct GC {
     bool memberCountEnabled;
     int memberCount;
 
+    //todo: membercount channel id array
 };
 
 

@@ -41,6 +41,27 @@ class Commands {
 
             {"5", dpp::slashcommand("user_info", "lihat profil user", 0)
                   .add_option(dpp::command_option(dpp::co_user, "user", "pilih satu", false))
+            },
+            // census
+            {"6", dpp::slashcommand("set_member_count", "setting channel jumlah member", 0)
+                  .add_option(
+                      dpp::command_option(dpp::co_sub_command, "add", "aktifkan member count")
+                          .add_option(
+                              dpp::command_option(dpp::co_string, "mode", "jenis member yang dihitung", true)
+                                  .add_choice(dpp::command_option_choice("semua members", "all"))
+                                  .add_choice(dpp::command_option_choice("human ajah", "human"))
+                                  .add_choice(dpp::command_option_choice("bot doang", "bot"))
+
+                          )
+                          .add_option(
+                              dpp::command_option(dpp::co_string, "nama_channel", "(OPSIONAL) nama custom channelny, kalo ga di isi ngikut default", false)
+                          )
+                  )
+                  // sub-command "disable"
+                  .add_option(
+                      dpp::command_option(dpp::co_sub_command, "remove", "nonaktifkan fitur member count")
+                  )
+                  .set_default_permissions(dpp::p_administrator)
             }
 
         };

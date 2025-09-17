@@ -136,7 +136,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
     //  the function is still experiment and i dont know hos stable it is
     //  usage: shutdown <option>
     //  ex: shutdown now, shutdown 30s, shutdown 5m, other than that it will be treated as default: 60s
-    if (text.rfind("shutdown", 0) == 0) {
+    if (text.rfind("$shutdown", 0) == 0) {
 
         /// Bot owner
         //  only bot owner who has access to it
@@ -184,7 +184,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
             // check if there are still active chatbot sessions
             // the last parameter (true) is set to force save the
             // session as soon as the shutdown command given instead
-            // of default 5 minutes
+            // of default: 5 minutes
             checkSessions(bot, true);
 
             bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
@@ -501,6 +501,9 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
         std::cout << "[DEBUG] Entry user info" << std::endl;
         Commands::command_user_info(bot, event);
     }
+    else if (command == "set_member_count") {
+        Commands::command_member_count(bot, event);
+    }
 
 }
 
@@ -600,19 +603,24 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        bot.guild_command_create(cmd, 1349036976627777557, [](const dpp::confirmation_callback_t& cb) {
+        if (key == "6") {
+            bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
             } else {
                 std::cout << "Command diregister!\n";
             }
-            sleep(1);
-        });
+            sleep(3);
+            });
+        }
+
     }
+
 }
 
 void BotHandler::preDelSlash(dpp::cluster& bot) {
     bot.guild_bulk_command_delete(1270735247922692177);
+    //bot.guild_command_
 }
 
 /**
@@ -673,7 +681,6 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
 
             std::string closing = (forced) ? "Sesi diakhiri untuk saat ini, anda masih bisa melanjutkan percakapan tetapi tidak akan tersimpan" : "sesi telah berakhir untuk membebaskan memory, anda bisa memulainya lagi kapan saja";
             std::string repl =  closing + "\n"
-                               "||jngn kseringan open close yh bilek ntr hdd w mledak||\n"
                                "token usage: " + inputToken + " : " + outputToken + " : " + totalToken;
 
             /// Announce the closing
