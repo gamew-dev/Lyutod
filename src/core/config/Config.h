@@ -36,6 +36,9 @@ struct GC {
 
     bool memberCountEnabled;
     int memberCount;
+    dpp::snowflake memberCountChannel1,
+                   memberCountChannel2,
+                   memberCountChannel3;
 
     //todo: membercount channel id array
 };
@@ -84,6 +87,7 @@ class Config
                                   const dpp::snowflake& role_id),
                 guildMemberCount (const std::string& guild_id);
 
+    static void syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id = 0);
     /// Server config getter
     //  i need to find an other way
     //  TODO: develop better implementation

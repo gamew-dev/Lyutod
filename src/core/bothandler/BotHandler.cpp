@@ -144,7 +144,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         if (std::to_string(tokoh.id) == Config::botOwner) {
 
             // cut the shutdown string
-            std::string arg = text.substr(8);
+            std::string arg = text.substr(9);
             std::stringstream ss(arg);
             std::string option;
             ss >> option;
@@ -504,6 +504,9 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
     else if (command == "set_member_count") {
         Commands::command_member_count(bot, event);
     }
+    else if (command == "sync_guild") {
+        Commands::command_sync_guild(bot, event);
+    }
 
 }
 
@@ -603,8 +606,8 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        if (key == "6") {
-            bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
+        if (key == "7") {
+            bot.guild_command_create(cmd, 1404412516779429958, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
             } else {

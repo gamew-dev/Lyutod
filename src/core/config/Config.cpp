@@ -218,10 +218,13 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
         filejson["autoRoleEnabled"] = false;
         filejson["autoRoleName"] = "";
-        filejson["autoRoleID"] = "";
+        filejson["autoRoleID"] = "0";
 
         filejson["memberCountEnabled"] = false;
         filejson["memberCount"] = event.created.member_count;
+        filejson["memberCountChannel1"] = "0";
+        filejson["memberCountChannel2"] = "0";
+        filejson["memberCountChannel3"] = "0";
 
 
 
@@ -298,10 +301,71 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
         data.autoRoleName = fileJson.value("autoRoleName", "");
         data.autoRoleID = std::stoull(fileJson.value("autoRoleID", "0"));
         data.memberCountEnabled = fileJson.value("memberCountEnabled", false);
-        data.memberCount = fileJson.value("memberCount", 0);
+        data.memberCountChannel1 = std::stoull(fileJson.value("memberCountChannel1", "0"));
+        data.memberCountChannel2 = std::stoull(fileJson.value("memberCountChannel2", "0"));
+        data.memberCountChannel3 = std::stoull(fileJson.value("memberCountChannel3", "0"));
+
 
     }
 
     return data;
 }
 
+void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id) {
+
+    std::string path = guildPath + guild_id + ".json";
+    //std::string repl;
+    GC data;
+    nlohmann::json fileJson;
+
+    std::ifstream file(path);
+    if (file) {
+        std::cout << "[INFO] Searching guild config..." <<std::endl;
+        file >> fileJson;
+
+        data.name = fileJson.value("Name", "");
+        if (data.name != "") {
+            std::cout << "Database server found" << std::endl;
+            bot.message_create(dpp::message(channel_id, "data ditemukan untuk server " + data.name));
+        }
+        data.id = std::stoull(fileJson.value("ID", "0"));
+        data.ownerID = std::stoull(fileJson.value("ownerID", "0"));
+        data.autoRoleEnabled = fileJson.value("autoRoleEnabled", false);
+        data.autoRoleName = fileJson.value("autoRoleName", "");
+        data.autoRoleID = std::stoull(fileJson.value("autoRoleID", "0"));
+        data.memberCountEnabled = fileJson.value("memberCountEnabled", false);
+        data.memberCount = fileJson.value("memberCount", 0);
+        data.memberCountChannel1 = std::stoull(fileJson.value("memberCountChannel1", "0"));
+        data.memberCountChannel2 = std::stoull(fileJson.value("memberCountChannel2", "0"));
+        data.memberCountChannel3 = std::stoull(fileJson.value("memberCountChannel3", "0"));
+
+        file.close();
+    } else {
+        std::cout << "database server not found" << std::endl;
+        bot.message_create(dpp::message(channel_id, "database server tidak ditemukan"));
+        return;
+    }
+
+    fileJson["Name"] = data.name;
+    fileJson["ID"] = std::to_string(data.id);
+    fileJson["ownerID"] = std::to_string(data.ownerID);
+
+    fileJson["autoRoleEnabled"] = data.autoRoleEnabled;
+    fileJson["autoRoleName"] = data.autoRoleName;
+    fileJson["autoRoleID"] = std::to_string(data.autoRoleID);
+
+    fileJson["memberCountEnabled"] = data.memberCountEnabled;
+    fileJson["memberCount"] = data.memberCount;
+    fileJson["memberCountChannel1"] = std::to_string(data.memberCountChannel1);
+    fileJson["memberCountChannel2"] = std::to_string(data.memberCountChannel2);
+    fileJson["memberCountChannel3"] = std::to_string(data.memberCountChannel3);
+
+    bot.start_timer([&, channel_id](dpp::timer h) {
+        bot.message_create(dpp::message(channel_id, "sinkronisasi data berhasil"));
+        bot.stop_timer(h);
+    }, 2);
+
+    std::ofstream out(path);
+    out << fileJson.dump(4);
+    out.close();
+}

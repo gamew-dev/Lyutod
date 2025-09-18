@@ -21,6 +21,8 @@ class Commands {
                 command_user_info   (      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
                 command_member_count(      dpp::cluster& bot,
+                                     const dpp::slashcommand_t& event),
+                command_sync_guild  (      dpp::cluster& bot,
                                      const dpp::slashcommand_t& event);
 
     static inline std::map<std::string, dpp::slashcommand> commands_list {
@@ -29,39 +31,43 @@ class Commands {
             {"2", dpp::slashcommand("server_info", "Cek status server", 0)},
 
             {"3", dpp::slashcommand("say", "Bot says icixiwir echo", 0)
-                  .add_option(dpp::command_option(dpp::co_string, "pesan", "textny..", true))
-                  .add_option(dpp::command_option(dpp::co_channel, "channel", "Channel tujuan", true))
+                .add_option(dpp::command_option(dpp::co_string, "pesan", "textny..", true))
+                .add_option(dpp::command_option(dpp::co_channel, "channel", "Channel tujuan", true))
             },
 
             {"4", dpp::slashcommand("set_autorole", "setting autorole server", 0)
-                  .add_option(dpp::command_option(dpp::co_boolean, "set", "true/false", true))
-                  .add_option(dpp::command_option(dpp::co_role, "role", "pilih role", false))
-                  .set_default_permissions(dpp::p_administrator)
+                .add_option(dpp::command_option(dpp::co_boolean, "set", "true/false", true))
+                .add_option(dpp::command_option(dpp::co_role, "role", "pilih role", false))
+                .set_default_permissions(dpp::p_administrator)
             },
 
             {"5", dpp::slashcommand("user_info", "lihat profil user", 0)
-                  .add_option(dpp::command_option(dpp::co_user, "user", "pilih satu", false))
+                .add_option(dpp::command_option(dpp::co_user, "user", "pilih satu", false))
             },
             // census
             {"6", dpp::slashcommand("set_member_count", "setting channel jumlah member", 0)
-                  .add_option(
-                      dpp::command_option(dpp::co_sub_command, "add", "aktifkan member count")
-                          .add_option(
-                              dpp::command_option(dpp::co_string, "mode", "jenis member yang dihitung", true)
-                                  .add_choice(dpp::command_option_choice("semua members", "all"))
-                                  .add_choice(dpp::command_option_choice("human ajah", "human"))
-                                  .add_choice(dpp::command_option_choice("bot doang", "bot"))
+                .add_option(
+                    dpp::command_option(dpp::co_sub_command, "add", "aktifkan member count")
+                        .add_option(
+                            dpp::command_option(dpp::co_string, "mode", "jenis member yang dihitung", true)
+                                .add_choice(dpp::command_option_choice("semua members", "all"))
+                                .add_choice(dpp::command_option_choice("human ajah", "human"))
+                                .add_choice(dpp::command_option_choice("bot doang", "bot"))
 
-                          )
-                          .add_option(
-                              dpp::command_option(dpp::co_string, "nama_channel", "(OPSIONAL) nama custom channelny, kalo ga di isi ngikut default", false)
-                          )
-                  )
-                  // sub-command "disable"
-                  .add_option(
-                      dpp::command_option(dpp::co_sub_command, "remove", "nonaktifkan fitur member count")
-                  )
-                  .set_default_permissions(dpp::p_administrator)
+                        )
+                        .add_option(
+                            dpp::command_option(dpp::co_string, "nama_channel", "(OPSIONAL) nama custom channelny, kalo ga di isi ngikut default", false)
+                        )
+                )
+
+                .add_option(
+                    dpp::command_option(dpp::co_sub_command, "remove", "nonaktifkan fitur member count")
+                )
+                .set_default_permissions(dpp::p_administrator)
+            },
+
+            {"7", dpp::slashcommand("sync_guild", "sinkron config/setting guild", 0)
+                .set_default_permissions(dpp::p_administrator)
             }
 
         };
