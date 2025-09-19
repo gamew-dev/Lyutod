@@ -282,6 +282,56 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
 }
 
 
+void Config::guildMemberCount(const std::string& guild_id, const short& pil, const dpp::snowflake& channel_id) {
+
+    std::string path = guildPath + guild_id + ".json";
+
+    std::cout << "[Debug]: parameter value...\n" << "\tguild_id: " << guild_id << "\n\tpil: " << pil << "\n\tchannel_id: " << channel_id << std::endl;
+
+    std::ifstream file(path);
+
+    nlohmann::json fileJson;
+
+    if (file.is_open()) {
+        file >> fileJson;
+        file.close();
+    }
+    else {
+        std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
+        return;
+    }
+
+
+
+    //fileJson["memberCount"] = 0; // probably gonna delete this
+    //fileJson["memberCountEnabled"] = true; // and this
+
+    if (pil == 1) {
+        fileJson["memberCountChannel1"] = std::to_string(channel_id);
+    }
+    else if (pil == 2) {
+        fileJson["memberCountChannel2"] = std::to_string(channel_id);
+    }
+    else if (pil == 3) {
+        fileJson["memberCountChannel3"] = std::to_string(channel_id);
+    }
+    else if (pil == 4) {
+        fileJson["memberCountChannel1"] = "0";
+    }
+    else if (pil == 5) {
+        fileJson["memberCountChannel2"] = "0";
+    }
+    else if (pil == 6) {
+        fileJson["memberCountChannel3"] = "0";
+    }
+
+    std::ofstream out(path);
+    out << fileJson.dump(4);
+    out.close();
+
+    std::cout << "[Debug]: data saved";
+}
+
 GC Config::guildLoadConfig(const std::string& guild_id) {
 
     std::string path = guildPath + guild_id + ".json";
@@ -363,7 +413,7 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
     bot.start_timer([&, channel_id](dpp::timer h) {
         bot.message_create(dpp::message(channel_id, "sinkronisasi data berhasil"));
         bot.stop_timer(h);
-    }, 2);
+    }, 1);
 
     std::ofstream out(path);
     out << fileJson.dump(4);

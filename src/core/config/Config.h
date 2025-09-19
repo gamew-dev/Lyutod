@@ -85,7 +85,9 @@ class Config
                 guildSaveAutoRole(const std::string& guild_id,
                                   const bool&        autorole,
                                   const dpp::snowflake& role_id),
-                guildMemberCount (const std::string& guild_id);
+                guildMemberCount (const std::string& guild_id,
+                                  const short& pil,
+                                  const dpp::snowflake& channel_id);
 
     static void syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id = 0);
     /// Server config getter

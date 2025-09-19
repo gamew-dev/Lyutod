@@ -143,11 +143,13 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         //  see also: config.h/cpp
         if (std::to_string(tokoh.id) == Config::botOwner) {
 
+            std::cout << "[Debug]: original input: " << text << std::endl;
             // cut the shutdown string
             std::string arg = text.substr(9);
             std::stringstream ss(arg);
             std::string option;
             ss >> option;
+            std::cout << "[Debug]: cutted input: (arg: " << arg << " , option: " << option << ")" << std::endl;
 
             // set the default value here
             int countdown = 60;
@@ -606,8 +608,8 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        if (key == "7") {
-            bot.guild_command_create(cmd, 1404412516779429958, [](const dpp::confirmation_callback_t& cb) {
+        if (key == "6") {
+            bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
             } else {

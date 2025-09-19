@@ -50,7 +50,7 @@ class Commands {
                     dpp::command_option(dpp::co_sub_command, "add", "aktifkan member count")
                         .add_option(
                             dpp::command_option(dpp::co_string, "mode", "jenis member yang dihitung", true)
-                                .add_choice(dpp::command_option_choice("semua members", "all"))
+                                .add_choice(dpp::command_option_choice("semua members", "members"))
                                 .add_choice(dpp::command_option_choice("human ajah", "human"))
                                 .add_choice(dpp::command_option_choice("bot doang", "bot"))
 
