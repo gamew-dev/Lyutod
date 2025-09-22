@@ -504,6 +504,7 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
         Commands::command_user_info(bot, event);
     }
     else if (command == "set_member_count") {
+        std::cout << "[DEBUG] Memanggil fungsi sensus" << std::endl;
         Commands::command_member_count(bot, event);
     }
     else if (command == "sync_guild") {
