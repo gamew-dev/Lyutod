@@ -625,7 +625,7 @@ void BotHandler::preRegSlash(dpp::cluster& bot) {
 }
 
 void BotHandler::preDelSlash(dpp::cluster& bot) {
-    bot.guild_bulk_command_delete(1270735247922692177);
+    bot.guild_bulk_command_delete(1349036976627777557);
     //bot.guild_command_
 }
 

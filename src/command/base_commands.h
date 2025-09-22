@@ -62,6 +62,27 @@ class Commands {
 
                 .add_option(
                     dpp::command_option(dpp::co_sub_command, "remove", "nonaktifkan fitur member count")
+                        .add_option(
+                            dpp::command_option(dpp::co_string, "mode", "jenis channel yg mw dihapus", true)
+                                .add_choice(dpp::command_option_choice("all members", "members"))
+                                .add_choice(dpp::command_option_choice("yg human ajah", "human"))
+                                .add_choice(dpp::command_option_choice("bot", "bot"))
+
+                        )
+                )
+                .add_option(
+                    dpp::command_option(dpp::co_sub_command, "edit", "edit namany")
+                        .add_option(
+                            dpp::command_option(dpp::co_string, "mode", "jenis member yang dihitung", true)
+                                .add_choice(dpp::command_option_choice("semua members", "members"))
+                                .add_choice(dpp::command_option_choice("human ajah", "human"))
+                                .add_choice(dpp::command_option_choice("bot doang", "bot"))
+
+                        )
+                        .add_option(dpp::command_option(dpp::co_string, "nama", "nama barunya..", true))
+                )
+                .add_option(
+                    dpp::command_option(dpp::co_sub_command, "sync", "sinkronisasi & update semua channel")
                 )
                 .set_default_permissions(dpp::p_administrator)
             },

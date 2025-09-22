@@ -329,7 +329,7 @@ void Config::guildMemberCount(const std::string& guild_id, const short& pil, con
     out << fileJson.dump(4);
     out.close();
 
-    std::cout << "[Debug]: data saved";
+    std::cout << "[Debug]: data saved" << std::endl;
 }
 
 GC Config::guildLoadConfig(const std::string& guild_id) {
