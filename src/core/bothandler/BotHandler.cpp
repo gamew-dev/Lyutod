@@ -580,6 +580,8 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
         });
 
     }
+
+    /// TODO: add an automatic cencus for ...
 }
 
 /**

@@ -1,3 +1,17 @@
+/**
+ * base_commands.h
+
+ * @brief Declaration of slashcommand.
+ *
+ * The base commands file store the declaration of slashcommand and the function
+ *
+ *
+ * @note Every command has it own implementation files
+ * @author Hissats
+ *
+ */
+
+
 #ifndef COMMANDS_H
 #define COMMANDS_H
 

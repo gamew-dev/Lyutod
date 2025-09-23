@@ -89,6 +89,10 @@ class Config
                                   const short& pil,
                                   const dpp::snowflake& channel_id);
 
+
+    /// Server sync guild
+    //  sync database with server
+
     static void syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id = 0);
     /// Server config getter
     //  i need to find an other way
