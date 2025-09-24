@@ -260,7 +260,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
             serverID = std::to_string(serverID64);
         }
 
-        event.reply("Sesi Chat dimulai, sesi akan berakhir setelah > 5 menit tidak ada pesan baru");
+        event.reply("`# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
 
         auto memoryRead = Config::serverReadMemory(serverID);
         BotHandler::ServerSessions[serverID64] = ServerSessionStruct{memoryRead, std::chrono::steady_clock::now()};
@@ -445,7 +445,6 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                         server.history.erase(server.history.begin());
                     }
 
-
                 } catch (...) {
                     bot.message_create(dpp::message(event.msg.channel_id, "woe error: parsing"));
                 }
@@ -581,8 +580,251 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
 
     }
 
-    /// TODO: add an automatic cencus for ...
+    /// @TODO: add an automatic cencus for ...
+    bot.guild_get_members(server, 1000, 0,
+        [&bot, event, guildConfig](const dpp::confirmation_callback_t& cb) {
+            std::cout << "[DEBUG] guild_get_members callback" << std::endl;
+
+            if (cb.is_error()) {
+                //event.edit_response("eror ngab: " + cb.get_error().message);
+                return;
+            }
+            else {
+                //event.edit_response("sinkronisasi...");
+
+                auto members = std::get<dpp::guild_member_map>(cb.value);
+                int totalMember = 0;
+                int botMember = 0;
+                int humanMember = 0;
+
+                totalMember = members.size();
+                for (auto& [id, gm] : members) {
+                    if (gm.get_user()->is_bot()) botMember++;
+                }
+                humanMember = totalMember - botMember;
+
+
+
+                if (guildConfig.memberCountChannel1 == 0) {
+                    std::cout << "[Debug]: all member skipped" << std::endl;
+
+                }
+                else {
+                    bot.channel_get(guildConfig.memberCountChannel1, [&bot, event, totalMember](const dpp::confirmation_callback_t& cc) {
+                        if (!cc.is_error()) {
+
+                            dpp::channel ch = std::get<dpp::channel>(cc.value);
+                            std::string base = ch.name.substr(0, ch.name.find(" : "));
+                            std::string newName = base + " : " + std::to_string(totalMember);
+
+                            ch.set_name(newName);
+
+                            bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
+                                if (cc2.is_error()) {
+                                    std::cout << "[Debug]: all member error..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk all member: " + cc2.get_error().message));
+
+                                } else {
+                                    std::cout << "[Debug]: all member updated..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
+
+                                }
+
+                            });
+                        } else {std::cout << "[Debug]: Error get all channel" << std::endl;}
+                    });
+                }
+
+                if (guildConfig.memberCountChannel2 == 0) {
+                    std::cout << "[Debug]: human only skipped" << std::endl;
+
+                }
+                else {
+                    bot.channel_get(guildConfig.memberCountChannel2, [&bot, event, humanMember](const dpp::confirmation_callback_t& cc) {
+                        if (!cc.is_error()) {
+
+                            dpp::channel ch = std::get<dpp::channel>(cc.value);
+                            std::string base = ch.name.substr(0, ch.name.find(" : "));
+                            std::string newName = base + " : " + std::to_string(humanMember);
+
+                            ch.set_name(newName);
+
+                            bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
+                                if (cc2.is_error()) {
+                                    std::cout << "[Debug]: human only error..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk member only: " + cc2.get_error().message));
+
+                                } else {
+                                    std::cout << "[Debug]: human only updated..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
+
+                                }
+
+                            });
+                        } else {std::cout << "[Debug]: Error get human channel" << std::endl;}
+                    });
+                }
+
+                if (guildConfig.memberCountChannel3 == 0) {
+                    std::cout << "[Debug]: bot only skipped" << std::endl;
+
+                }
+                else {
+                    bot.channel_get(guildConfig.memberCountChannel3, [&bot, event, botMember](const dpp::confirmation_callback_t& cc) {
+                        if (!cc.is_error()) {
+
+                            dpp::channel ch = std::get<dpp::channel>(cc.value);
+                            std::string base = ch.name.substr(0, ch.name.find(" : "));
+                            std::string newName = base + " : " + std::to_string(botMember);
+
+                            ch.set_name(newName);
+
+                            bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
+                                if (cc2.is_error()) {
+                                    std::cout << "[Debug]: bot only fail..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk bot only: " + cc2.get_error().message));
+
+                                } else {
+                                    std::cout << "[Debug]: bot only updated..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
+
+                                }
+
+                            });
+                        } else {std::cout << "[Debug]: Error get bot channel" << std::endl;}
+                    });
+                }
+            }
+        });
+
+
+    /// end here
 }
+
+
+void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_remove_t& event) {
+
+    const dpp::snowflake server = event.removing_guild.id;
+
+    auto guildConfig = Config::guildLoadConfig(std::to_string(static_cast<uint64_t>(server)));
+
+    bot.guild_get_members(server, 1000, 0,
+        [&bot, event, guildConfig](const dpp::confirmation_callback_t& cb) {
+            std::cout << "[DEBUG] guild_get_members callback" << std::endl;
+
+            if (cb.is_error()) {
+                //event.edit_response("eror ngab: " + cb.get_error().message);
+                return;
+            }
+            else {
+                //event.edit_response("sinkronisasi...");
+
+                auto members = std::get<dpp::guild_member_map>(cb.value);
+                int totalMember = 0;
+                int botMember = 0;
+                int humanMember = 0;
+
+                totalMember = members.size();
+                for (auto& [id, gm] : members) {
+                    if (gm.get_user()->is_bot()) botMember++;
+                }
+                humanMember = totalMember - botMember;
+
+
+
+                if (guildConfig.memberCountChannel1 == 0) {
+                    std::cout << "[Debug]: all member skipped" << std::endl;
+
+                }
+                else {
+                    bot.channel_get(guildConfig.memberCountChannel1, [&bot, event, totalMember](const dpp::confirmation_callback_t& cc) {
+                        if (!cc.is_error()) {
+
+                            dpp::channel ch = std::get<dpp::channel>(cc.value);
+                            std::string base = ch.name.substr(0, ch.name.find(" : "));
+                            std::string newName = base + " : " + std::to_string(totalMember);
+
+                            ch.set_name(newName);
+
+                            bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
+                                if (cc2.is_error()) {
+                                    std::cout << "[Debug]: all member error..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk all member: " + cc2.get_error().message));
+
+                                } else {
+                                    std::cout << "[Debug]: all member updated..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
+
+                                }
+
+                            });
+                        } else {std::cout << "[Debug]: Error get all channel" << std::endl;}
+                    });
+                }
+
+                if (guildConfig.memberCountChannel2 == 0) {
+                    std::cout << "[Debug]: human only skipped" << std::endl;
+
+                }
+                else {
+                    bot.channel_get(guildConfig.memberCountChannel2, [&bot, event, humanMember](const dpp::confirmation_callback_t& cc) {
+                        if (!cc.is_error()) {
+
+                            dpp::channel ch = std::get<dpp::channel>(cc.value);
+                            std::string base = ch.name.substr(0, ch.name.find(" : "));
+                            std::string newName = base + " : " + std::to_string(humanMember);
+
+                            ch.set_name(newName);
+
+                            bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
+                                if (cc2.is_error()) {
+                                    std::cout << "[Debug]: human only error..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk member only: " + cc2.get_error().message));
+
+                                } else {
+                                    std::cout << "[Debug]: human only updated..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
+
+                                }
+
+                            });
+                        } else {std::cout << "[Debug]: Error get human channel" << std::endl;}
+                    });
+                }
+
+                if (guildConfig.memberCountChannel3 == 0) {
+                    std::cout << "[Debug]: bot only skipped" << std::endl;
+
+                }
+                else {
+                    bot.channel_get(guildConfig.memberCountChannel3, [&bot, event, botMember](const dpp::confirmation_callback_t& cc) {
+                        if (!cc.is_error()) {
+
+                            dpp::channel ch = std::get<dpp::channel>(cc.value);
+                            std::string base = ch.name.substr(0, ch.name.find(" : "));
+                            std::string newName = base + " : " + std::to_string(botMember);
+
+                            ch.set_name(newName);
+
+                            bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
+                                if (cc2.is_error()) {
+                                    std::cout << "[Debug]: bot only fail..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk bot only: " + cc2.get_error().message));
+
+                                } else {
+                                    std::cout << "[Debug]: bot only updated..." << std::endl;
+                                    //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
+
+                                }
+
+                            });
+                        } else {std::cout << "[Debug]: Error get bot channel" << std::endl;}
+                    });
+                }
+            }
+        });
+}
+
 
 /**
  *  updatePresence

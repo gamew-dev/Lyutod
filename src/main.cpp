@@ -59,7 +59,7 @@ int main() {
         // First time startup resence setting
         bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
 
-        // Bot timer, for every 5 minutes bot is changing presence status
+        // Bot timer, for every 10 minutes bot is changing presence status
         // and checking chatbot sessions
         bot.start_timer([&bot, &handler](const dpp::timer& timer){
 
@@ -71,7 +71,7 @@ int main() {
             }
 
 
-        },300);
+        },600);
 
     }); //on-ready
 
@@ -122,6 +122,9 @@ int main() {
         handler.handleGuildNewMem(bot, event);
     });
 
+    bot.on_guild_member_remove([&bot, &handler](const dpp::guild_member_remove_t& event) {
+        handler.handleGuildRemMem(bot, event);
+    });
 
     // This logic is a bit annoying tbh, this one called for
     // every bot startup and when joined new server/guild.

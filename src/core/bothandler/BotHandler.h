@@ -42,6 +42,10 @@ class BotHandler
 
              handleGuildNewMem  (      dpp::cluster& bot,               /// When someone join server
                                  const dpp::guild_member_add_t& event) ,
+
+             handleGuildRemMem  (      dpp::cluster& bot,
+                                 const dpp::guild_member_remove_t& event),
+
              handleButtonEvent  (      dpp::cluster& bot,               /// Button pressed
                                  const dpp::button_click_t& event    ) ,
 
