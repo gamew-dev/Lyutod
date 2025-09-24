@@ -54,7 +54,7 @@ int main() {
         // Registering slash command
         // keep in mind as far as now, this code is still testing
         // and some of the code is still hardcoded including this one
-        handler.preRegSlash(bot);
+        ///handler.preRegSlash(bot);
 
         // First time startup resence setting
         bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
@@ -122,6 +122,7 @@ int main() {
         handler.handleGuildNewMem(bot, event);
     });
 
+    // When a member leave guild
     bot.on_guild_member_remove([&bot, &handler](const dpp::guild_member_remove_t& event) {
         handler.handleGuildRemMem(bot, event);
     });

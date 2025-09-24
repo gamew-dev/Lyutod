@@ -241,7 +241,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
  *  guildSaveAutoRole
  *
  *  A function to be paired with autorole command, pretty much self explanotary
- *  Todo: find a better way
+ *  @TODO: find a better way
  *
  *  @param guild id
  *  @param is autorole enabled? dunno lol

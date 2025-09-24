@@ -538,7 +538,7 @@ void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t&
  *  handleGuildNewMem
  *
  *  Manage new user that joined, currently paired with
- *  autoRole command and greet chat
+ *  autoRole command, member count and greet chat
  *
  *  @param the bot itself to be able replying and assign role
  *  @param guild member add event class
@@ -701,6 +701,16 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
     /// end here
 }
 
+/**
+ *  handleGuildRemMem
+ *
+ *  Manage user that leave guild, this include for kick, ban
+ *  for now it's only purpose is update the member count
+ *
+ *  @param the bot itself to be able replying and assign role
+ *  @param guild member remove event class
+ *
+ */
 
 void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_remove_t& event) {
 

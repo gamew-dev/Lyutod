@@ -41,3 +41,17 @@
 - Fixed ai memory session
     - server session and user session saved separately, including dm's
     - fixed minor prompt issues
+
+## 0.6.10
+### 0.6 Stable version
+This version marks the final release of version 0.6.x branch. The core logic    
+has satisfied enough for initial design goals and any further development would   
+need to modify some of the main logic files.
+### Whats new
+- Guild sync databases
+   An admin command used to update guild config
+- Guild member count
+   An admin command for creating a cencuss voice channel
+- Small minor improvement
+    - Changed bot default timer from 5 minutes to 10
+    - Chatbot timer prompt text

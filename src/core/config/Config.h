@@ -24,7 +24,7 @@
 
 /// Guild config struct
 //  The GC struct (Guild Config) stores guild-specific data such as
-//  IDs, owner information, and auto-role settings.
+//  IDs, owner information, member count channel, and auto-role settings.
 struct GC {
     std::string name;
     dpp::snowflake id,
@@ -40,7 +40,6 @@ struct GC {
                    memberCountChannel2,
                    memberCountChannel3;
 
-    //todo: membercount channel id array
 };
 
 

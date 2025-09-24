@@ -43,7 +43,7 @@ class BotHandler
              handleGuildNewMem  (      dpp::cluster& bot,               /// When someone join server
                                  const dpp::guild_member_add_t& event) ,
 
-             handleGuildRemMem  (      dpp::cluster& bot,
+             handleGuildRemMem  (      dpp::cluster& bot,               /// When someone leave server
                                  const dpp::guild_member_remove_t& event),
 
              handleButtonEvent  (      dpp::cluster& bot,               /// Button pressed
@@ -86,7 +86,7 @@ class BotHandler
         //  therefore it will be UserSessions[123...9] = UserSessionStruct{"i like trains", 69 years ago}
         //  same happen with the server session, good thing about u_map is there are no ordered index 1,2,3 like an array for looping
         //  instead, it will check if it has value or not.
-        //  Todo:
+        ///  @Todo:
         std::unordered_map<dpp::snowflake, UserSessionStruct> UserSessions;
         std::unordered_map<dpp::snowflake, ServerSessionStruct> ServerSessions;
 
