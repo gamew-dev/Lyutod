@@ -106,3 +106,7 @@ bool Utils::isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     return false;
 }
+
+bool Utils::changeChannelname(const dpp::snowflake& channel_id, const std::string& new_name) {
+
+}
