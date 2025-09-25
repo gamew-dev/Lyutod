@@ -260,7 +260,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
             serverID = std::to_string(serverID64);
         }
 
-        event.reply("`# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
+        event.reply("-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
 
         auto memoryRead = Config::serverReadMemory(serverID);
         BotHandler::ServerSessions[serverID64] = ServerSessionStruct{memoryRead, std::chrono::steady_clock::now()};
