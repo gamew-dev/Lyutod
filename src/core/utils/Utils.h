@@ -23,6 +23,10 @@ class Utils
                                     const std::string& sync_value,
                                     const std::string& new_name);
 
+    static void changeChannelname(dpp::cluster& bot,
+                                    const dpp::snowflake& channel_id,
+                                    const std::string& new_name);
+
 };
 
 #endif // UTILS_H
