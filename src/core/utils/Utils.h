@@ -17,8 +17,11 @@ class Utils
 
     static int  getDay()                            ; // get day (0 - 6) format
 
-    static bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event),
-                changeChannelname(const dpp::snowflake& channel_id, const std::string& new_name);
+    static bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event);
+    static void changeChannelname(dpp::cluster& bot,
+                                    const dpp::snowflake& channel_id,
+                                    const std::string& sync_value,
+                                    const std::string& new_name);
 
 };
 

@@ -107,6 +107,42 @@ bool Utils::isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     return false;
 }
 
-bool Utils::changeChannelname(const dpp::snowflake& channel_id, const std::string& new_name) {
+void Utils::changeChannelname( dpp::cluster& bot,
+                              const dpp::snowflake& channel_id,
+                              const std::string& sync_value,
+                              const std::string& new_name) {
 
+    bot.channel_get(channel_id, [&bot, sync_value, new_name](const dpp::confirmation_callback_t& cc) {
+        if (!cc.is_error()) {
+
+            dpp::channel ch = std::get<dpp::channel>(cc.value);
+            std::string finalName;
+
+            if (new_name == "") {
+                std::string base = ch.name.substr(0, ch.name.find(" : "));
+                finalName = base + " : " + sync_value;
+            } else {
+                finalName = new_name + " : " + sync_value;
+            }
+
+
+            ch.set_name(finalName);
+
+            bot.channel_edit(ch, [](const dpp::confirmation_callback_t& cc2) {
+                if (cc2.is_error()) {
+                    std::cout << "[Debug]: human only error..." << std::endl;
+                    return true;
+
+                } else {
+                    std::cout << "[Debug]: human only updated..." << std::endl;
+                    return false;
+
+                }
+
+            });
+        } else {
+            std::cout << "[Debug]: Error get human channel" << std::endl;
+            return false;
+        }
+    });
 }
