@@ -2,6 +2,8 @@
 
 void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
+    event.thinking();
+
     dpp::command_interaction cmd_data = event.command.get_command_interaction();
 
 
@@ -11,54 +13,40 @@ void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t
         return;
     }
 
-    /// getter sub command option (add, remove, edit, sync)
+    /// getter sub command option (set, edit, remove)
+    //  and global variable for guild config, id etc
     auto subcommand = cmd_data.options[0];
     dpp::snowflake guild_id = event.command.guild_id;
+    auto data = Config::guildLoadConfig(std::to_string(guild_id));
 
     if (subcommand.name == "set") {
         // add logic
+        if (data.autoRoleEnabled) {
+            event.edit_response("Autorole sudah aktif di server ini, gunakan `autorole edit` untuk mengubahnya");
+            return;
+        }
+
+        dpp::role role = std::get<dpp::snowflake>(event.get_parameter("role"));
+        event.edit_response("autorole berhasil diaktifkan dengan role: <@&" + std::to_string(role.id) + ">.");
+        Config::guildSaveAutoRole(std::to_string(guild_id), true, role.id);
+
     }
 
     else if (subcommand.name == "edit") {
         // edit logic
+        dpp::role role = std::get<dpp::snowflake>(event.get_parameter("role"));
+        event.edit_response("autorole berhasil diubah dengan role: <@&" + std::to_string(role.id) + ">.");
+        Config::guildSaveAutoRole(std::to_string(guild_id), true, role.id);
+
     }
 
     else if (subcommand.name == "disable") {
         // remove logic
+        if (!data.autoRoleEnabled) {
+            event.edit_response("tidak ditemukan autorole aktif di server ini");
+            return;
+        }
+        event.edit_response("autorole berhasil dinonaktifkan");
+        Config::guildSaveAutoRole(std::to_string(guild_id), false, 0);
     }
-
-    //std::cout << "[DEBUG] Getting set value" << std::endl;
-    //bool autorole = std::get<bool>(event.get_parameter("set"));
-    //std::cout << "[DEBUG] Set value: "<< autorole << std::endl;
-
-
-    //std::cout << "[DEBUG] Getting role value" << std::endl;
-    dpp::snowflake role;
-    auto param = event.get_parameter("role");
-
-    if (param.index() == 0) {
-        role = 0;
-    } else {
-        role = std::get<dpp::snowflake>(event.get_parameter("role"));
-    }
-
-    std::cout << "[DEBUG] role value: "<< std::to_string(role) << std::endl;
-
-
-    if (!autorole) {
-        event.reply("Autorole berhasil **dinonaktifkan**.");
-        role = 0;
-    }
-
-    else if (autorole && role == 0) {
-        event.reply("Anda harus memilih **role** untuk mengaktifkan autorole.");
-        return;
-    }
-
-    else if (autorole && role != 0) {
-        event.reply("Autorole berhasil diaktifkan dengan role: <@&" + std::to_string(role) + ">.");
-    }
-
-    Config::guildSaveAutoRole(std::to_string(guild_id), autorole, std::to_string(role));
-    std::cout << "[DEBUG] End of line" << std::endl;
 }

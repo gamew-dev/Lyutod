@@ -254,7 +254,7 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
                                const dpp::snowflake& role_id) {
 
     std::string path = guildPath + guild_id + ".json";
-    std::string role_id_str = std::to_string(role_id);
+
 
     std::ifstream file(path);
 
@@ -269,6 +269,7 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
         return;
     }
 
+    std::string role_id_str = std::to_string(role_id);
     std::string role_name = "<@" + role_id_str + ">";
 
     filejson["autoRoleEnabled"] = autorole;
