@@ -2,14 +2,37 @@
 
 void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
+    dpp::command_interaction cmd_data = event.command.get_command_interaction();
+
+
+    /// Check
+    if (cmd_data.options.empty()) {
+        event.reply("pilih subcommandny");
+        return;
+    }
+
+    /// getter sub command option (add, remove, edit, sync)
+    auto subcommand = cmd_data.options[0];
     dpp::snowflake guild_id = event.command.guild_id;
 
-    std::cout << "[DEBUG] Getting set value" << std::endl;
-    bool autorole = std::get<bool>(event.get_parameter("set"));
-    std::cout << "[DEBUG] Set value: "<< autorole << std::endl;
+    if (subcommand.name == "set") {
+        // add logic
+    }
+
+    else if (subcommand.name == "edit") {
+        // edit logic
+    }
+
+    else if (subcommand.name == "disable") {
+        // remove logic
+    }
+
+    //std::cout << "[DEBUG] Getting set value" << std::endl;
+    //bool autorole = std::get<bool>(event.get_parameter("set"));
+    //std::cout << "[DEBUG] Set value: "<< autorole << std::endl;
 
 
-    std::cout << "[DEBUG] Getting role value" << std::endl;
+    //std::cout << "[DEBUG] Getting role value" << std::endl;
     dpp::snowflake role;
     auto param = event.get_parameter("role");
 
