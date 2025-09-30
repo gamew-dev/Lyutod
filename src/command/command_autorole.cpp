@@ -9,7 +9,7 @@ void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t
 
     /// Check
     if (cmd_data.options.empty()) {
-        event.reply("pilih subcommandny");
+        event.edit_response("pilih subcommandny");
         return;
     }
 
