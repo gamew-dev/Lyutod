@@ -1,6 +1,6 @@
 #include "base_commands.h"
 
-void Commands::command_set_autorole(dpp::cluster& bot, const dpp::slashcommand_t& event) {
+void Commands::command_autorole(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     event.thinking();
 
