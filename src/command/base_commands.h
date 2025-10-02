@@ -71,7 +71,7 @@ class Commands {
 
             {"5", dpp::slashcommand("user", "command untuk user", 0)
                 .add_option(dpp::command_option(dpp::co_sub_command, "info", "cek info user")
-                    .add_option(dpp::command_option(dpp::co_user, "user", "pilih", true))
+                    .add_option(dpp::command_option(dpp::co_user, "user", "pilih", false))
 
                 )
                 .add_option(dpp::command_option(dpp::co_sub_command, "avatar", "cek pp user")
