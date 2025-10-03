@@ -481,33 +481,32 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
     std::cout << "[LOG] Menerima command: " << command << std::endl;
 
-    if (command == "status") {
-        Commands::command_status(start, bot, event);
+    if (command == "bot") {
+        Commands::command_bot(start, bot, event);
     }
 
-    else if (command == "server_info") {
-        Commands::command_server_info(bot, event);
+    else if (command == "server") {
+        Commands::command_server(bot, event);
     }
 
     else if (command == "say") {
         Commands::command_say(bot, event);
     }
 
-    else if (command == "set_autorole") {
-        std::cout << "[DEBUG] Selecting autorole" << std::endl;
-        Commands::command_set_autorole(bot, event);
+    else if (command == "autorole") {
+        Commands::command_autorole(bot, event);
     }
 
-    else if (command == "user_info") {
-        std::cout << "[DEBUG] Entry user info" << std::endl;
-        Commands::command_user_info(bot, event);
+    else if (command == "user") {
+        Commands::command_user(bot, event);
     }
-    else if (command == "set_member_count") {
-        std::cout << "[DEBUG] Memanggil fungsi sensus" << std::endl;
-        Commands::command_member_count(bot, event);
+
+    else if (command == "sensus") {
+        Commands::command_census(bot, event);
     }
-    else if (command == "sync_guild") {
-        Commands::command_sync_guild(bot, event);
+
+    else if (command == "guild") {
+        Commands::command_guild(bot, event);
     }
 
 }
