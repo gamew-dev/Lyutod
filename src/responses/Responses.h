@@ -25,7 +25,7 @@ class Responses
         auto cari = Responses::pilihan.find(keyword);
         if (cari == Responses::pilihan.end() || cari->second.empty()) {
             // keyword not found :bobok:
-            return "<@465096085224947722>";
+            return "<@"+Config::botOwner+">";
         }
 
         // random generator
