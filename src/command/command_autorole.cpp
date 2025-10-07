@@ -26,17 +26,17 @@ void Commands::command_autorole(dpp::cluster& bot, const dpp::slashcommand_t& ev
             return;
         }
 
-        dpp::role role = std::get<dpp::snowflake>(event.get_parameter("role"));
-        event.edit_response("autorole berhasil diaktifkan dengan role: <@&" + std::to_string(role.id) + ">.");
-        Config::guildSaveAutoRole(std::to_string(guild_id), true, role.id);
+        dpp::snowflake role = std::get<dpp::snowflake>(event.get_parameter("role"));
+        event.edit_response("autorole berhasil diaktifkan dengan role: <@&" + std::to_string(role) + ">.");
+        Config::guildSaveAutoRole(std::to_string(guild_id), true, role);
 
     }
 
     else if (subcommand.name == "edit") {
         // edit logic
-        dpp::role role = std::get<dpp::snowflake>(event.get_parameter("role"));
-        event.edit_response("autorole berhasil diubah dengan role: <@&" + std::to_string(role.id) + ">.");
-        Config::guildSaveAutoRole(std::to_string(guild_id), true, role.id);
+        dpp::snowflake role = std::get<dpp::snowflake>(event.get_parameter("role"));
+        event.edit_response("autorole berhasil diubah dengan role: <@&" + std::to_string(role) + ">.");
+        Config::guildSaveAutoRole(std::to_string(guild_id), true, role);
 
     }
 
