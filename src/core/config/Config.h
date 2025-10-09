@@ -50,10 +50,10 @@ class Config
     private:
 
     /// File/directory path
-    static inline std::string clientPath = "data/client/config.json";
-    static inline std::string userPath = "data/ai/user/";
-    static inline std::string serverPath = "data/ai/server/";
-    static inline std::string guildPath = "data/guild/";
+    static inline std::string clientPath = "data/client/config.json",
+                              userPath   = "data/ai/user/",
+                              serverPath = "data/ai/server/",
+                              guildPath  = "data/guild/";
 
     public:
 
