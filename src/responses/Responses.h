@@ -108,27 +108,38 @@ class Responses
             "hmm", "sok asik", "luwh siapa", "wleee",
             "anda tidak memiliki ijin untuk menjalankan perintah tersebut, hal ini akan dilaporkan ke pihak developer",
             "<:y_y:1370304542914383924>", "<:apalah:1370304744316469249>"
+        }},
+        { "confirmed", {
+            "k", "siap bos", "nggih", "olraikk",
+            "don",
+            "otw", "emuachh"
         }}
     };
     // this is for react
     static inline std::vector<std::string> emot = {
-            dpp::unicode_emoji::pleading_face,
-            dpp::unicode_emoji::nerd,
-            dpp::unicode_emoji::melting_face,
-            dpp::unicode_emoji::thinking_face,
-            dpp::unicode_emoji::skull,
-            dpp::unicode_emoji::zany_face,
-            dpp::unicode_emoji::dizzy_face,
-            dpp::unicode_emoji::face_with_spiral_eyes,
-            dpp::unicode_emoji::face_exhaling,
-            dpp::unicode_emoji::expressionless,
-            dpp::unicode_emoji::rolling_eyes,
-            dpp::unicode_emoji::open_mouth,
-            dpp::unicode_emoji::pleading_face,
-            dpp::unicode_emoji::weary,
-            dpp::unicode_emoji::confounded
-        };
+        dpp::unicode_emoji::pleading_face,
+        dpp::unicode_emoji::nerd,
+        dpp::unicode_emoji::melting_face,
+        dpp::unicode_emoji::thinking_face,
+        dpp::unicode_emoji::skull,
+        dpp::unicode_emoji::zany_face,
+        dpp::unicode_emoji::dizzy_face,
+        dpp::unicode_emoji::face_with_spiral_eyes,
+        dpp::unicode_emoji::face_exhaling,
+        dpp::unicode_emoji::expressionless,
+        dpp::unicode_emoji::rolling_eyes,
+        dpp::unicode_emoji::open_mouth,
+        dpp::unicode_emoji::pleading_face,
+        dpp::unicode_emoji::weary,
+        dpp::unicode_emoji::confounded
+    };
 
+    static inline std::vector<std::string> emot2 = {
+        dpp::unicode_emoji::pregnant_man,
+        dpp::unicode_emoji::eggplant,
+        dpp::unicode_emoji::fish,
+        dpp::unicode_emoji::wilted_flower
+    };
 };
 
 #endif // RESPONSES_H
