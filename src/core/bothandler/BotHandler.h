@@ -26,7 +26,6 @@ class BotHandler
     /// ctor
     BotHandler();
 
-
     void preRegSlash        (      dpp::cluster& bot)             , /// Slash command Register
 
          preDelSlash        (      dpp::cluster& bot)             , /// Slash command Deletion
@@ -104,8 +103,6 @@ class BotHandler
         dpp::presence(dpp::ps_idle , dpp::at_streaming , "a")
 
     };
-
-
 
 };
 
