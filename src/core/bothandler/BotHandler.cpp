@@ -862,7 +862,7 @@ TESTING ONLY, HARDCODED COMMAND
 void BotHandler::preRegSlash(dpp::cluster& bot) {
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        if (key == "6") {
+        //if (key == "6") {
             bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
             if (cb.is_error()) {
                 std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
@@ -871,14 +871,23 @@ void BotHandler::preRegSlash(dpp::cluster& bot) {
             }
             sleep(3);
             });
-        }
+        //}
 
     }
+
+    bot.global_bulk_command_create(commands, [](const dpp::confirmation_callback_t& result) {
+        if (result.is_error()) {
+            std::cerr << "Gagal mendaftarkan commands: "
+                      << result.get_error().message << "\n";
+        } else {
+            std::cout << "Berhasil mendaftarkan semua commands!\n";
+        }
+    });
 
 }
 
 void BotHandler::preDelSlash(dpp::cluster& bot) {
-    bot.guild_bulk_command_delete(1349036976627777557);
+    bot.guild_bulk_command_delete(1270735247922692177);
 
 }
 
