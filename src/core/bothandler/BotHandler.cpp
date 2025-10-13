@@ -859,23 +859,18 @@ void BotHandler::updatePresence(dpp::cluster& bot) {
 /**
 TESTING ONLY, HARDCODED COMMAND
 */
-void BotHandler::preRegSlash(dpp::cluster& bot) {
+void BotHandler::preRegSlash(dpp::cluster& bot, dpp::snowflake id) {
+
+    std::vector<dpp::slashcommand> _commands;
 
     for (auto& [key, cmd] : Commands::commands_list) {
-        //if (key == "6") {
-            bot.guild_command_create(cmd, 1270735247922692177, [](const dpp::confirmation_callback_t& cb) {
-            if (cb.is_error()) {
-                std::cerr << "Gagal register command: " << cb.get_error().message << "\n";
-            } else {
-                std::cout << "Command diregister!\n";
-            }
-            sleep(3);
-            });
-        //}
+        dpp::slashcommand c = cmd;
+        c.set_application_id(bot.me.id);
+        _commands.push_back(c);
 
     }
 
-    bot.global_bulk_command_create(commands, [](const dpp::confirmation_callback_t& result) {
+    bot.guild_bulk_command_create(_commands, id,[](const dpp::confirmation_callback_t& result) {
         if (result.is_error()) {
             std::cerr << "Gagal mendaftarkan commands: "
                       << result.get_error().message << "\n";
@@ -886,8 +881,9 @@ void BotHandler::preRegSlash(dpp::cluster& bot) {
 
 }
 
-void BotHandler::preDelSlash(dpp::cluster& bot) {
-    bot.guild_bulk_command_delete(1270735247922692177);
+void BotHandler::preDelSlash(dpp::cluster& bot, dpp::snowflake id) {
+    bot.guild_bulk_command_delete(id);
+    std::cout << "Berhasil menghapus semua commands!\n";
 
 }
 
