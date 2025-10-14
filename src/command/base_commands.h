@@ -75,7 +75,7 @@ class Commands {
 
             )
             .add_option(dpp::command_option(dpp::co_sub_command, "avatar", "cek pp user")
-                .add_option(dpp::command_option(dpp::co_user, "user", "pilih", true))
+                .add_option(dpp::command_option(dpp::co_user, "user", "pilih", false))
 
             )
         },

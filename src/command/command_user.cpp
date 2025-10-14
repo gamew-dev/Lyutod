@@ -39,7 +39,7 @@ void Commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event)
 
         uint64_t timestamp = static_cast<uint64_t>(user.get_creation_time());
         std::string created = "<t:" + std::to_string(timestamp) + "> " + "<t:" + std::to_string(timestamp) + ":R>";
-        std::string imgURL = user.get_avatar_url(4096, dpp::i_png, true);
+        std::string imgURL = user.get_avatar_url(2048, dpp::i_png, true);
         std::cout << "[Debug] img url: " << imgURL << std::endl;
 
 
@@ -80,6 +80,46 @@ void Commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event)
         dpp::message msg(event.command.channel_id, embed);
 
         event.reply(msg);
+    }
+
+    else if (subcommand.name == "avatar") {
+        dpp::user user;
+
+        auto param = event.get_parameter("user");
+        std::cout << "[Debug] Checking user parameter" << std::endl;
+
+        if (param.index() == 0) {
+
+            user = event.command.usr;
+            std::cout << "Debug: user id: self [" << std::to_string(user.id) << "]" << std::endl;
+        } else {
+            dpp::snowflake user_id = std::get<dpp::snowflake>(param);
+            user = event.command.resolved.users.at(user_id);
+            std::cout << "Debug: user id: target [" << std::to_string(user.id) << "]" << std::endl;
+        }
+
+        std::string imgURL = user.get_avatar_url(4096, dpp::i_png, true);
+
+
+
+        dpp::embed embed = dpp::embed()
+            .set_color(dpp::colors::red_blood)
+            .set_title("User avatar")
+
+            .set_image(imgURL)
+
+            .set_footer(
+                dpp::embed_footer()
+                .set_text(Config::botVersi)
+                .set_icon("https://cdn.discordapp.com/attachments/1270735248472277004/1370083495313145916/42802-givelove.png?ex=681e3530&is=681ce3b0&hm=dde61ba938af5ce6e8934dfd54b023570c983a1bfdb944d56adcaa2c838d6595&")
+            )
+
+            .set_timestamp(time(0));
+
+        dpp::message msg(event.command.channel_id, embed);
+
+        event.reply(msg);
+
     }
 
 

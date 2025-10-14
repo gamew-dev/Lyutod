@@ -26,9 +26,11 @@ class BotHandler
     /// ctor
     BotHandler();
 
-    void preRegSlash        (      dpp::cluster& bot)             , /// Slash command Register
+    void preRegSlash        (      dpp::cluster& bot,
+                                    dpp::snowflake id)             , /// Slash command Register
 
-         preDelSlash        (      dpp::cluster& bot)             , /// Slash command Deletion
+         preDelSlash        (      dpp::cluster& bot,
+                                    dpp::snowflake id)             , /// Slash command Deletion
 
          handleSlash        (      dpp::cluster& bot,               /// Handling slash command
                                  const dpp::slashcommand_t& event    ) ,
