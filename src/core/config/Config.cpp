@@ -220,8 +220,6 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
         filejson["autoRoleName"] = "";
         filejson["autoRoleID"] = "0";
 
-        filejson["memberCountEnabled"] = false;
-        filejson["memberCount"] = event.created.member_count;
         filejson["memberCountChannel1"] = "0";
         filejson["memberCountChannel2"] = "0";
         filejson["memberCountChannel3"] = "0";
@@ -348,10 +346,11 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
         if (data.name != "") std::cout << "opening " << data.name << " config" << std::endl;
         data.id = std::stoull(fileJson.value("ID", "0"));
         data.ownerID = std::stoull(fileJson.value("ownerID", "0"));
+
         data.autoRoleEnabled = fileJson.value("autoRoleEnabled", false);
         data.autoRoleName = fileJson.value("autoRoleName", "");
         data.autoRoleID = std::stoull(fileJson.value("autoRoleID", "0"));
-        data.memberCountEnabled = fileJson.value("memberCountEnabled", false);
+
         data.memberCountChannel1 = std::stoull(fileJson.value("memberCountChannel1", "0"));
         data.memberCountChannel2 = std::stoull(fileJson.value("memberCountChannel2", "0"));
         data.memberCountChannel3 = std::stoull(fileJson.value("memberCountChannel3", "0"));
@@ -384,8 +383,7 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
         data.autoRoleEnabled = fileJson.value("autoRoleEnabled", false);
         data.autoRoleName = fileJson.value("autoRoleName", "");
         data.autoRoleID = std::stoull(fileJson.value("autoRoleID", "0"));
-        data.memberCountEnabled = fileJson.value("memberCountEnabled", false);
-        data.memberCount = fileJson.value("memberCount", 0);
+
         data.memberCountChannel1 = std::stoull(fileJson.value("memberCountChannel1", "0"));
         data.memberCountChannel2 = std::stoull(fileJson.value("memberCountChannel2", "0"));
         data.memberCountChannel3 = std::stoull(fileJson.value("memberCountChannel3", "0"));
@@ -405,8 +403,6 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
     fileJson["autoRoleName"] = data.autoRoleName;
     fileJson["autoRoleID"] = std::to_string(data.autoRoleID);
 
-    fileJson["memberCountEnabled"] = data.memberCountEnabled;
-    fileJson["memberCount"] = data.memberCount;
     fileJson["memberCountChannel1"] = std::to_string(data.memberCountChannel1);
     fileJson["memberCountChannel2"] = std::to_string(data.memberCountChannel2);
     fileJson["memberCountChannel3"] = std::to_string(data.memberCountChannel3);

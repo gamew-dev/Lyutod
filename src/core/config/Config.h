@@ -34,8 +34,6 @@ struct GC {
     std::string autoRoleName;
     dpp::snowflake autoRoleID;
 
-    bool memberCountEnabled;
-    int memberCount;
     dpp::snowflake memberCountChannel1,
                    memberCountChannel2,
                    memberCountChannel3;
