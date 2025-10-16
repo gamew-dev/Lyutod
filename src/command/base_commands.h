@@ -22,20 +22,20 @@
 class Commands {
 
     public:
-    static void command_bot(         const std::time_t& start,
+    static void command_bot     (    const std::time_t& start,
                                            dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_server (      dpp::cluster& bot,
+                command_server  (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_say         (      dpp::cluster& bot,
+                command_say     (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_autorole(      dpp::cluster& bot,
+                command_autorole(          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_user   (      dpp::cluster& bot,
+                command_user    (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_census(      dpp::cluster& bot,
+                command_census  (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
-                command_guild  (      dpp::cluster& bot,
+                command_guild   (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event);
 
     static inline std::map<std::string, dpp::slashcommand> commands_list {
