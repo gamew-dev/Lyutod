@@ -6,16 +6,13 @@ class Terminal
 {
     public:
         Terminal();
-        enum class PilihanMenu {
-            START_BOT,
-            SLASHCOMMAND_CONFIG,
-            EXIT
-        };
-
-        PilihanMenu run();
+        int run();
 
     private:
 
+    void showMenuHeader(const std::string& title);
+    void showMenuContent(const short& contentID);
+    void handleInput();
 
 };
 
