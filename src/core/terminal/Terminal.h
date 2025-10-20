@@ -1,18 +1,17 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
+#include "dpp/dpp.h"
 
 class Terminal
 {
     public:
         Terminal();
-        int run();
-
     private:
 
     void showMenuHeader(const std::string& title);
     void showMenuContent(const short& contentID);
-    void handleInput();
+    int handleInput();
 
 };
 
