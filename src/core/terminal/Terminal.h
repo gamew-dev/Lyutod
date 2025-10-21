@@ -7,10 +7,19 @@ class Terminal
 {
     public:
         Terminal();
+        int run();
     private:
 
+     enum class Menu {
+        Main = 0,
+        Config,
+        SlashCommands,
+        GuildList,
+        Exit
+    };
+
     void showMenuHeader(const std::string& title);
-    void showMenuContent(const short& contentID);
+    void showMenuContent(const Menu& contentID);
     int handleInput();
 
 };
