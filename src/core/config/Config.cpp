@@ -194,6 +194,20 @@ void Config::serverUpdateHistory(const std::string& id, const std::vector<std::s
  *
  */
 
+std::vector<std::string> guildGetList() {
+    std::vector<std::string> guildList;
+
+    for (const auto& entry : std::filesystem::directory_iterator(guildPath)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".json") {
+            guildFiles.push_back(entry.path().stem().string());
+
+        }
+    }
+
+    return guildFiles;
+}
+
+
 bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
     dpp::snowflake id = event.created.id;

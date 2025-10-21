@@ -19,7 +19,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <filesystem>
+
 #include "dpp/dpp.h"
+
 
 
 /// Guild config struct
@@ -77,6 +80,7 @@ class Config
     static std::vector<std::string> serverReadMemory(const std::string id);
 
     /// Server config
+    static std::vector<std::string> guildGetList();
     static bool guildCreateConfig(const dpp::guild_create_t& event);
     static void guildRemoveConfig(const std::string& guild_id),
                 guildSaveAutoRole(const std::string& guild_id,
