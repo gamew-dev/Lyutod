@@ -13,7 +13,9 @@ class Terminal
      enum class Menu {
         Main = 0,
         Config,
-        SlashCommands,
+        SlashCommandsMain,
+        SlashCommandsRegister,
+        SlashCommandsDelete,
         GuildList,
         Exit
     };

@@ -17,7 +17,20 @@ void Terminal::showMenuContent(const Menu& contentID) {
              << "3. Exit\n";
     break;
 
+    case Menu::SlashCommandsMain:
+        showMenuHeader("Slash command setting");
+        cout << "1. Register slash command\n"
+             << "2. Remove slash command\n"
+             << "3. Return";
 
+
+    break;
+
+    /*
+    case Menu::
+        cout <<
+    break;
+    */
 
     }
 }
@@ -38,5 +51,8 @@ int Terminal::run() {
     showMenuHeader("Lyudya startup TUI");
     showMenuContent(menuNow);
 
+    while (true) {
+
+    }
 
 }
