@@ -194,17 +194,17 @@ void Config::serverUpdateHistory(const std::string& id, const std::vector<std::s
  *
  */
 
-std::vector<std::string> guildGetList() {
+std::vector<std::string> Config::guildGetList() {
     std::vector<std::string> guildList;
 
     for (const auto& entry : std::filesystem::directory_iterator(guildPath)) {
         if (entry.is_regular_file() && entry.path().extension() == ".json") {
-            guildFiles.push_back(entry.path().stem().string());
+            guildList.push_back(entry.path().stem().string());
 
         }
     }
 
-    return guildFiles;
+    return guildList;
 }
 
 
@@ -238,6 +238,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
         filejson["memberCountChannel2"] = "0";
         filejson["memberCountChannel3"] = "0";
 
+        filejson["loggerChannel"] = "0";
 
 
         std::ofstream file(path);
@@ -369,6 +370,7 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
         data.memberCountChannel2 = std::stoull(fileJson.value("memberCountChannel2", "0"));
         data.memberCountChannel3 = std::stoull(fileJson.value("memberCountChannel3", "0"));
 
+        data.loggerChannel = std::stoull(fileJson.value("loggerChannel", "0"));
 
     }
 
@@ -402,6 +404,8 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
         data.memberCountChannel2 = std::stoull(fileJson.value("memberCountChannel2", "0"));
         data.memberCountChannel3 = std::stoull(fileJson.value("memberCountChannel3", "0"));
 
+        data.loggerChannel = std::stoull(fileJson.value("loggerChannel", "0"));
+
         file.close();
     } else {
         std::cout << "database server not found" << std::endl;
@@ -421,10 +425,12 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
     fileJson["memberCountChannel2"] = std::to_string(data.memberCountChannel2);
     fileJson["memberCountChannel3"] = std::to_string(data.memberCountChannel3);
 
+    filejson["loggerChannel"] = "0";
+
     bot.start_timer([&, channel_id](dpp::timer h) {
         bot.message_create(dpp::message(channel_id, "sinkronisasi data berhasil"));
         bot.stop_timer(h);
-    }, 1);
+    }, 2);
 
     std::ofstream out(path);
     out << fileJson.dump(4);

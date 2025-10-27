@@ -23,8 +23,11 @@ void Terminal::showMenuContent(const Menu& contentID) {
              << "2. Remove slash command\n"
              << "3. Return";
 
-
     break;
+
+    //case Menu::
+        //cout <<
+    //break;
 
     /*
     case Menu::
@@ -35,7 +38,7 @@ void Terminal::showMenuContent(const Menu& contentID) {
     }
 }
 
-void Terminal::handleInput() {
+int Terminal::handleInput() {
     int key;
     cout << "input: ";
     cin >> key;
@@ -44,7 +47,7 @@ void Terminal::handleInput() {
 
 int Terminal::run() {
 
-    using namespace Terminal;
+    //using namespace Terminal;
     Menu menuNow = Menu::Main;
 
 

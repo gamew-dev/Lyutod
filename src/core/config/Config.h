@@ -41,6 +41,8 @@ struct GC {
                    memberCountChannel2,
                    memberCountChannel3;
 
+    dpp::snowflake loggerChannel;
+
 };
 
 

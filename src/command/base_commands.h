@@ -126,6 +126,14 @@ class Commands {
             .add_option(
                 dpp::command_option(dpp::co_sub_command, "sync", "sinkronisasi database dengan pusat")
             )
+            .add_option(
+                dpp::command_option(dpp::co_sub_command, "logger", "log debug untuk server")
+                    .add_option(
+                        dpp::command_option(dpp::co_string, "mode", "mhmmmm ngopi enak", true)
+                            .add_choice(dpp::command_option_choice("add", "add"))
+                            .add_choice(dpp::command_option_choice("remove", "remove"))
+                    )
+            )
             .set_default_permissions(dpp::p_administrator)
         }
 
