@@ -966,3 +966,13 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
         }
     }
 }
+
+
+
+
+
+/// Private
+
+void BotHandler::handleLog(const std::string& line) {
+    std::cout << line << std::endl;
+}

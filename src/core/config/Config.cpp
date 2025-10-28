@@ -425,7 +425,7 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
     fileJson["memberCountChannel2"] = std::to_string(data.memberCountChannel2);
     fileJson["memberCountChannel3"] = std::to_string(data.memberCountChannel3);
 
-    filejson["loggerChannel"] = "0";
+    fileJson["loggerChannel"] = "0";
 
     bot.start_timer([&, channel_id](dpp::timer h) {
         bot.message_create(dpp::message(channel_id, "sinkronisasi data berhasil"));

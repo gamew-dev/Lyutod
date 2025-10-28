@@ -11,14 +11,14 @@ It is **not** intended as user-facing documentation, but rather as a reference f
 - **0.7.x** → Starting point for new features, experiments, and refactoring.
 
 ---
+## 0.7.x
 
-## Technical Considerations
-- Rewriting slash command .
-- Better memory management.
-- Better logging system.
-- Third party games server moderation (Minecraft, Terraria, etc)
+### In developtment/Completed
+- [x] Rewriting slash command.
+- [ ] Simple terminal control
+- [ ] Better memory management.
+- [ ] Better logging system.
 
----
-
-## To-Do List
-- [ ] Make a `README.md`.
+### Future Considerations
+- Third party games server moderation (Minecraft, Terraria, etc).
+- Self lookup source AI.

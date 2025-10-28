@@ -54,8 +54,12 @@ int main() {
         // Registering slash command
         // keep in mind as far as now, this code is still testing
         // and some of the code is still hardcoded including this one
-        handler.preRegSlash(bot, 1270735247922692177);
-        ///handler.preDelSlash(bot, 1270735247922692177);
+
+        //1349036976627777557
+        //1270735247922692177
+
+        handler.preRegSlash(bot, 1349036976627777557);
+        ///handler.preDelSlash(bot, 1349036976627777557);
 
         // First time startup resence setting
         bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));

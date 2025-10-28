@@ -58,6 +58,8 @@ class BotHandler
 
     private:
 
+    void handleLog(const std::string& line);
+
     /// get bot time when the startup at
     //  the value will be init in ctr
     //  and used it some command ex: status

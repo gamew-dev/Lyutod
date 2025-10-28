@@ -24,6 +24,17 @@
 #include "dpp/dpp.h"
 
 
+/// Client config struct
+//  The struct that store bot information
+//
+struct CC {
+    std::string botOwner,
+                botToken,
+                botVersion,
+
+                gptToken;
+};
+
 
 /// Guild config struct
 //  The GC struct (Guild Config) stores guild-specific data such as

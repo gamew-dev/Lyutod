@@ -55,3 +55,16 @@ need to modify some of the main logic files.
 - Small minor improvement
     - Changed bot default timer from 5 minutes to 10
     - Chatbot timer prompt text
+
+## 0.7
+### 0.7.x Base version
+First stable version and base version for future developtment of 0.7 branch  
+This base version introduce a major refactor of slashcommand with grouping  
+and subcommand support.
+### Whats new
+- Major slashcommand update
+   Rewriten slashcommand logic and structure
+- Codebase restructuring and preparations for cleaner developtment
+    - Memory management refactor
+    - Terminal control expansion
+    - Some minor logic improvements
