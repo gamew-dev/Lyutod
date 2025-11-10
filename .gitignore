@@ -1,5 +1,7 @@
 bin/
-bot7*
+bot*
 obj/
-src/dpp/
+build/
 data/
+CMakeLists.txt
+.vscode/
