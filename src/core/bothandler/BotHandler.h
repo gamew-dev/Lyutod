@@ -14,9 +14,9 @@
 #ifndef BOTHANDLER_H
 #define BOTHANDLER_H
 
-#include "Config.h"
-#include "Utils.h"
-#include "Responses.h"
+#include "../config/Config.h"
+#include "../utils/Utils.h"
+#include "../../responses/Responses.h"
 #include "../../command/base_commands.h"
 
 class BotHandler

@@ -8,7 +8,7 @@
  */
 
 
-#include "BotHandler.h"
+#include "core/bothandler/BotHandler.h"
 
 int main() {
 
@@ -149,8 +149,9 @@ int main() {
         // Call the guild create config function and return true if succes
         // send a greeting/join chat in server system channel
         if (Config::guildCreateConfig(event)) {
-            std::string repl = Responses::makeMsg("invite", bot.me, false);
-            bot.message_create(dpp::message(event.created.system_channel_id, repl));
+            //std::string repl = Responses::makeMsg("invite", bot.me, false);
+            //bot.message_create(dpp::message(event.created.system_channel_id, repl));
+            //std::cout << "" << std::endl;
         }
 
     });

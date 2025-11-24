@@ -25,13 +25,18 @@ void Commands::command_guild(dpp::cluster& bot, const dpp::slashcommand_t& event
         Config::syncGuildConfig(bot, guild_id_str, channel_id_str);
     }
 
+
+    else if (subcommand.name == "info") {
+        
+    }
+
     else if (subcommand.name == "logger") {
         std::string mode = std::get<std::string>(event.get_parameter("mode"));
 
         auto data = Config::guildLoadConfig(guild_id_str);
 
         if (mode == "add") {
-            event.reply("add, no effect");
+            event.reply("add, no effect.. nanti yh kids msih wip");
             return;
         }
 
