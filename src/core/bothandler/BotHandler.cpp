@@ -235,6 +235,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string serverID = std::to_string(serverID64);
 
     dpp::snowflake channel = event.msg.channel_id;
+    std::string channel_str = std::to_string(channel);
 
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::string input = "[" + userID +"]: "+ clearText;
@@ -255,15 +256,22 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     if (ServerSessions.find(serverID64) != ServerSessions.end()) {
         std::cout << "server sudah memiliki session" << std::endl;
     } else {
+        
         if (serverID64 == 0) {
+            std::cout << "server id is 0!!!" << std::endl;
             serverID64 = userID64;
             serverID = std::to_string(serverID64);
+            std::cout << "perubahan server id: " << serverID << std::endl;
         }
+        
 
         event.reply("-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
 
         auto memoryRead = Config::serverReadMemory(serverID);
-        BotHandler::ServerSessions[serverID64] = ServerSessionStruct{memoryRead, std::chrono::steady_clock::now()};
+        BotHandler::ServerSessions[serverID64] = std::make_shared<ServerSessionStruct>(ServerSessionStruct{
+            memoryRead, 
+            std::chrono::steady_clock::now()
+        });
 
     }
 
@@ -271,14 +279,17 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
         std::cout << "User sudah ada!\n";
     } else {
         std::string memoryRead = Config::userReadMemory(userID);
-        BotHandler::UserSessions[userID64] = UserSessionStruct{memoryRead, std::chrono::steady_clock::now()};
+        BotHandler::UserSessions[userID64] = std::make_shared<UserSessionStruct>(UserSessionStruct{
+            memoryRead, 
+            std::chrono::steady_clock::now()
+        });
     }
 
     std::cout << "[Debug] prompt is: " << input << std::endl;
 
 
     /// Ai prompt
-    //  the brainwasing spell magic
+    //  the brainwashing spell magic
     std::string prompt =
     "Aturan dan Gaya ngobrol: santai, singkat, jelas, gak usah trlalu formal. "
     "Boleh campur bahasa sehari2 biar lebih manusiawi. ushakan jwb pendek, jngan monoton. "
@@ -290,13 +301,15 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     "Kalau ada hal sepele, jawab sepele juga, boleh bercanda dikit. ikuti perkembangan jaman juga, gunakan emot nangis buat ketawa"
     "Saya bakal kasih memory tentang user dan histori obrolan (kadang kosong). "
     "Jawablah dalam format JSON dengan dua field: {”output”: ”jawaban untuk user”, ”memory”: ”catatan penting atau jika tidak ada berikan '-'”}"
-    "Contoh:"
+    "Contoh: [JANGAN DIMASUKKAN KE MEMORY, INI HANYA CONTOH]"
     "[user]: Saya suka apel"
     "[anda]: {”output”: ”ohh suka apel toh” (atau) ”ywdh sih”, ”memory”: ”suka apel”}"
     "[user]: Halo"
     "[anda]: {”output”: ”halo bro” (atau) ”iyaa”, ”memory”: ”-”}"
     "[user]: Saya suka pisang dan jeruk [MEMORY: suka apel]"
-    "[anda]: {”output”: ”emang enak sih”, ”memory”: ”suka pisang, jeruk”}";
+    "[anda]: {”output”: ”emang enak sih”, ”memory”: ”suka pisang, jeruk”}"
+    "[user]: gabut nih... [MEMORY: suka nasgor, suka nasgor, suka nasgor]"
+    "[anda]: {”output”: ”wah gabut? sinih ngobrol ajah”, ”memory”: ”suka nasgor”}";
 
 
     /// History & Memory fetch
@@ -304,12 +317,12 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  the user memory usage is as simple as concantenate it
     //  while the history vector would need a bit of looping
     //  for make it a good use
-    auto& session = UserSessions[userID64];
-    std::string memory = session.memory;
+    auto session = UserSessions[userID64];
+    std::string memory = session->memory;
     std::cout << "[Debug] memory is: " << memory << std::endl;
 
-    auto& server = ServerSessions[serverID64];
-    std::vector<std::string> history = server.history;
+    auto server = ServerSessions[serverID64];
+    std::vector<std::string> history = server->history;
 
 
     /// JSON payload for the API request.
@@ -376,7 +389,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  push the user input/question into the history vector
     //  since we already used it in above has no purpose now
     //  might aswell save it now
-    server.history.push_back(input);
+    server->history.push_back(input);
 
 
     /// Request
@@ -384,14 +397,18 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     bot.request(
         "https://api.openai.com/v1/chat/completions",
         dpp::m_post,
-        [&](const dpp::http_request_completion_t& cc) {
+        [&, session, server, channel](const dpp::http_request_completion_t& cc) {
             std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
             if (cc.status == 200) {
+                /// Success
+                //  if the callback completion status is 200 or success
+                //  we got the ai answer. however, the content is still in
+                //  json form and we still need to parse it
+                //  thus, we gonna try to parse it. if it fail there will be
+                //  a catcher for the error
                 try {
-                    /// Success
-                    //  if the callback completion status is 200 or success
-                    //  we got the ai answer. however, the content is still in
-                    //  json form and we still need to parse it
+
+                    /// Answer file 
                     auto j = nlohmann::json::parse(cc.body);
 
                     /// Parsing
@@ -412,45 +429,46 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                     /// Reply
                     //  now, since we got the answer that we wanted, we can reply the original
                     //  chat with this event.reply()
-                    event.reply(answer);
+                    bot.message_create(dpp::message(channel, answer));
+                    
 
                     /// Session update
                     //  update the user and server session, we use auto& to automaticly change
                     //  the original value.
                     //  most of the logic below this are self explanatory
-                    auto& session = UserSessions[userID64];
-                    session.last_activity = std::chrono::steady_clock::now();
+                    
+                    session->last_activity = std::chrono::steady_clock::now();
 
                     if (memoOut != "-") {
-                        if (session.memory == "") {
-                            session.memory = memoOut;
+                        if (session->memory == "") {
+                            session->memory = memoOut;
                         }
                         else {
-                            std::cout << "updating " << userID <<" memory: " << memoOut << std::endl;
-                            session.memory += ", " + memoOut;
+                            //std::cout << "updating " << userID <<" memory: " << memoOut << std::endl;
+                            session->memory += ", " + memoOut;
                         }
                     }
 
-                    auto& server = ServerSessions[serverID64];
-                    server.last_activity = std::chrono::steady_clock::now();
-                    server.lastChannel = channel;
-                    server.inputUsage += inputToken;
-                    server.outputUsage += outputToken;
+                    server->last_activity = std::chrono::steady_clock::now();
+                    server->lastChannel = channel;
+                    server->inputUsage += inputToken;
+                    server->outputUsage += outputToken;
 
-                    server.history.push_back("[anda]: " + answer);
+                    server->history.push_back("[anda]: " + answer);
 
                     /// Todo: change into config for better control
                     //  well, its a max size of history that we gonna send
-                    if (server.history.size() >= 5) {
-                        server.history.erase(server.history.begin());
+                    if (server->history.size() >= 5) {
+                        server->history.erase(server->history.begin());
                     }
 
+
                 } catch (...) {
-                    bot.message_create(dpp::message(event.msg.channel_id, "woe error: parsing"));
+                    bot.message_create(dpp::message(channel, "woe error: parsing"));
                 }
             } else {
                 std::cout << "Error: " << cc.body << "\n";
-                bot.message_create(dpp::message(event.msg.channel_id, "<@465096085224947722>, status: " + std::to_string(cc.status)));
+                bot.message_create(dpp::message(channel, "<@465096085224947722>, status: " + std::to_string(cc.status)));
             }
         },
         postdata,
@@ -458,9 +476,6 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
         headers
 
     );
-
-
-
 
 }
 
@@ -507,6 +522,10 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
     else if (command == "guild") {
         Commands::command_guild(bot, event);
+    }
+
+    else if (command == "chatbot") {
+        Commands::command_chatbot(bot, event);
     }
 
 }
@@ -912,11 +931,11 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     //  forced: (e.g., on shutdown) sessions are saved but not cleared,
     //  but new messages are no longer recorded.
     for (auto it = UserSessions.begin(); it != UserSessions.end(); ) {
-        auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
+        auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second->last_activity);
         if (elapsed.count() >= 5 || forced) {
             std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
-            std::string memory = it->second.memory;
+            std::string memory = it->second->memory;
             std::cout << "memori akhir: " << memory << std::endl;
 
             Config::userUpdateMemory(id, memory);
@@ -934,25 +953,25 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     /// Server session
     //  same with user session but with more variable logic
     for (auto it = ServerSessions.begin(); it != ServerSessions.end(); ) {
-        auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second.last_activity);
+        auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second->last_activity);
         if (elapsed.count() >= 5 || forced) {
 
-            std::cout << "Last channel: " << it->second.lastChannel << std::endl;
+            std::cout << "Last channel: " << it->second->lastChannel << std::endl;
 
-            std::string inputToken = std::to_string(it->second.inputUsage),
-                        outputToken = std::to_string(it->second.outputUsage),
-                        totalToken = std::to_string(it->second.inputUsage + it->second.outputUsage);
+            std::string inputToken = std::to_string(it->second->inputUsage),
+                        outputToken = std::to_string(it->second->outputUsage),
+                        totalToken = std::to_string(it->second->inputUsage + it->second->outputUsage);
 
             std::string closing = (forced) ? "Sesi diakhiri untuk saat ini, anda masih bisa melanjutkan percakapan tetapi tidak akan tersimpan" : "sesi telah berakhir untuk membebaskan memory, anda bisa memulainya lagi kapan saja";
             std::string repl =  closing + "\n"
                                "token usage: " + inputToken + " : " + outputToken + " : " + totalToken;
 
             /// Announce the closing
-            bot.message_create(dpp::message(it->second.lastChannel, repl));
+            bot.message_create(dpp::message(it->second->lastChannel, repl));
 
             std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
-            std::vector<std::string> history = it->second.history;
+            std::vector<std::string> history = it->second->history;
 
             Config::serverUpdateHistory(id, history);
 

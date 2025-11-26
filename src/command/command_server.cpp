@@ -24,7 +24,7 @@ void Commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& even
         dpp::embed status = dpp::embed()
             .set_color(dpp::colors::antique_bronze)
             .set_title(event.command.get_guild().name)
-            .set_url("https://discord.gg/ntStxHH9gS")
+            //.set_url("https://discord.gg/ntStxHH9gS")
             //.set_author("Server Invite", "https://discord.gg/ntStxHH9gS", event.command.get_guild().icon)
             //.set_thumbnail(event.command.get_guild().icon)
             .set_description(event.command.get_guild().description)
@@ -69,7 +69,7 @@ void Commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& even
 
     else if (subcommand.name == "icon") {
 
-        event.reply("hmh");
+        event.reply("hmh, wip malas");
     }
 
 

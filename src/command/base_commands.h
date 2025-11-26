@@ -36,6 +36,8 @@ class Commands {
                 command_census  (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event),
                 command_guild   (          dpp::cluster& bot,
+                                     const dpp::slashcommand_t& event),
+                command_chatbot (          dpp::cluster& bot,
                                      const dpp::slashcommand_t& event);
 
     static inline std::map<std::string, dpp::slashcommand> commands_list {
@@ -135,6 +137,20 @@ class Commands {
                     )
             )
             .set_default_permissions(dpp::p_administrator)
+        },
+
+        {"8", dpp::slashcommand("chatbot", "command untuk chatbot", 0)
+            .add_option(
+                dpp::command_option(dpp::co_sub_command, "check_memory", "cek isi memory Anda di Database")
+            )
+
+            .add_option(
+                dpp::command_option(dpp::co_sub_command, "clear_memory", "hapus memory Anda di Database")
+            )
+
+            .add_option(
+                dpp::command_option(dpp::co_sub_command, "history", "cek histori percakapan")
+            )
         }
 
     };

@@ -58,7 +58,7 @@ int main() {
         //1349036976627777557
         //1270735247922692177
 
-        handler.preRegSlash(bot, 1349036976627777557);
+        handler.preRegSlash(bot, 1270735247922692177);
         ///handler.preDelSlash(bot, 1349036976627777557);
 
         // First time startup resence setting
@@ -149,8 +149,8 @@ int main() {
         // Call the guild create config function and return true if succes
         // send a greeting/join chat in server system channel
         if (Config::guildCreateConfig(event)) {
-            //std::string repl = Responses::makeMsg("invite", bot.me, false);
-            //bot.message_create(dpp::message(event.created.system_channel_id, repl));
+            std::string repl = Responses::makeMsg("invite", bot.me, false);
+            bot.message_create(dpp::message(event.created.system_channel_id, repl));
             //std::cout << "" << std::endl;
         }
 

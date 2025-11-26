@@ -79,7 +79,7 @@ class BotHandler
     struct ServerSessionStruct {
         std::vector<std::string> history;
         std::chrono::steady_clock::time_point last_activity;
-        dpp::snowflake lastChannel;
+        dpp::snowflake lastChannel = 0;
         int inputUsage = 0;
         int outputUsage = 0;
     };
@@ -90,8 +90,8 @@ class BotHandler
     //  same happen with the server session, good thing about u_map is there are no ordered index 1,2,3 like an array for looping
     //  instead, it will check if it has value or not.
     ///  @Todo:
-    std::unordered_map<dpp::snowflake, UserSessionStruct> UserSessions;
-    std::unordered_map<dpp::snowflake, ServerSessionStruct> ServerSessions;
+    std::unordered_map<dpp::snowflake, std::shared_ptr<UserSessionStruct>> UserSessions;
+    std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSessionStruct>> ServerSessions;
 
     /// Presence list that available for the bot
     std::vector <dpp::presence> presence {
