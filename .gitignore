@@ -2,6 +2,7 @@ bin/
 bot*
 obj/
 build/
+release/
 data/
 CMakeLists.txt
 .vscode/

@@ -22,6 +22,11 @@
 
 bool Config::clientLoadConfig() {
 
+
+    std::filesystem::create_directories(userPath);
+    std::filesystem::create_directories(serverPath);
+    std::filesystem::create_directories(guildPath);
+
     std::ifstream file(clientPath);
     if (file) {
         std::cout << "[INFO] Reading bot config..." <<std::endl;
