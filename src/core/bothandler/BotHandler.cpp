@@ -240,8 +240,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::string input = "[" + userID +"]: "+ clearText;
 
-
-
+    bot.channel_typing(channel);
 
     /// Session availability
     //  below is used for checking is the user/server already has an active session or not
@@ -264,14 +263,33 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
             std::cout << "perubahan server id: " << serverID << std::endl;
         }
         
+        bot.message_create(
+        dpp::message(channel, "-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru"),
+        [&](const dpp::confirmation_callback_t& cb) {
+            if (cb.is_error()) {
+                std::cout << "[Err]: fail to send new opened session chat msg";
+                return;
+            }
 
-        event.reply("-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
+            dpp::message msg = std::get<dpp::message>(cb.value);  
+    
 
-        auto memoryRead = Config::serverReadMemory(serverID);
-        BotHandler::ServerSessions[serverID64] = std::make_shared<ServerSessionStruct>(ServerSessionStruct{
-            memoryRead, 
-            std::chrono::steady_clock::now()
+            std::cout << "Got id pesan: " << std::to_string(msg.id) << std::endl;
+
+            auto memoryRead = Config::serverReadMemory(serverID);
+            BotHandler::ServerSessions[serverID64] = std::make_shared<ServerSessionStruct>(
+                ServerSessionStruct{
+                    memoryRead, 
+                    std::chrono::steady_clock::now(),
+                    msg.id
+                }
+            );
+
         });
+
+        //event.reply("-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
+
+        
 
     }
 
@@ -307,9 +325,9 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     "[user]: Halo"
     "[anda]: {”output”: ”halo bro” (atau) ”iyaa”, ”memory”: ”-”}"
     "[user]: Saya suka pisang dan jeruk [MEMORY: suka apel]"
-    "[anda]: {”output”: ”emang enak sih”, ”memory”: ”suka pisang, jeruk”}"
-    "[user]: gabut nih... [MEMORY: suka nasgor, suka nasgor, suka nasgor]"
-    "[anda]: {”output”: ”wah gabut? sinih ngobrol ajah”, ”memory”: ”suka nasgor”}";
+    "[anda]: {”output”: ”emang enak sih”, ”memory”: ”suka jeruk”}"
+    "[user]: gabut nih... [MEMORY: suka nasgor, suka jeruk, suka nasgor]"
+    "[anda]: {”output”: ”wah gabut? sinih ngobrol ajah”, ”memory”: ”-”}";
 
 
     /// History & Memory fetch
@@ -429,7 +447,14 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                     /// Reply
                     //  now, since we got the answer that we wanted, we can reply the original
                     //  chat with this event.reply()
-                    bot.message_create(dpp::message(channel, answer));
+                    if (server->openMessageID != 0) {
+                        dpp::message msg(server->openMessageID, answer);
+                        msg.channel_id = channel;
+                        bot.message_edit(msg);
+                    } else {
+
+                        bot.message_create(dpp::message(channel, answer));
+                    }
                     
 
                     /// Session update

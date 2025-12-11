@@ -79,12 +79,14 @@ class BotHandler
     struct ServerSessionStruct {
         std::vector<std::string> history;
         std::chrono::steady_clock::time_point last_activity;
+        dpp::snowflake openMessageID = 0;
         dpp::snowflake lastChannel = 0;
         int inputUsage = 0;
         int outputUsage = 0;
+
     };
 
-    /// The map for session pairin,
+    /// The map for session pairin',
     //  the first index will be using user and/or server's id. for example, user has an id of 123456789
     //  therefore it will be UserSessions[123...9] = UserSessionStruct{"i like trains", 69 years ago}
     //  same happen with the server session, good thing about u_map is there are no ordered index 1,2,3 like an array for looping

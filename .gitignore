@@ -5,4 +5,5 @@ build/
 release/
 data/
 CMakeLists.txt
+autobuild.sh
 .vscode/
