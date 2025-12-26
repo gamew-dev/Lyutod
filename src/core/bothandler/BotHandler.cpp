@@ -223,6 +223,8 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
  *  @param the bot itself to be able replying
  *  @param message event class contain the message/prompt for the ai
  *
+ *  @Todo: fix mess, rewrite session variable name (server & session)
+ *         async scopings
  */
 
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
@@ -499,9 +501,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
         postdata,
         "application/json",
         headers
-
     );
-
 }
 
 /**

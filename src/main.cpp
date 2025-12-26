@@ -96,7 +96,8 @@ int main() {
         // will be treat as chatbot for ai
         if (Utils::isMentioned(bot, event)) {
             std::cout << "bot Mentioned" << std::endl;
-            handler.handleAiRequest(bot, event);
+            event.reply("Fitur ai sedang maintenance yh kids, ownerny sedang mimir");
+            //handler.handleAiRequest(bot, event);
         } else {
             handler.handleMessage(bot, event);
         }
