@@ -4,6 +4,6 @@ obj/
 build/
 release/
 data/
-CMakeLists.txt
+CMakeLists.txt*
 autobuild.sh
 .vscode/

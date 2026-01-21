@@ -59,6 +59,7 @@ class BotHandler
     private:
 
     void handleLog(const std::string& line);
+    void makeAIRequest();
 
     /// get bot time when the startup at
     //  the value will be init in ctr
@@ -79,8 +80,10 @@ class BotHandler
     struct ServerSessionStruct {
         std::vector<std::string> history;
         std::chrono::steady_clock::time_point last_activity;
+
         dpp::snowflake openMessageID = 0;
         dpp::snowflake lastChannel = 0;
+
         int inputUsage = 0;
         int outputUsage = 0;
 

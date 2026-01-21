@@ -230,18 +230,19 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     /// basic variable
-    dpp::snowflake userID64 = event.msg.author.id;
-    dpp::snowflake serverID64 = event.msg.guild_id;
+    dpp::snowflake userID = event.msg.author.id;
+    dpp::snowflake serverID = event.msg.guild_id;
 
-    std::string userID = std::to_string(userID64);
-    std::string serverID = std::to_string(serverID64);
+    std::string userID_str = std::to_string(userID64);
+    std::string serverID_str = std::to_string(serverID64);
 
-    dpp::snowflake channel = event.msg.channel_id;
-    std::string channel_str = std::to_string(channel);
+    dpp::snowflake channelID = event.msg.channel_id;
+    std::string channelID_str = std::to_string(channelID);
 
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::string input = "[" + userID +"]: "+ clearText;
 
+    bool isNewSession;
     bot.channel_typing(channel);
 
     /// Session availability
@@ -254,17 +255,20 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  though there's a possibility that the id of an user and a server is same, or not.. idk
     //  anywayy... what are the chances right??? ^_^
 
-    if (ServerSessions.find(serverID64) != ServerSessions.end()) {
+    if (ServerSessions.find(serverID) != ServerSessions.end()) {
         std::cout << "server sudah memiliki session" << std::endl;
-    } else {
-        
-        if (serverID64 == 0) {
+    }
+    else {
+        isNewSession = true;
+
+        if (serverID == 0) {
             std::cout << "server id is 0!!!" << std::endl;
-            serverID64 = userID64;
-            serverID = std::to_string(serverID64);
-            std::cout << "perubahan server id: " << serverID << std::endl;
+            serverID = userID;
+            serverID_str = std::to_string(serverID);
+            std::cout << "perubahan server id: " << serverID_str << std::endl;
         }
-        
+
+        /*
         bot.message_create(
         dpp::message(channel, "-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru"),
         [&](const dpp::confirmation_callback_t& cb) {
@@ -287,23 +291,33 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                 }
             );
 
-        });
-
+        }); //open session callback end
+        */
         //event.reply("-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
-
-        
 
     }
 
-    if (UserSessions.find(userID64) != UserSessions.end()) {
+    if (UserSessions.find(userID) != UserSessions.end()) {
         std::cout << "User sudah ada!\n";
     } else {
-        std::string memoryRead = Config::userReadMemory(userID);
-        BotHandler::UserSessions[userID64] = std::make_shared<UserSessionStruct>(UserSessionStruct{
+        std::string memoryRead = Config::userReadMemory(userID_str);
+        BotHandler::UserSessions[userID] = std::make_shared<UserSessionStruct>(UserSessionStruct{
             memoryRead, 
             std::chrono::steady_clock::now()
         });
     }
+
+    /// History & Memory fetch
+    //  call the session with the given id and store it.
+    //  the user memory usage is as simple as concantenate it
+    //  while the history vector would need a bit of looping
+    //  for make it a good use
+    auto user = UserSessions[userID];
+    std::string memory = user->memory;
+    std::cout << "[Debug] memory is: " << memory << std::endl;
+
+    auto server = ServerSessions[serverID];
+    std::vector<std::string> history = server->history;
 
     std::cout << "[Debug] prompt is: " << input << std::endl;
 
@@ -332,17 +346,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     "[anda]: {”output”: ”wah gabut? sinih ngobrol ajah”, ”memory”: ”-”}";
 
 
-    /// History & Memory fetch
-    //  call the session with the given id and store it.
-    //  the user memory usage is as simple as concantenate it
-    //  while the history vector would need a bit of looping
-    //  for make it a good use
-    auto session = UserSessions[userID64];
-    std::string memory = session->memory;
-    std::cout << "[Debug] memory is: " << memory << std::endl;
 
-    auto server = ServerSessions[serverID64];
-    std::vector<std::string> history = server->history;
 
 
     /// JSON payload for the API request.
@@ -351,13 +355,15 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  the API Request (see variable below).
     nlohmann::json messagesPayload = nlohmann::json::array();
 
-    // ai prompt and user memory
+    /// User session
+    //  used for memory in input
     messagesPayload.push_back({
         {"role", "system"},
         {"content", prompt + "\n\n[MEMORY]\n" + memory}
     });
 
-    // chat history
+    /// Server session
+    //  used in chat history
     for (const auto& line : history) {
         std::cout<< "reading history: " << line << std::endl;
         if (line.rfind("[anda]:", 0) == 0) {
@@ -412,12 +418,16 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     server->history.push_back(input);
 
 
+    /// Request and make an answer
+
+
+
     /// Request
     //  here it will do the thing, that and something
     bot.request(
         "https://api.openai.com/v1/chat/completions",
         dpp::m_post,
-        [&, session, server, channel](const dpp::http_request_completion_t& cc) {
+        [&, user, server, channelID](const dpp::http_request_completion_t& cc) {
             std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
             if (cc.status == 200) {
                 /// Success
