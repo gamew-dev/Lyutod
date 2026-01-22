@@ -233,17 +233,17 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     dpp::snowflake userID = event.msg.author.id;
     dpp::snowflake serverID = event.msg.guild_id;
 
-    std::string userID_str = std::to_string(userID64);
-    std::string serverID_str = std::to_string(serverID64);
+    std::string userID_str = std::to_string(userID);
+    std::string serverID_str = std::to_string(serverID);
 
     dpp::snowflake channelID = event.msg.channel_id;
     std::string channelID_str = std::to_string(channelID);
 
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
-    std::string input = "[" + userID +"]: "+ clearText;
+    std::string input = "[" + userID_str +"]: "+ clearText;
 
-    bool isNewSession;
-    bot.channel_typing(channel);
+    bool isNewSession = false;
+    //bot.channel_typing(channel);
 
     /// Session availability
     //  below is used for checking is the user/server already has an active session or not
@@ -255,47 +255,30 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  though there's a possibility that the id of an user and a server is same, or not.. idk
     //  anywayy... what are the chances right??? ^_^
 
-    if (ServerSessions.find(serverID) != ServerSessions.end()) {
-        std::cout << "server sudah memiliki session" << std::endl;
-    }
-    else {
+
+    std::shared_ptr<ServerSessionStruct> server;
+
+    auto it = ServerSessions.find(serverID);
+    if (it != ServerSessions.end()) {
+        server = it->second;
+        std::cout << "server sudah memiliki session\n";
+    } else {
         isNewSession = true;
 
         if (serverID == 0) {
-            std::cout << "server id is 0!!!" << std::endl;
             serverID = userID;
             serverID_str = std::to_string(serverID);
-            std::cout << "perubahan server id: " << serverID_str << std::endl;
         }
 
-        /*
-        bot.message_create(
-        dpp::message(channel, "-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru"),
-        [&](const dpp::confirmation_callback_t& cb) {
-            if (cb.is_error()) {
-                std::cout << "[Err]: fail to send new opened session chat msg";
-                return;
-            }
+        server = std::make_shared<ServerSessionStruct>();
+        server->guildID = serverID;
+        server->history = Config::serverReadMemory(serverID_str);
+        server->last_activity = std::chrono::steady_clock::now();
 
-            dpp::message msg = std::get<dpp::message>(cb.value);  
-    
-
-            std::cout << "Got id pesan: " << std::to_string(msg.id) << std::endl;
-
-            auto memoryRead = Config::serverReadMemory(serverID);
-            BotHandler::ServerSessions[serverID64] = std::make_shared<ServerSessionStruct>(
-                ServerSessionStruct{
-                    memoryRead, 
-                    std::chrono::steady_clock::now(),
-                    msg.id
-                }
-            );
-
-        }); //open session callback end
-        */
-        //event.reply("-# Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru");
-
+        ServerSessions.emplace(serverID, server);
     }
+
+
 
     if (UserSessions.find(userID) != UserSessions.end()) {
         std::cout << "User sudah ada!\n";
@@ -316,7 +299,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string memory = user->memory;
     std::cout << "[Debug] memory is: " << memory << std::endl;
 
-    auto server = ServerSessions[serverID];
+    //auto server = ServerSessions[serverID];
     std::vector<std::string> history = server->history;
 
     std::cout << "[Debug] prompt is: " << input << std::endl;
@@ -417,18 +400,41 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  might aswell save it now
     server->history.push_back(input);
 
-
     /// Request and make an answer
 
+    if (isNewSession) {
+        bot.message_create(dpp::message(channelID, "Sesi Chat dimulai, sesi akan berakhir setelah > 10 menit tidak ada pesan baru."),
+            [&, channelID, postdata, headers](const dpp::confirmation_callback_t& cb) {
+                if (cb.is_error()) return;
+
+                auto msg = std::get<dpp::message>(cb.value);
 
 
-    /// Request
-    //  here it will do the thing, that and something
+                server->openMessageID = msg.id;
+                server->lastChannel = channelID;
+                server->last_activity = std::chrono::steady_clock::now();
+
+                makeAIRequest(bot, channelID, user, server, postdata, headers);
+            });
+    } else {
+        makeAIRequest(bot, channelID, user, server, postdata, headers);
+    }
+
+}
+
+
+void BotHandler::makeAIRequest(dpp::cluster &bot,
+                               dpp::snowflake channelID,
+                               std::shared_ptr<UserSessionStruct> user,
+                               std::shared_ptr<ServerSessionStruct> server,
+                               std::string postdata,
+                               dpp::http_headers headers) {
+
     bot.request(
         "https://api.openai.com/v1/chat/completions",
         dpp::m_post,
         [&, user, server, channelID](const dpp::http_request_completion_t& cc) {
-            std::cout << "Done requesting with status:" << std::to_string(cc.status) << std::endl;
+            std::cout << "[Log]: Done requesting with status:" << std::to_string(cc.status) << std::endl;
             if (cc.status == 200) {
                 /// Success
                 //  if the callback completion status is 200 or success
@@ -438,7 +444,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                 //  a catcher for the error
                 try {
 
-                    /// Answer file 
+                    /// Answer file
                     auto j = nlohmann::json::parse(cc.body);
 
                     /// Parsing
@@ -454,40 +460,48 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
                     nlohmann::json content_json = nlohmann::json::parse(content);
                     std::string answer = content_json["output"];
                     std::string memoOut = content_json["memory"];
-                    std::cout << "memory out is: <" << memoOut << ">"<<std::endl;
+                    std::cout << "[Log]: memory out is: <" << memoOut << ">"<<std::endl;
 
                     /// Reply
                     //  now, since we got the answer that we wanted, we can reply the original
                     //  chat with this event.reply()
                     if (server->openMessageID != 0) {
-                        dpp::message msg(server->openMessageID, answer);
-                        msg.channel_id = channel;
-                        bot.message_edit(msg);
-                    } else {
 
-                        bot.message_create(dpp::message(channel, answer));
+                        bot.start_timer([&, server, channelID, answer](dpp::timer h) {
+                            dpp::message msg;
+                            msg.id = server->openMessageID;
+                            msg.channel_id = channelID;
+                            msg.guild_id = server->guildID;
+                            msg.content = answer;
+
+                            bot.message_edit(msg);
+                            server->openMessageID = 0;
+                            bot.stop_timer(h);
+                        },3);
+
+                    } else {
+                        bot.message_create(dpp::message(channelID, answer));
                     }
-                    
+
 
                     /// Session update
                     //  update the user and server session, we use auto& to automaticly change
                     //  the original value.
-                    //  most of the logic below this are self explanatory
-                    
-                    session->last_activity = std::chrono::steady_clock::now();
+                    //  most of the logic below are self explanatory
+
+                    user->last_activity = std::chrono::steady_clock::now();
 
                     if (memoOut != "-") {
-                        if (session->memory == "") {
-                            session->memory = memoOut;
+                        if (user->memory == "") {
+                            user->memory = memoOut;
                         }
                         else {
-                            //std::cout << "updating " << userID <<" memory: " << memoOut << std::endl;
-                            session->memory += ", " + memoOut;
+                            user->memory += ", " + memoOut;
                         }
                     }
 
                     server->last_activity = std::chrono::steady_clock::now();
-                    server->lastChannel = channel;
+                    server->lastChannel = channelID;
                     server->inputUsage += inputToken;
                     server->outputUsage += outputToken;
 
@@ -501,18 +515,21 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
 
                 } catch (...) {
-                    bot.message_create(dpp::message(channel, "woe error: parsing"));
+                    bot.message_create(dpp::message(channelID, "error ngab, coba lgi nnti"));
                 }
             } else {
-                std::cout << "Error: " << cc.body << "\n";
-                bot.message_create(dpp::message(channel, "<@465096085224947722>, status: " + std::to_string(cc.status)));
+                std::cout << "[Err]: " << cc.body << "\n";
+                //bot.message_create(dpp::message(channelID, "<@465096085224947722>, status: " + std::to_string(cc.status)));
             }
         },
         postdata,
         "application/json",
         headers
-    );
+        );
+
 }
+
+
 
 /**
  *  handleSlash
@@ -1002,7 +1019,9 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
                                "token usage: " + inputToken + " : " + outputToken + " : " + totalToken;
 
             /// Announce the closing
-            bot.message_create(dpp::message(it->second->lastChannel, repl));
+            dpp::message msg(it->second->lastChannel, repl);
+            msg.set_flags(dpp::m_suppress_notifications);
+            bot.message_create(msg);
 
             std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;
             std::string id = std::to_string(it->first);

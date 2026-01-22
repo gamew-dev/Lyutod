@@ -58,9 +58,6 @@ class BotHandler
 
     private:
 
-    void handleLog(const std::string& line);
-    void makeAIRequest();
-
     /// get bot time when the startup at
     //  the value will be init in ctr
     //  and used it some command ex: status
@@ -81,6 +78,7 @@ class BotHandler
         std::vector<std::string> history;
         std::chrono::steady_clock::time_point last_activity;
 
+        dpp::snowflake guildID = 0;
         dpp::snowflake openMessageID = 0;
         dpp::snowflake lastChannel = 0;
 
@@ -88,6 +86,17 @@ class BotHandler
         int outputUsage = 0;
 
     };
+
+
+    void handleLog(const std::string& line);
+    void makeAIRequest(dpp::cluster& bot,
+                       dpp::snowflake channelID,
+                       std::shared_ptr<UserSessionStruct> user,
+                       std::shared_ptr<ServerSessionStruct> server,
+                       std::string postdata,
+                       dpp::http_headers headers);
+
+
 
     /// The map for session pairin',
     //  the first index will be using user and/or server's id. for example, user has an id of 123456789

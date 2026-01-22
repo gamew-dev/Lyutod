@@ -58,7 +58,7 @@ int main() {
         //1349036976627777557
         //1270735247922692177
 
-        handler.preRegSlash(bot, 1270735247922692177);
+        //handler.preRegSlash(bot, 1270735247922692177);
         ///handler.preDelSlash(bot, 1349036976627777557);
 
         // First time startup resence setting
@@ -96,8 +96,8 @@ int main() {
         // will be treat as chatbot for ai
         if (Utils::isMentioned(bot, event)) {
             std::cout << "bot Mentioned" << std::endl;
-            event.reply("Fitur ai sedang maintenance yh kids, ownerny sedang mimir");
-            //handler.handleAiRequest(bot, event);
+            //event.reply("Fitur ai sedang maintenance yh kids, ownerny sedang mimir");
+            handler.handleAiRequest(bot, event);
         } else {
             handler.handleMessage(bot, event);
         }
