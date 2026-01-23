@@ -28,6 +28,8 @@ void Commands::command_chatbot (dpp::cluster& bot, const dpp::slashcommand_t& ev
         std::cout << "edit respon/jawab" << std::endl;
     }
 
+
+
     else if (subcommand.name == "history") {
 
         std::cout << "ambil data history" << std::endl;
@@ -35,7 +37,13 @@ void Commands::command_chatbot (dpp::cluster& bot, const dpp::slashcommand_t& ev
 
         std::string result;
         for (const auto& line : history) {
-            result += line + "\n";
+            std::string display = line;
+
+            if (display.rfind("[anda]:", 0) == 0) {
+                display.replace(0, 7, "[Lyudya]:");
+            }
+
+            result += display + "\n";
             std::cout << "cek history line: " << line << std::endl;
         }
         event.edit_response("```" + result + "```");

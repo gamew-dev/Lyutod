@@ -75,10 +75,10 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
                     dpp::component()
                         .set_label("Tes")
                         .set_type(dpp::cot_button)
-                        .set_emoji(dpp::unicode_emoji::smile)
-                        .set_style(dpp::cos_danger)
+                        .set_emoji(Responses::emoteReact())
+                        .set_style(dpp::cos_success )
 
-                        .set_id("test id")
+                        .set_id("ID_tes")
                 )
             );
 
@@ -594,12 +594,17 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
 void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
 
-    if (std::to_string(event.command.usr.id) == Config::botOwner) {
-        event.reply(dpp::ir_update_message, "Tos <:owo:1370082279006666802>");
+    if (event.custom_id == "ID_tes") {
+        if (std::to_string(event.command.usr.id) == Config::botOwner) {
+            event.reply(dpp::ir_update_message, "Tos <:owo:1370082279006666802>");
+        } else {
+            std::string repl = Responses::makeMsg("prohibited", event.command.usr, false);
+            event.reply(dpp::ir_update_message, repl);
+        }
     } else {
-        std::string repl = Responses::makeMsg("prohibited", event.command.usr, false);
-        event.reply(dpp::ir_update_message, repl);
+        event.reply(dpp::message("tombol sudah expired / tidak valid").set_flags(dpp::m_ephemeral));
     }
+
 
 
 }
