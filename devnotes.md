@@ -15,10 +15,14 @@ It is **not** intended as user-facing documentation, but rather as a reference f
 
 ### In developtment/Completed
 - [x] Rewriting slash command.
-- [ ] Simple terminal control
+- [ ] Simple startup terminal control.
 - [ ] Better memory management.
 - [ ] Better logging system.
+- [ ] Better file management
+
 
 ### Future Considerations
 - Third party games server moderation (Minecraft, Terraria, etc).
 - Self lookup source AI.
+- Simple interactive games using buttons.
+- Always active channel chatbot session 

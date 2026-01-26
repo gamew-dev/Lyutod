@@ -84,6 +84,17 @@ class BotHandler
 
         int inputUsage = 0;
         int outputUsage = 0;
+    };
+
+    struct MessageSessionStruct {
+
+        dpp::snowflake owner;
+
+        std::string type;
+        std::string state;
+        int page;
+
+        std::chrono::steady_clock::time_point last_activity;
 
     };
 
@@ -106,6 +117,12 @@ class BotHandler
     ///  @Todo:
     std::unordered_map<dpp::snowflake, std::shared_ptr<UserSessionStruct>> UserSessions;
     std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSessionStruct>> ServerSessions;
+
+    /// Map for active message
+    //  An active message that has an interface/interactive feature such as menu selection, button
+    //  edit, modal, etc
+    //  WIP...
+    std::unordered_map<dpp::snowflake, MessageSessionStruct> MessageSession;
 
     /// Presence list that available for the bot
     std::vector <dpp::presence> presence {

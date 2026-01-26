@@ -1,9 +1,2 @@
-bin/
-bot*
-obj/
-build/
 release/
-data/
-CMakeLists.txt*
-autobuild.sh
-.vscode/
+CMakeLists.txt.*

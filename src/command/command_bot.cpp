@@ -60,8 +60,43 @@ void Commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dp
 
         dpp::message msg(event.command.channel_id, status);
 
+        msg.add_component(
+            dpp::component()
+                .add_component(dpp::component()
+                    .set_label("<")
+                    .set_emoji(dpp::unicode_emoji::left_arrow)
+                    .set_type(dpp::cot_button)
+                    .set_id("cmd_status|left")
+                    .set_style(dpp::cos_primary)
+                )
+                .add_component(dpp::component()
+                    .set_label(">")
+                    .set_emoji(dpp::unicode_emoji::right_arrow)
+                    .set_emoji(Responses::emoteReact())
+                    .set_type(dpp::cot_button)
+                    .set_id("cmd_status|right")
+                    .set_style(dpp::cos_secondary)
+            )
+        );
 
         event.reply(msg);
+        /*
+        event.reply(msg, [&](const dpp::confirmation_callback_t& cb) {
+            if (!cb.is_error()) {
+
+                UIStateManager::registerMessage(
+                    cb.get<dpp::message>().id,
+                    {
+                        .owner = event.command.usr.id,
+                        .type = "bot_status",
+                        .page = 0,
+                        .expire_at = time(nullptr) + 120
+                    }
+                    );
+
+            }
+        });
+        */
     }
 
     else if (subcommand.name == "invite") {
@@ -75,11 +110,5 @@ void Commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dp
 
         event.reply("y ntr infony w add :malas");
     }
-
-
-
-
-
-
 
 }

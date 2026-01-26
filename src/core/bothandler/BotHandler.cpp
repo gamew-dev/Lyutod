@@ -82,7 +82,23 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
                 )
             );
 
-            event.reply(aaa);
+            bot.message_create(aaa,[&](const dpp::confirmation_callback_t& cb) {
+                if (cb.is_error()) return;
+
+                const dpp::message& sent = std::get<dpp::message>(cb.value);
+
+                MessageSessionStruct session;
+                    session.owner = event.msg.author.id;
+                    session.type = "testttttt";
+                    session.state = "stateless";
+                    session.page = -1;
+                    session.last_activity = std::chrono::steady_clock::now();
+
+                MessageSession[sent.id] = session;
+
+            });
+
+
     	}
 
     if (
@@ -595,17 +611,15 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
 
     if (event.custom_id == "ID_tes") {
-        if (std::to_string(event.command.usr.id) == Config::botOwner) {
-            event.reply(dpp::ir_update_message, "Tos <:owo:1370082279006666802>");
-        } else {
-            std::string repl = Responses::makeMsg("prohibited", event.command.usr, false);
-            event.reply(dpp::ir_update_message, repl);
-        }
+        auto session = MessageSession[event.command.msg.id];
+        std::string data = "owner: <@" + std::to_string(session.owner) + ">\n"
+                           "type: " + session.type + "\n"
+                           "state: " + session.state + "\n"
+                            "page: " + std::to_string(session.page);
+        event.reply(dpp::ir_update_message, data);
     } else {
         event.reply(dpp::message("tombol sudah expired / tidak valid").set_flags(dpp::m_ephemeral));
     }
-
-
 
 }
 
@@ -989,7 +1003,7 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     //  but new messages are no longer recorded.
     for (auto it = UserSessions.begin(); it != UserSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second->last_activity);
-        if (elapsed.count() >= 5 || forced) {
+        if (elapsed.count() >= 9 || forced) {
             std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
             std::string memory = it->second->memory;
@@ -1011,7 +1025,7 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     //  same with user session but with more variable logic
     for (auto it = ServerSessions.begin(); it != ServerSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second->last_activity);
-        if (elapsed.count() >= 5 || forced) {
+        if (elapsed.count() >= 9 || forced) {
 
             std::cout << "Last channel: " << it->second->lastChannel << std::endl;
 

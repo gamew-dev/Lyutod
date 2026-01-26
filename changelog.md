@@ -68,3 +68,12 @@ and subcommand support.
     - Memory management refactor
     - Terminal control expansion
     - Some minor logic improvements
+
+## 0.7.1
+- New workplace setup
+    - Added CMakeLists 
+- Feature: Reworked chatbot prompt message with edit and silent ability
+- Feature: Chatbot slashCommand
+    - Ability to check history and user memory
+- Fix: Chatbot session memory corrupt
+- Fix: Button event caching
