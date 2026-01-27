@@ -12,33 +12,45 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
 
 # === Source files ===
 # .h and .cpp file for source code
-file(GLOB_RECURSE SRC_FILES
-    src/core/*.cpp
+# Mostly, you dont need to add the .h files, but
+# since many text editor/IDE doesn't show it in
+# project tree, I just add it here anyway
+file(GLOB_RECURSE CORE_SRC
     src/core/*.h
-    src/command/*.cpp
+    src/core/*.cpp
+)
+
+file(GLOB_RECURSE CMD_SRC
     src/command/*.h
+    src/command/*.cpp
+)
+
+file(GLOB_RECURSE STATE_SRC
+    src/state/*.h
+    src/state/*.cpp
+)
+
+file(GLOB_RECURSE RESP_SRC
     src/responses/*.h
+    src/responses/*.cpp
+)
+
+set(SRC_FILES
+    ${CORE_SRC}
+    ${CMD_SRC}
+    ${STATE_SRC}
+    ${RESP_SRC}
     src/main.cpp
 )
 
 # === Executable ===
 # target output: "bot"
-add_executable(bot ${SRC_FILES}
-    src/command/base_commands_ui.h)
+add_executable(bot ${SRC_FILES})
 
 # === Include directories ===
-# file header
+# header files and implementation files base directory path
 target_include_directories(bot PRIVATE
     ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/src/core
-    ${PROJECT_SOURCE_DIR}/src/core/bothandler
-    ${PROJECT_SOURCE_DIR}/src/core/config
-    ${PROJECT_SOURCE_DIR}/src/core/terminal
-    ${PROJECT_SOURCE_DIR}/src/core/utils
-    ${PROJECT_SOURCE_DIR}/src/command
-    ${PROJECT_SOURCE_DIR}/src/responses
-    /usr/include
-    /usr/local/include
 )
 
 # === Link DPP library ===
