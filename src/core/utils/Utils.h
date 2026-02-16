@@ -3,11 +3,10 @@
 
 #include "dpp/dpp.h"
 
-class Utils
+namespace Utils
 {
-    public:
 
-    static std::string getRam()                            , // get ram size
+    std::string getRam()                            , // get ram size
 
                     getTime(const std::time_t& time)    , // get online time
 
@@ -15,18 +14,18 @@ class Utils
 
                     clearMention(const std::string& message, const std::string& id);
 
-    static int  getDay()                            ; // get day (0 - 6) format
+    int  getDay()                            ; // get day (0 - 6) format
 
-    static bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event);
-    static void changeChannelname(dpp::cluster& bot,
+    bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event);
+    void changeChannelname(dpp::cluster& bot,
                                     const dpp::snowflake& channel_id,
                                     const std::string& sync_value,
                                     const std::string& new_name);
 
-    static void changeChannelname(dpp::cluster& bot,
+    void changeChannelname(dpp::cluster& bot,
                                     const dpp::snowflake& channel_id,
                                     const std::string& new_name);
 
-};
+}
 
 #endif // UTILS_H

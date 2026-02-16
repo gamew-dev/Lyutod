@@ -1,6 +1,8 @@
 #include "Utils.h"
 
-std::string Utils::getRam() {
+namespace Utils {
+
+std::string getRam() {
     std::ifstream core_file("/proc/self/status");
     std::string line;
 
@@ -31,7 +33,7 @@ std::string Utils::getRam() {
     return "???";
 }
 
-std::string Utils::getTime(const std::time_t& time) {
+std::string getTime(const std::time_t& time) {
     std::time_t now = std::time(nullptr);
     std::time_t diff = now - time;
 
@@ -52,11 +54,11 @@ std::string Utils::getTime(const std::time_t& time) {
     return result.str();
 }
 
-std::string Utils::getPing(const dpp::cluster& bot) {
+std::string getPing(const dpp::cluster& bot) {
     return (std::to_string(int(bot.rest_ping * 100)) + " ms");
 }
 
-std::string Utils::clearMention(const std::string& message, const std::string& id) {
+std::string clearMention(const std::string& message, const std::string& id) {
     std::string content = message;
 
 
@@ -79,7 +81,7 @@ std::string Utils::clearMention(const std::string& message, const std::string& i
 
 
 
-int Utils::getDay() {
+int getDay() {
     // timenow? (timestamps)
     std::time_t waktu = std::time(nullptr);
 
@@ -93,7 +95,7 @@ int Utils::getDay() {
     return hari->tm_wday;
 }
 
-bool Utils::isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
+bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
 
 
     for (const auto& user_mention : event.msg.mentions) {
@@ -107,7 +109,7 @@ bool Utils::isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     return false;
 }
 
-void Utils::changeChannelname( dpp::cluster& bot,
+void changeChannelname( dpp::cluster& bot,
                               const dpp::snowflake& channel_id,
                               const std::string& sync_value,
                               const std::string& new_name) {
@@ -143,7 +145,7 @@ void Utils::changeChannelname( dpp::cluster& bot,
     });
 }
 
-void Utils::changeChannelname(dpp::cluster& bot,
+void changeChannelname(dpp::cluster& bot,
                                     const dpp::snowflake& channel_id,
                                     const std::string& new_name) {
 
@@ -168,5 +170,7 @@ void Utils::changeChannelname(dpp::cluster& bot,
             std::cout << "[Debug]: Error get human channel" << std::endl;
         }
     });
+
+}
 
 }
