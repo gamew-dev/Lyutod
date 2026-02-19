@@ -4,16 +4,41 @@
 /// A struct to pair with ServerSession map for chatbotSession
 //  keeps the chat history, last chat, last chat channel id
 //  and token usage
-struct ServerSessionStruct {
+
+#include <chrono>
+#include <string>
+#include <vector>
+
+// dpp placeholder
+namespace dpp {
+using snowflake = u_int64_t;
+}
+
+// Server session data wrapped on struct
+struct ServerSession {
     std::vector<std::string> history;
     std::chrono::steady_clock::time_point last_activity;
 
-    dpp::snowflake guildID = 0;
-    dpp::snowflake openMessageID = 0;
-    dpp::snowflake lastChannel = 0;
+    dpp::snowflake guild_id = 0;
+    dpp::snowflake open_message_id = 0;
+    dpp::snowflake last_channel = 0;
 
-    int inputUsage = 0;
-    int outputUsage = 0;
+    int input_usage = 0;
+    int output_usage = 0;
+};
+
+// Server session object wrapped as class
+class ServerSessionStore {
+    public:
+    ServerSession& Get(dpp::snowflake guild_id);
+    void Remove(dpp::snowflake guild_id);
+    void Cleanup();
+
+    template<typename Fn>
+    void ForEach(Fn fn);
+
+    private:
+    std::unordered_map<dpp::snowflake, std::unique_ptr<ServerSession>> data_;
 };
 
 

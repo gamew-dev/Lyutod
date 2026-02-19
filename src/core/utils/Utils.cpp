@@ -3,11 +3,11 @@
 namespace Utils {
 
 std::string getRam() {
+    #ifdef __linux__
     std::ifstream core_file("/proc/self/status");
     std::string line;
 
     while (std::getline(core_file, line)) {
-     #ifdef __linux__
         if (line.find("VmRSS:") == 0) {
             std::istringstream iss(line);
             std::string label, unit;
