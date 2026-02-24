@@ -26,13 +26,15 @@
 
 /// Client config struct
 //  The struct that store bot information
-//
+//  currently has no use????
 struct CC {
     std::string botOwner,
                 botToken,
                 botVersion,
 
                 gptToken;
+
+    bool isLog;
 };
 
 
@@ -78,6 +80,7 @@ class Config
                               botToken,
                               botVersi,
                               gptToken;
+    static inline bool isLog;
 
     /// Bot config
     static bool clientLoadConfig();

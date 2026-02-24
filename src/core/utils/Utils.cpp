@@ -101,7 +101,7 @@ bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     for (const auto& user_mention : event.msg.mentions) {
             if (user_mention.first.id == bot.me.id) {
                 return true;
-                std::cout << "bot mentioned" << std::endl;
+                if (Config::isLog) std::cout << "bot mentioned" << std::endl;
             }
     }
 

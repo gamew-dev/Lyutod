@@ -22,7 +22,7 @@ int main() {
         token = Config::botToken;
     }
     else {
-        std::cout << "no token files found" << std::endl;
+        if (Config::isLog) std::cout << "no token files found" << std::endl;
         return 1;
     }
 
@@ -41,7 +41,7 @@ int main() {
     // D++ built in log system, though in this function i only filtered the [Info] only
     bot.on_log([](const dpp::log_t& event) {
         if (event.severity == dpp::ll_info) {
-                std::cout << "[INFO] " << event.message << std::endl;
+                if (Config::isLog) std::cout << "[INFO] " << event.message << std::endl;
             }
     });
 
@@ -49,7 +49,7 @@ int main() {
     // When the bot started active
     bot.on_ready([&bot, &handler](const dpp::ready_t& event) {
 
-        std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
+        if (Config::isLog) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
 
         // Registering slash command
         // keep in mind as far as now, this code is still testing
@@ -89,7 +89,7 @@ int main() {
         if (event.msg.author.id == bot.me.id) return;
 
 
-        std::cout << event.msg.author.global_name << ": " << event.msg.content << std::endl;
+        if (Config::isLog) std::cout << event.msg.author.global_name << ": " << event.msg.content << std::endl;
 
         // Throw the event for InputHandler to manage
         // for every message that mentions the bot, it
@@ -145,7 +145,7 @@ int main() {
         // yet again, for now this code only hardcoded for my log status
         // see issues and to do for further info
         if (dpp::run_once<struct logging>()) {
-            std::cout << "[INFO] Checking guild cache" <<std::endl;
+            if (Config::isLog) sstd::cout << "[INFO] Checking guild cache" <<std::endl;
         }
 
         // Call the guild create config function and return true if succes
