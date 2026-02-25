@@ -145,7 +145,7 @@ int main() {
         // yet again, for now this code only hardcoded for my log status
         // see issues and to do for further info
         if (dpp::run_once<struct logging>()) {
-            if (Config::isLog) sstd::cout << "[INFO] Checking guild cache" <<std::endl;
+            if (Config::isLog) std::cout << "[INFO] Checking guild cache" <<std::endl;
         }
 
         // Call the guild create config function and return true if succes

@@ -610,14 +610,21 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
 void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
 
+    auto session = MessageSession[event.command.msg.id];
+
     if (event.custom_id == "ID_tes") {
-        auto session = MessageSession[event.command.msg.id];
+
         std::string data = "owner: <@" + std::to_string(session.owner) + ">\n"
                            "type: " + session.type + "\n"
                            "state: " + session.state + "\n"
                             "page: " + std::to_string(session.page);
         event.reply(dpp::ir_update_message, data);
-    } else {
+    } else if (event.custom_id.find("cmd_status") != std::string::npos){
+        button_commands::bot_ui(bot, event, session.page);
+    }
+
+
+    else {
         event.reply(dpp::message("tombol sudah expired / tidak valid").set_flags(dpp::m_ephemeral));
     }
 

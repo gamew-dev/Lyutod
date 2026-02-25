@@ -48,7 +48,7 @@ bool Config::clientLoadConfig() {
         filejson["botToken"] = "";
         filejson["botVersi"] = "";
         filejson["gptToken"] = "";
-        fileJson["isLog"] = false;
+        filejson["isLog"] = false;
 
         std::ofstream file(clientPath);
         file << filejson.dump(4);

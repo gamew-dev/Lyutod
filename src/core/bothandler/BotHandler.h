@@ -18,6 +18,7 @@
 #include "../utils/Utils.h"
 #include "../../responses/Responses.h"
 #include "../../command/base_commands.h"
+#include "../../command/base_commands_ui.h"
 
 class BotHandler
 {
@@ -92,7 +93,7 @@ class BotHandler
 
         std::string type;
         std::string state;
-        int page;
+        int page = 0;
 
         std::chrono::steady_clock::time_point last_activity;
 

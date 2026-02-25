@@ -8,6 +8,8 @@
 #include <chrono>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <memory>
 
 // dpp placeholder
 namespace dpp {
@@ -38,7 +40,8 @@ class ServerSessionStore {
     void ForEach(Fn fn);
 
     private:
-    std::unordered_map<dpp::snowflake, std::unique_ptr<ServerSession>> data_;
+    std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSession>> data_; //unique_ptr
+    //std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSession>> ServerSessions;
 };
 
 

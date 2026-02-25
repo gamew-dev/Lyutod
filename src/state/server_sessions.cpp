@@ -1,5 +1,5 @@
 #include "state/server_sessions.h".h"
-
+/*
 ServerSession& ServerSessionStore::Get(dpp::snowflake guild_id) {
     auto it = data_.find(guild_id);
     if (it == data_.end()) {
@@ -8,3 +8,4 @@ ServerSession& ServerSessionStore::Get(dpp::snowflake guild_id) {
     it->second->last_activity = std::chrono::steady_clock::now();
     return *it->second;
 }
+*/

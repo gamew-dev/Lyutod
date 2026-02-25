@@ -63,19 +63,16 @@ void Commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dp
         msg.add_component(
             dpp::component()
                 .add_component(dpp::component()
-                    .set_label("<")
                     .set_emoji(dpp::unicode_emoji::left_arrow)
                     .set_type(dpp::cot_button)
                     .set_id("cmd_status|left")
                     .set_style(dpp::cos_primary)
                 )
                 .add_component(dpp::component()
-                    .set_label(">")
                     .set_emoji(dpp::unicode_emoji::right_arrow)
-                    .set_emoji(Responses::emoteReact())
                     .set_type(dpp::cot_button)
                     .set_id("cmd_status|right")
-                    .set_style(dpp::cos_secondary)
+                    .set_style(dpp::cos_primary)
             )
         );
 

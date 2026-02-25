@@ -7,7 +7,7 @@
 #include "../core/utils/Utils.h"
 
 namespace button_commands {
-
+void bot_ui(dpp::cluster& bot, const dpp::button_click_t& event, int& page);
 }
 
 
