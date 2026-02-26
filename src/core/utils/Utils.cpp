@@ -1,5 +1,7 @@
 #include "Utils.h"
 
+#include "../config/Config.h"
+
 namespace Utils {
 
 std::string getRam() {
@@ -101,7 +103,7 @@ bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     for (const auto& user_mention : event.msg.mentions) {
             if (user_mention.first.id == bot.me.id) {
                 return true;
-                std::cout << "bot mentioned" << std::endl;
+                if (Config::isLog) std::cout << "bot mentioned" << std::endl;
             }
     }
 
@@ -131,16 +133,16 @@ void changeChannelname( dpp::cluster& bot,
 
             bot.channel_edit(ch, [](const dpp::confirmation_callback_t& cc2) {
                 if (cc2.is_error()) {
-                    std::cout << "[Debug]: human only error..." << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
 
                 } else {
-                    std::cout << "[Debug]: human only updated..." << std::endl;;
+                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;;
 
                 }
 
             });
         } else {
-            std::cout << "[Debug]: Error get human channel" << std::endl;
+            if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
         }
     });
 }
@@ -158,16 +160,16 @@ void changeChannelname(dpp::cluster& bot,
 
             bot.channel_edit(ch, [](const dpp::confirmation_callback_t& cc2) {
                 if (cc2.is_error()) {
-                    std::cout << "[Debug]: human only error..." << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
 
                 } else {
-                    std::cout << "[Debug]: human only updated..." << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;
 
                 }
 
             });
         } else {
-            std::cout << "[Debug]: Error get human channel" << std::endl;
+            if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
         }
     });
 

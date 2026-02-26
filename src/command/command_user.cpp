@@ -18,29 +18,29 @@ void Commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event)
         dpp::user user;
 
         //event.get
-        std::cout << "[Debug] Entering slash command func" << std::endl;
+        if (Config::isLog) std::cout << "[Debug] Entering slash command func" << std::endl;
 
         auto param = event.get_parameter("user");
-        std::cout << "[Debug] Checking user parameter" << std::endl;
+        if (Config::isLog) std::cout << "[Debug] Checking user parameter" << std::endl;
 
         if (param.index() == 0) {
 
             user = event.command.usr;
-            std::cout << "Debug: user id: self [" << std::to_string(user.id) << "]" << std::endl;
+            if (Config::isLog) std::cout << "Debug: user id: self [" << std::to_string(user.id) << "]" << std::endl;
         } else {
             dpp::snowflake user_id = std::get<dpp::snowflake>(param);
             user = event.command.resolved.users.at(user_id);
-            std::cout << "Debug: user id: target [" << std::to_string(user.id) << "]" << std::endl;
+            if (Config::isLog) std::cout << "Debug: user id: target [" << std::to_string(user.id) << "]" << std::endl;
         }
 
 
 
-        std::cout << "[Debug] creating embed message" << std::endl;
+        if (Config::isLog) std::cout << "[Debug] creating embed message" << std::endl;
 
         uint64_t timestamp = static_cast<uint64_t>(user.get_creation_time());
         std::string created = "<t:" + std::to_string(timestamp) + "> " + "<t:" + std::to_string(timestamp) + ":R>";
         std::string imgURL = user.get_avatar_url(2048, dpp::i_png, true);
-        std::cout << "[Debug] img url: " << imgURL << std::endl;
+        if (Config::isLog) std::cout << "[Debug] img url: " << imgURL << std::endl;
 
 
         dpp::embed embed = dpp::embed()
@@ -86,16 +86,16 @@ void Commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event)
         dpp::user user;
 
         auto param = event.get_parameter("user");
-        std::cout << "[Debug] Checking user parameter" << std::endl;
+        if (Config::isLog) std::cout << "[Debug] Checking user parameter" << std::endl;
 
         if (param.index() == 0) {
 
             user = event.command.usr;
-            std::cout << "Debug: user id: self [" << std::to_string(user.id) << "]" << std::endl;
+            if (Config::isLog) std::cout << "Debug: user id: self [" << std::to_string(user.id) << "]" << std::endl;
         } else {
             dpp::snowflake user_id = std::get<dpp::snowflake>(param);
             user = event.command.resolved.users.at(user_id);
-            std::cout << "Debug: user id: target [" << std::to_string(user.id) << "]" << std::endl;
+            if (Config::isLog) std::cout << "Debug: user id: target [" << std::to_string(user.id) << "]" << std::endl;
         }
 
         std::string imgURL = user.get_avatar_url(4096, dpp::i_png, true);

@@ -702,7 +702,7 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
 
 
                 if (guildConfig.memberCountChannel1 == 0) {
-                    std::cout << "[Debug]: all member skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: all member skipped" << std::endl;
 
                 }
                 else {
@@ -717,22 +717,22 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: all member error..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: all member error..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk all member: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: all member updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: all member updated..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get all channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get all channel" << std::endl;}
                     });
                 }
 
                 if (guildConfig.memberCountChannel2 == 0) {
-                    std::cout << "[Debug]: human only skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: human only skipped" << std::endl;
 
                 }
                 else {
@@ -747,22 +747,22 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: human only error..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk member only: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: human only updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get human channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;}
                     });
                 }
 
                 if (guildConfig.memberCountChannel3 == 0) {
-                    std::cout << "[Debug]: bot only skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: bot only skipped" << std::endl;
 
                 }
                 else {
@@ -777,17 +777,17 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: bot only fail..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: bot only fail..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk bot only: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: bot only updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: bot only updated..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get bot channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get bot channel" << std::endl;}
                     });
                 }
             }
@@ -816,7 +816,7 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
 
     bot.guild_get_members(server, 1000, 0,
         [&bot, event, guildConfig](const dpp::confirmation_callback_t& cb) {
-            std::cout << "[DEBUG] guild_get_members callback" << std::endl;
+            if (Config::isLog) std::cout << "[DEBUG] guild_get_members callback" << std::endl;
 
             if (cb.is_error()) {
                 //event.edit_response("eror ngab: " + cb.get_error().message);
@@ -839,7 +839,7 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
 
 
                 if (guildConfig.memberCountChannel1 == 0) {
-                    std::cout << "[Debug]: all member skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: all member skipped" << std::endl;
 
                 }
                 else {
@@ -854,22 +854,22 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: all member error..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: all member error..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk all member: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: all member updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: all member updated..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get all channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get all channel" << std::endl;}
                     });
                 }
 
                 if (guildConfig.memberCountChannel2 == 0) {
-                    std::cout << "[Debug]: human only skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: human only skipped" << std::endl;
 
                 }
                 else {
@@ -884,22 +884,22 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: human only error..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk member only: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: human only updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get human channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;}
                     });
                 }
 
                 if (guildConfig.memberCountChannel3 == 0) {
-                    std::cout << "[Debug]: bot only skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: bot only skipped" << std::endl;
 
                 }
                 else {
@@ -914,17 +914,17 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: bot only fail..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: bot only fail..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk bot only: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: bot only updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: bot only updated..." << std::endl;
                                     //bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get bot channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get bot channel" << std::endl;}
                     });
                 }
             }
@@ -949,7 +949,7 @@ void BotHandler::updatePresence(dpp::cluster& bot) {
     std::uniform_int_distribution<> dist(0, presence.size() - 1);
 
     bot.set_presence(presence[dist(gen)]);
-    std::cout << "[LOG] Updating presence status..." << std::endl;
+    if (Config::isLog) std::cout << "[LOG] Updating presence status..." << std::endl;
 }
 
 
@@ -969,10 +969,10 @@ void BotHandler::preRegSlash(dpp::cluster& bot, dpp::snowflake id) {
 
     bot.guild_bulk_command_create(_commands, id,[](const dpp::confirmation_callback_t& result) {
         if (result.is_error()) {
-            std::cerr << "Gagal mendaftarkan commands: "
+            if (Config::isLog) std::cerr << "Gagal mendaftarkan commands: "
                       << result.get_error().message << "\n";
         } else {
-            std::cout << "Berhasil mendaftarkan semua commands!\n";
+            if (Config::isLog) std::cout << "Berhasil mendaftarkan semua commands!\n";
         }
     });
 
@@ -980,7 +980,7 @@ void BotHandler::preRegSlash(dpp::cluster& bot, dpp::snowflake id) {
 
 void BotHandler::preDelSlash(dpp::cluster& bot, dpp::snowflake id) {
     bot.guild_bulk_command_delete(id);
-    std::cout << "Berhasil menghapus semua commands!\n";
+    if (Config::isLog) std::cout << "Berhasil menghapus semua commands!\n";
 
 }
 
@@ -1011,10 +1011,10 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     for (auto it = UserSessions.begin(); it != UserSessions.end(); ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second->last_activity);
         if (elapsed.count() >= 9 || forced) {
-            std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
+            if (Config::isLog) std::cout << "Sesi berakhir untuk: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
             std::string memory = it->second->memory;
-            std::cout << "memori akhir: " << memory << std::endl;
+            if (Config::isLog) std::cout << "memori akhir: " << memory << std::endl;
 
             Config::userUpdateMemory(id, memory);
 
@@ -1034,7 +1034,7 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
         auto elapsed = std::chrono::duration_cast<std::chrono::minutes>(now - it->second->last_activity);
         if (elapsed.count() >= 9 || forced) {
 
-            std::cout << "Last channel: " << it->second->lastChannel << std::endl;
+            if (Config::isLog) std::cout << "Last channel: " << it->second->lastChannel << std::endl;
 
             std::string inputToken = std::to_string(it->second->inputUsage),
                         outputToken = std::to_string(it->second->outputUsage),
@@ -1049,7 +1049,7 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
             msg.set_flags(dpp::m_suppress_notifications);
             bot.message_create(msg);
 
-            std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;
+            if (Config::isLog) std::cout << "Sesi berakhir untuk server: " << it->first << std::endl;
             std::string id = std::to_string(it->first);
             std::vector<std::string> history = it->second->history;
 
@@ -1073,5 +1073,5 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
 /// Private
 
 void BotHandler::handleLog(const std::string& line) {
-    std::cout << line << std::endl;
+    if (Config::isLog) std::cout << line << std::endl;
 }

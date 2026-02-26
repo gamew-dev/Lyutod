@@ -29,7 +29,7 @@ bool Config::clientLoadConfig() {
 
     std::ifstream file(clientPath);
     if (file) {
-        std::cout << "[INFO] Reading bot config..." <<std::endl;
+        if (Config::isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
         nlohmann::json fileJson;
         file >> fileJson;
         botOwner = fileJson.value("botOwner", "");
@@ -42,7 +42,7 @@ bool Config::clientLoadConfig() {
 
     }
     else {
-        std::cout << "[INFO] Creating new bot config..." << std::endl;
+        if (Config::isLog) std::cout << "[INFO] Creating new bot config..." << std::endl;
         nlohmann::json filejson;
         filejson["botOwner"] = "";
         filejson["botToken"] = "";
@@ -77,14 +77,14 @@ std::string Config::userReadMemory(const std::string id) {
 
     std::ifstream file(path);
     if (file) {
-        std::cout << "[INFO] Reading user memory for: "<< id <<std::endl;
+        if (Config::isLog) std::cout << "[INFO] Reading user memory for: "<< id <<std::endl;
 
         nlohmann::json fileJson;
         file >> fileJson;
         memory = fileJson.value("memory", "");
     }
     else {
-        std::cout << "[INFO] Creating user memory for: "<< id << std::endl;
+        if (Config::isLog) std::cout << "[INFO] Creating user memory for: "<< id << std::endl;
         nlohmann::json filejson;
         filejson["memory"] = "";
 
@@ -122,7 +122,7 @@ void Config::userUpdateMemory(const std::string& id,
         file.close();
     }
     else {
-        std::cout << "[ERROR] no user memory found for: " << id << std::endl;
+        if (Config::isLog) std::cout << "[ERROR] no user memory found for: " << id << std::endl;
         return;
     }
 
@@ -152,7 +152,7 @@ std::vector<std::string> Config::serverReadMemory(const std::string id) {
 
     std::ifstream file(path);
     if (file) {
-        std::cout << "[INFO] Reading server history for: " << id << std::endl;
+        if (Config::isLog) std::cout << "[INFO] Reading server history for: " << id << std::endl;
         std::string line;
         while (std::getline(file, line)) {
             if (!line.empty()) {
@@ -160,7 +160,7 @@ std::vector<std::string> Config::serverReadMemory(const std::string id) {
             }
         }
     } else {
-        std::cout << "[INFO] Creating server history for: " << id << std::endl;
+        if (Config::isLog) std::cout << "[INFO] Creating server history for: " << id << std::endl;
         std::ofstream out(path);
         history.push_back("---End of History---");
         // file baru -> kosong
@@ -224,7 +224,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
     std::ifstream file(path);
     if(file.good()) {
-        std::cout << "[ + ] " << name << " is ready\n";
+        if (Config::isLog) std::cout << "[ + ] " << name << " is ready\n";
         return false;
     }
     else {
@@ -251,7 +251,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
         std::ofstream file(path);
         file << filejson.dump(4);
 
-        std::cout << "[ + ] Creating config: " << id << std::endl;
+        if (Config::isLog) std::cout << "[ + ] Creating config: " << id << std::endl;
 
         return true;
     }
@@ -285,7 +285,7 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
         file.close();
     }
     else {
-        std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
+        if (Config::isLog) std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
         return;
     }
 
@@ -307,7 +307,7 @@ void Config::guildMemberCount(const std::string& guild_id, const short& pil, con
 
     std::string path = guildPath + guild_id + ".json";
 
-    std::cout << "[Debug]: parameter value...\n" << "\tguild_id: " << guild_id << "\n\tpil: " << pil << "\n\tchannel_id: " << channel_id << std::endl;
+    if (Config::isLog) std::cout << "[Debug]: parameter value...\n" << "\tguild_id: " << guild_id << "\n\tpil: " << pil << "\n\tchannel_id: " << channel_id << std::endl;
 
     std::ifstream file(path);
 
@@ -318,7 +318,7 @@ void Config::guildMemberCount(const std::string& guild_id, const short& pil, con
         file.close();
     }
     else {
-        std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
+        if (Config::isLog) std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
         return;
     }
 
@@ -350,7 +350,7 @@ void Config::guildMemberCount(const std::string& guild_id, const short& pil, con
     out << fileJson.dump(4);
     out.close();
 
-    std::cout << "[Debug]: data saved" << std::endl;
+    if (Config::isLog) std::cout << "[Debug]: data saved" << std::endl;
 }
 
 GC Config::guildLoadConfig(const std::string& guild_id) {
@@ -360,12 +360,12 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
 
     std::ifstream file(path);
     if (file) {
-        std::cout << "[INFO] Searching guild config..." <<std::endl;
+        if (Config::isLog) std::cout << "[INFO] Searching guild config..." <<std::endl;
         nlohmann::json fileJson;
         file >> fileJson;
 
         data.name = fileJson.value("Name", "");
-        if (data.name != "") std::cout << "opening " << data.name << " config" << std::endl;
+        if (data.name != "") if (Config::isLog) std::cout << "opening " << data.name << " config" << std::endl;
         data.id = std::stoull(fileJson.value("ID", "0"));
         data.ownerID = std::stoull(fileJson.value("ownerID", "0"));
 
@@ -393,12 +393,12 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
 
     std::ifstream file(path);
     if (file) {
-        std::cout << "[INFO] Searching guild config..." <<std::endl;
+        if (Config::isLog) std::cout << "[INFO] Searching guild config..." <<std::endl;
         file >> fileJson;
 
         data.name = fileJson.value("Name", "");
         if (data.name != "") {
-            std::cout << "Database server found" << std::endl;
+            if (Config::isLog) std::cout << "Database server found" << std::endl;
             bot.message_create(dpp::message(channel_id, "data ditemukan untuk server " + data.name));
         }
         data.id = std::stoull(fileJson.value("ID", "0"));
@@ -415,7 +415,7 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
 
         file.close();
     } else {
-        std::cout << "database server not found" << std::endl;
+        if (Config::isLog) std::cout << "database server not found" << std::endl;
         bot.message_create(dpp::message(channel_id, "database server tidak ditemukan"));
         return;
     }

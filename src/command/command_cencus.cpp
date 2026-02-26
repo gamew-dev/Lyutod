@@ -25,7 +25,7 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
         ///
 
 
-        std::cout << "[Debug]: " << "add selected" << std::endl;
+        if (Config::isLog) std::cout << "[Debug]: " << "add selected" << std::endl;
 
         /// parameter value getter
         std::string mode = std::get<std::string>(event.get_parameter("mode"));
@@ -70,15 +70,15 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
 
         /// logic start here
-        std::cout << "[DEBUG] member count mode " << mode << "   | channel: " << channelName << " | pil: " << pil<< std::endl;
+        if (Config::isLog) std::cout << "[DEBUG] member count mode " << mode << "   | channel: " << channelName << " | pil: " << pil<< std::endl;
 
         /// get the guild member
         bot.guild_get_members(event.command.guild_id, 1000, 0,
         [&bot, event, guild_id_str, pil, channelName](const dpp::confirmation_callback_t& cb) {
-            std::cout << "[DEBUG] guild_get_members callback" << std::endl;
+            if (Config::isLog) std::cout << "[DEBUG] guild_get_members callback" << std::endl;
             if (cb.is_error()) {
                 event.edit_response("error ngab: gagal fetch members");
-                std::cout << "error ngab: gagal fetch members" << std::endl;
+                if (Config::isLog) std::cout << "error ngab: gagal fetch members" << std::endl;
                 return;
             }
 
@@ -116,17 +116,17 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
             /// create the voice channel
             bot.channel_create(voiceChannel,
             [event, guild_id_str, pil](const dpp::confirmation_callback_t& cb2) {
-                std::cout << "[DEBUG] channel_create callback" << std::endl;
+                if (Config::isLog) std::cout << "[DEBUG] channel_create callback" << std::endl;
                 if (cb2.is_error()) {
-                    std::cout << "error ngab: gagal mbuat channel" << std::endl;
+                    if (Config::isLog) std::cout << "error ngab: gagal mbuat channel" << std::endl;
                     event.edit_response("error ngab: gagal mbuat channel");
                     return;
                 }
                 dpp::channel created = std::get<dpp::channel>(cb2.value);
 
-                std::cout << "[Debug]: " << "guild id is: " << guild_id_str << std::endl;
+                if (Config::isLog) std::cout << "[Debug]: " << "guild id is: " << guild_id_str << std::endl;
                 dpp::snowflake channel_id = created.id;
-                std::cout << "[Debug]: async channel id: " << std::to_string(created.id) << std::endl;
+                if (Config::isLog) std::cout << "[Debug]: async channel id: " << std::to_string(created.id) << std::endl;
 
                 /// edit database
                 Config::guildMemberCount(guild_id_str, pil, channel_id);
@@ -143,7 +143,7 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
     }
 
     else if (subcommand.name == "remove") {
-        std::cout << "[Debug]: " << "False selected" << std::endl;
+        if (Config::isLog) std::cout << "[Debug]: " << "False selected" << std::endl;
         std::string mode = std::get<std::string>(event.get_parameter("mode"));
 
         auto data = Config::guildLoadConfig(guild_id_str);
@@ -173,7 +173,7 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
         event.edit_response("menghapus channel " + mode +"...");
 
         bot.channel_delete(channel_id, [&bot,&event, mode](const dpp::confirmation_callback_t& cb) {
-            std::cout << "[DEBUG] callbackdhannel delete..." << std::endl;
+            if (Config::isLog) std::cout << "[DEBUG] callbackdhannel delete..." << std::endl;
             if (cb.is_error()) {
                 bot.message_create(dpp::message(event.command.channel_id, "eror ngab: gbisa apus channel [" + mode + "]: " + cb.get_error().message));
                 //event.edit_response("eror ngab: gbisa apus channel [" + mode + "]: " + cb.get_error().message);
@@ -187,7 +187,7 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
     }
 
     else if (subcommand.name == "edit") {
-        std::cout << "[Debug]: " << "False selected" << std::endl;
+        if (Config::isLog) std::cout << "[Debug]: " << "False selected" << std::endl;
 
         std::string newName = std::get<std::string>(event.get_parameter("nama"));
         std::string mode = std::get<std::string>(event.get_parameter("mode"));
@@ -250,7 +250,7 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
         bot.guild_get_members(event.command.guild_id, 1000, 0,
         [&bot, event, data](const dpp::confirmation_callback_t& cb) {
-            std::cout << "[DEBUG] guild_get_members callback" << std::endl;
+            if (Config::isLog) std::cout << "[DEBUG] guild_get_members callback" << std::endl;
 
             if (cb.is_error()) {
                 event.edit_response("eror ngab: " + cb.get_error().message);
@@ -273,7 +273,7 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
 
                 if (data.memberCountChannel1 == 0) {
-                    std::cout << "[Debug]: all member skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: all member skipped" << std::endl;
 
                 }
                 else {
@@ -288,22 +288,22 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: all member error..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: all member error..." << std::endl;
                                     bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk all member: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: all member updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: all member updated..." << std::endl;
                                     bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get all channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get all channel" << std::endl;}
                     });
                 }
 
                 if (data.memberCountChannel2 == 0) {
-                    std::cout << "[Debug]: human only skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: human only skipped" << std::endl;
 
                 }
                 else {
@@ -318,22 +318,22 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: human only error..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
                                     bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk member only: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: human only updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;
                                     bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get human channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;}
                     });
                 }
 
                 if (data.memberCountChannel3 == 0) {
-                    std::cout << "[Debug]: bot only skipped" << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: bot only skipped" << std::endl;
 
                 }
                 else {
@@ -348,24 +348,24 @@ void Commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
                             bot.channel_edit(ch, [&bot, &event, ch](const dpp::confirmation_callback_t& cc2) {
                                 if (cc2.is_error()) {
-                                    std::cout << "[Debug]: bot only fail..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: bot only fail..." << std::endl;
                                     bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> error untuk bot only: " + cc2.get_error().message));
 
                                 } else {
-                                    std::cout << "[Debug]: bot only updated..." << std::endl;
+                                    if (Config::isLog) std::cout << "[Debug]: bot only updated..." << std::endl;
                                     bot.message_create(dpp::message(event.command.channel_id, "<#"+ std::to_string(ch.id) +"> terupdate"));
 
                                 }
 
                             });
-                        } else {std::cout << "[Debug]: Error get bot channel" << std::endl;}
+                        } else {if (Config::isLog) std::cout << "[Debug]: Error get bot channel" << std::endl;}
                     });
                 }
 
                 //event.edit_response("finishing sinkronisasi...");
-                std::cout << "[Debug]: Starting timer..." << std::endl;
+                if (Config::isLog) std::cout << "[Debug]: Starting timer..." << std::endl;
                 bot.start_timer([&bot, &event](dpp::timer h) {
-                    std::cout << "[Debug]: done: "  << std::endl;
+                    if (Config::isLog) std::cout << "[Debug]: done: "  << std::endl;
 
                     event.edit_response("sinkronisasi selesai");
                     bot.stop_timer(h);
