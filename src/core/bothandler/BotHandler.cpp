@@ -58,7 +58,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         text.find("jw")    != std::string::npos || text.find("jaua") != std::string::npos )
         {
             bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
-            std::clog << "react test" << std::endl;
+            //std::clog << "react test" << std::endl;
         }
 
 
@@ -159,13 +159,13 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         //  see also: config.h/cpp
         if (std::to_string(tokoh.id) == Config::botOwner) {
 
-            std::cout << "[Debug]: original input: " << text << std::endl;
+            //std::cout << "[Debug]: original input: " << text << std::endl;
             // cut the shutdown string
             std::string arg = text.substr(9);
             std::stringstream ss(arg);
             std::string option;
             ss >> option;
-            std::cout << "[Debug]: cutted input: (arg: " << arg << " , option: " << option << ")" << std::endl;
+            //std::cout << "[Debug]: cutted input: (arg: " << arg << " , option: " << option << ")" << std::endl;
 
             // set the default value here
             int countdown = 60;
@@ -253,7 +253,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     std::string serverID_str = std::to_string(serverID);
 
     dpp::snowflake channelID = event.msg.channel_id;
-    std::string channelID_str = std::to_string(channelID);
+    //std::string channelID_str = std::to_string(channelID);
 
     std::string clearText = Utils::clearMention(event.msg.content, std::to_string(bot.me.id));
     std::string input = "[" + userID_str +"]: "+ clearText;
@@ -277,7 +277,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     auto it = ServerSessions.find(serverID);
     if (it != ServerSessions.end()) {
         server = it->second;
-        std::cout << "server sudah memiliki session\n";
+        if (Config::isLog) std::cout << "server sudah memiliki session\n";
     } else {
         isNewSession = true;
 
@@ -297,7 +297,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
 
 
     if (UserSessions.find(userID) != UserSessions.end()) {
-        std::cout << "User sudah ada!\n";
+        if (Config::isLog) std::cout << "User sudah ada!\n";
     } else {
         std::string memoryRead = Config::userReadMemory(userID_str);
         BotHandler::UserSessions[userID] = std::make_shared<UserSessionStruct>(UserSessionStruct{
@@ -313,12 +313,12 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     //  for make it a good use
     auto user = UserSessions[userID];
     std::string memory = user->memory;
-    std::cout << "[Debug] memory is: " << memory << std::endl;
+    if (Config::isLog) std::cout << "[Debug] memory is: " << memory << std::endl;
 
     //auto server = ServerSessions[serverID];
     std::vector<std::string> history = server->history;
 
-    std::cout << "[Debug] prompt is: " << input << std::endl;
+    if (Config::isLog) std::cout << "[Debug] prompt is: " << input << std::endl;
 
 
     /// Ai prompt
@@ -364,7 +364,7 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     /// Server session
     //  used in chat history
     for (const auto& line : history) {
-        std::cout<< "reading history: " << line << std::endl;
+        if (Config::isLog) std::cout<< "reading history: " << line << std::endl;
         if (line.rfind("[anda]:", 0) == 0) {
 
             messagesPayload.push_back({
@@ -450,7 +450,7 @@ void BotHandler::makeAIRequest(dpp::cluster &bot,
         "https://api.openai.com/v1/chat/completions",
         dpp::m_post,
         [&, user, server, channelID](const dpp::http_request_completion_t& cc) {
-            std::cout << "[Log]: Done requesting with status:" << std::to_string(cc.status) << std::endl;
+            if (Config::isLog) std::cout << "[Log]: Done requesting with status:" << std::to_string(cc.status) << std::endl;
             if (cc.status == 200) {
                 /// Success
                 //  if the callback completion status is 200 or success
@@ -476,7 +476,7 @@ void BotHandler::makeAIRequest(dpp::cluster &bot,
                     nlohmann::json content_json = nlohmann::json::parse(content);
                     std::string answer = content_json["output"];
                     std::string memoOut = content_json["memory"];
-                    std::cout << "[Log]: memory out is: <" << memoOut << ">"<<std::endl;
+                    if (Config::isLog) std::cout << "[Log]: memory out is: <" << memoOut << ">"<<std::endl;
 
                     /// Reply
                     //  now, since we got the answer that we wanted, we can reply the original
@@ -534,7 +534,7 @@ void BotHandler::makeAIRequest(dpp::cluster &bot,
                     bot.message_create(dpp::message(channelID, "error ngab, coba lgi nnti"));
                 }
             } else {
-                std::cout << "[Err]: " << cc.body << "\n";
+                if (Config::isLog) std::cout << "[Err]: " << cc.body << "\n";
                 //bot.message_create(dpp::message(channelID, "<@465096085224947722>, status: " + std::to_string(cc.status)));
             }
         },
@@ -562,7 +562,7 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
 
     std::string command = event.command.get_command_name();
 
-    std::cout << "[LOG] Menerima command: " << command << std::endl;
+    if (Config::isLog) std::cout << "[LOG] Menerima command: " << command << std::endl;
 
     if (command == "bot") {
         Commands::command_bot(start, bot, event);
@@ -663,14 +663,14 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
     //  is the guild using autorole?
     auto guildConfig = Config::guildLoadConfig(std::to_string(static_cast<uint64_t>(server)));
 
-    std::cout << "[LOG]New member in server: " << guildConfig.name << std::endl;
+    if (Config::isLog) std::cout << "[LOG]New member in server: " << guildConfig.name << std::endl;
 
     if (guildConfig.autoRoleEnabled) {
         bot.guild_member_add_role(server, tokoh.id, guildConfig.autoRoleID, [&guildConfig](const dpp::confirmation_callback_t& callback) {
             if (callback.is_error()) {
-                std::cerr << "\e[0;31m"<<"[ERR]" << "\e[0m"<< " Can't given the role: " << callback.get_error().message << "\n";
+                if (Config::isLog) std::cerr << "\e[0;31m"<<"[ERR]" << "\e[0m"<< " Can't given the role: " << callback.get_error().message << "\n";
             } else {
-                std::cout << "[LOG] Successfully given the role: " << guildConfig.autoRoleName << std::endl;
+                if (Config::isLog) std::cout << "[LOG] Successfully given the role: " << guildConfig.autoRoleName << std::endl;
             }
         });
 
@@ -679,7 +679,7 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
     /// @TODO: add an automatic cencus for ...
     bot.guild_get_members(server, 1000, 0,
         [&bot, event, guildConfig](const dpp::confirmation_callback_t& cb) {
-            std::cout << "[DEBUG] guild_get_members callback" << std::endl;
+            if (Config::isLog) std::cout << "[DEBUG] guild_get_members callback" << std::endl;
 
             if (cb.is_error()) {
                 //event.edit_response("eror ngab: " + cb.get_error().message);
