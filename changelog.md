@@ -77,3 +77,9 @@ and subcommand support.
     - Ability to check history and user memory
 - Fix: Chatbot session memory corrupt
 - Fix: Button event caching
+
+## 0.7.2
+- Added autobuild script
+- New configs
+    - Added isLog for showing terminal logs
+- Minor improvement

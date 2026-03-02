@@ -11,7 +11,14 @@ It is **not** intended as user-facing documentation, but rather as a reference f
 - **0.7.x** → Starting point for new features, experiments, and refactoring.
 
 ---
-## 0.7.x
+## 0.6
+Public released, basic bot.
+
+## 0.7
+SlashCommand testing, button and better chatbot logic.
+
+## 0.8
+
 
 ### In developtment/Completed
 - [x] Rewriting slash command.
@@ -19,6 +26,7 @@ It is **not** intended as user-facing documentation, but rather as a reference f
 - [ ] Better logging system.
 - [ ] Better file management.
 - [ ] Simple button ui test
+
 
 
 ### Future Considerations

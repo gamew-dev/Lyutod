@@ -70,7 +70,7 @@ void Commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event)
 
             .set_footer(
                 dpp::embed_footer()
-                .set_text(Config::botVersi)
+                .set_text("hihi haha")
                 .set_icon("https://cdn.discordapp.com/attachments/1270735248472277004/1370083495313145916/42802-givelove.png?ex=681e3530&is=681ce3b0&hm=dde61ba938af5ce6e8934dfd54b023570c983a1bfdb944d56adcaa2c838d6595&")
             )
 
@@ -110,7 +110,7 @@ void Commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event)
 
             .set_footer(
                 dpp::embed_footer()
-                .set_text(Config::botVersi)
+                .set_text("hihi haha")
                 .set_icon("https://cdn.discordapp.com/attachments/1270735248472277004/1370083495313145916/42802-givelove.png?ex=681e3530&is=681ce3b0&hm=dde61ba938af5ce6e8934dfd54b023570c983a1bfdb944d56adcaa2c838d6595&")
             )
 

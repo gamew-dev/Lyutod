@@ -34,7 +34,7 @@ bool Config::clientLoadConfig() {
         file >> fileJson;
         botOwner = fileJson.value("botOwner", "");
         botToken = fileJson.value("botToken", "");
-        botVersi = fileJson.value("botVersi", "");
+        //botVersi = fileJson.value("botVersi", "");
         gptToken = fileJson.value("gptToken", "");
         isLog = fileJson.value("isLog", false);
 
@@ -46,7 +46,7 @@ bool Config::clientLoadConfig() {
         nlohmann::json filejson;
         filejson["botOwner"] = "";
         filejson["botToken"] = "";
-        filejson["botVersi"] = "";
+        //filejson["botVersi"] = "";
         filejson["gptToken"] = "";
         filejson["isLog"] = false;
 

@@ -30,7 +30,7 @@
 struct CC {
     std::string botOwner,
                 botToken,
-                botVersion,
+                //botVersion,
 
                 gptToken;
 
@@ -78,7 +78,7 @@ class Config
 
     static inline std::string botOwner,
                               botToken,
-                              botVersi,
+                              //botVersi,
                               gptToken;
     static inline bool isLog;
 
