@@ -31,8 +31,8 @@ file(GLOB_RECURSE STATE_SRC
 )
 
 file(GLOB_RECURSE RESP_SRC
-    src/responses/*.h
-    src/responses/*.cpp
+    src/services/*.h
+    src/services/*.cpp
 )
 
 set(SRC_FILES
@@ -45,7 +45,11 @@ set(SRC_FILES
 
 # === Executable ===
 # target output: "bot"
-add_executable(bot ${SRC_FILES})
+add_executable(bot ${SRC_FILES}
+    src/state/user_sessions.h src/state/user_sessions.cpp
+    src/state/button_sessions.h src/state/button_sessions.cpp
+    src/services/responses_chat.cpp
+    src/services/responses_ai.h src/services/responses_ai.cpp)
 
 # === Include directories ===
 # header files and implementation files base directory path
