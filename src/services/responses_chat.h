@@ -3,63 +3,24 @@
 
 #include "dpp/dpp.h"
 #include "dpp/unicode_emoji.h"
-#include "../core/utils/Utils.h"
+#include "../core/utils/utils.h"
 
 #include <random>
 
-class Responses
+namespace dpp {
+    class user;
+}
+
+namespace responses_chat
 {
-    public:
 
-    static std::string emoteReact() {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        std::uniform_int_distribution<> distrib(0, emot.size() - 1);
-
-        return emot[distrib(gen)];
-    }
-
-    static std::string makeMsg(const std::string& keyword, const dpp::user& user, bool mention) {
-        //std::cout << "log: keyword = " << keyword << std::endl;
-
-        auto cari = Responses::pilihan.find(keyword);
-        if (cari == Responses::pilihan.end() || cari->second.empty()) {
-            // keyword not found :bobok:
-            return "<@"+Config::botOwner+">";
-        }
-
-        // random generator
-        static std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
-        std::uniform_int_distribution<> dist(0, static_cast<int>(cari->second.size()) - 1);
-
-        std::string jawab = cari->second[dist(rng)];
-
-        // ganti placeholder {user}
-        const std::string placeholder = "{user}";
-        size_t pos = jawab.find(placeholder);
-
-        if (pos != std::string::npos) {
-            std::string pengganti = mention ? user.get_mention() : user.username;
-            jawab.replace(pos, placeholder.length(), pengganti);
-        }
-
-        // Tambahan reaksi hari Sabtu & Minggu
-        int hari = Utils::getDay();
-        if (hari == 6 && !Config::cooldownBsok) { // Sabtu
-            jawab += "\nbsok minggu <a:a_nice:1370082910991945778>";
-            Config::cooldownBsok = true;
-        } else if (hari == 0 && !Config::cooldownBsok) { // Minggu
-            jawab += "\nbsok senin <:mengsedih:1370066473959297024>";
-            Config::cooldownBsok = true;
-        }
-
-        return jawab;
-    }
+    std::string EmoteReact();
+    std::string MakeMessage(const std::string& keyword,
+                            const dpp::user& user,
+                            const bool& mention);
 
 
-    private:
-
-    static inline std::unordered_map<std::string, std::vector<std::string>> pilihan = {
+    std::unordered_map<std::string, std::vector<std::string>> pilihan = {
         {"sambut", {
             "{user} hai sayang! <:wlwl:1370068430316765264>",
             "halo bubub {user} <:lup:1370432773814227014>",
@@ -116,7 +77,7 @@ class Responses
         }}
     };
     // this is for react
-    static inline std::vector<std::string> emot = {
+    std::vector<std::string> emot = {
         dpp::unicode_emoji::pleading_face,
         dpp::unicode_emoji::nerd,
         dpp::unicode_emoji::melting_face,
@@ -134,12 +95,12 @@ class Responses
         dpp::unicode_emoji::confounded
     };
 
-    static inline std::vector<std::string> emot2 = {
+    std::vector<std::string> emot2 = {
         dpp::unicode_emoji::pregnant_man,
         dpp::unicode_emoji::eggplant,
         dpp::unicode_emoji::fish,
         dpp::unicode_emoji::wilted_flower
     };
-};
+}
 
 #endif // RESPONSES_H

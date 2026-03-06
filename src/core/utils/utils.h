@@ -1,18 +1,28 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "dpp/dpp.h"
+//#include "dpp/dpp.h"
 
-namespace Utils
+#include <string> // std::string
+#include <chrono> // std::time_t
+
+
+namespace dpp {
+    class cluster;
+    struct message_create_t;
+    using snowflake = uint64_t;
+}
+
+namespace utils
 {
 
-    std::string getRam()                            , // get ram size
+std::string GetRam(); // get ram size
 
-                    getTime(const std::time_t& time)    , // get online time
+std::string GetTime(const std::time_t& time)    ; // get online time
 
-                    getPing(const dpp::cluster& bot)    , // get latency
+std::string GetPing(const dpp::cluster& bot)    ; // get latency
 
-                    clearMention(const std::string& message, const std::string& id);
+std::string ClearMention(const std::string& message, const std::string& id);
 
     int  getDay()                            ; // get day (0 - 6) format
 

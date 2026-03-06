@@ -8,7 +8,12 @@
  *  @author Hissats
  */
 
-#include "Config.h"
+#include "config.h"
+
+#include <dpp/dpp.h>
+#include <filesystem>
+
+namespace config {
 
 /**
 *   ClientLoadConfig
@@ -19,8 +24,7 @@
 *   See also: main.cpp
 *
 */
-
-bool Config::clientLoadConfig() {
+bool ClientLoadConfig() {
 
 
     std::filesystem::create_directories(userPath);
@@ -29,7 +33,7 @@ bool Config::clientLoadConfig() {
 
     std::ifstream file(clientPath);
     if (file) {
-        if (Config::isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
+        if (isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
         nlohmann::json fileJson;
         file >> fileJson;
         botOwner = fileJson.value("botOwner", "");
@@ -42,7 +46,7 @@ bool Config::clientLoadConfig() {
 
     }
     else {
-        if (Config::isLog) std::cout << "[INFO] Creating new bot config..." << std::endl;
+        if (isLog) std::cout << "[INFO] Creating new bot config..." << std::endl;
         nlohmann::json filejson;
         filejson["botOwner"] = "";
         filejson["botToken"] = "";
@@ -70,21 +74,21 @@ bool Config::clientLoadConfig() {
  *
  */
 
-std::string Config::userReadMemory(const std::string id) {
+std::string UserReadMemory(const std::string id) {
 
     std::string path = userPath + id + ".json";
     std::string memory;
 
     std::ifstream file(path);
     if (file) {
-        if (Config::isLog) std::cout << "[INFO] Reading user memory for: "<< id <<std::endl;
+        if (isLog) std::cout << "[INFO] Reading user memory for: "<< id <<std::endl;
 
         nlohmann::json fileJson;
         file >> fileJson;
         memory = fileJson.value("memory", "");
     }
     else {
-        if (Config::isLog) std::cout << "[INFO] Creating user memory for: "<< id << std::endl;
+        if (isLog) std::cout << "[INFO] Creating user memory for: "<< id << std::endl;
         nlohmann::json filejson;
         filejson["memory"] = "";
 
@@ -108,7 +112,7 @@ std::string Config::userReadMemory(const std::string id) {
  *
  */
 
-void Config::userUpdateMemory(const std::string& id,
+void UserUpdateMemory(const std::string& id,
                               const std::string& memory) {
 
     std::string path = userPath + id + ".json";
@@ -122,7 +126,7 @@ void Config::userUpdateMemory(const std::string& id,
         file.close();
     }
     else {
-        if (Config::isLog) std::cout << "[ERROR] no user memory found for: " << id << std::endl;
+        if (isLog) std::cout << "[ERROR] no user memory found for: " << id << std::endl;
         return;
     }
 
@@ -145,14 +149,14 @@ void Config::userUpdateMemory(const std::string& id,
  *
  */
 
-std::vector<std::string> Config::serverReadMemory(const std::string id) {
+std::vector<std::string> ServerReadMemory(const std::string id) {
 
     std::string path = serverPath + id + ".txt";
     std::vector<std::string> history;
 
     std::ifstream file(path);
     if (file) {
-        if (Config::isLog) std::cout << "[INFO] Reading server history for: " << id << std::endl;
+        if (isLog) std::cout << "[INFO] Reading server history for: " << id << std::endl;
         std::string line;
         while (std::getline(file, line)) {
             if (!line.empty()) {
@@ -160,7 +164,7 @@ std::vector<std::string> Config::serverReadMemory(const std::string id) {
             }
         }
     } else {
-        if (Config::isLog) std::cout << "[INFO] Creating server history for: " << id << std::endl;
+        if (isLog) std::cout << "[INFO] Creating server history for: " << id << std::endl;
         std::ofstream out(path);
         history.push_back("---End of History---");
         // file baru -> kosong
@@ -179,7 +183,7 @@ std::vector<std::string> Config::serverReadMemory(const std::string id) {
  *
  */
 
-void Config::serverUpdateHistory(const std::string& id, const std::vector<std::string>& history) {
+void ServerUpdateHistory(const std::string& id, const std::vector<std::string>& history) {
     std::string path = serverPath + id + ".txt";
     std::ofstream out(path);
     if (out) {
@@ -201,7 +205,7 @@ void Config::serverUpdateHistory(const std::string& id, const std::vector<std::s
  *
  */
 
-std::vector<std::string> Config::guildGetList() {
+std::vector<std::string> GuildGetList() {
     std::vector<std::string> guildList;
 
     for (const auto& entry : std::filesystem::directory_iterator(guildPath)) {
@@ -215,7 +219,7 @@ std::vector<std::string> Config::guildGetList() {
 }
 
 
-bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
+bool GuildCreateConfig(const dpp::guild_create_t& event) {
 
     dpp::snowflake id = event.created.id;
     std::string idstr = std::to_string(id);
@@ -224,7 +228,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
 
     std::ifstream file(path);
     if(file.good()) {
-        if (Config::isLog) std::cout << "[ + ] " << name << " is ready\n";
+        if (isLog) std::cout << "[ + ] " << name << " is ready\n";
         return false;
     }
     else {
@@ -251,7 +255,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
         std::ofstream file(path);
         file << filejson.dump(4);
 
-        if (Config::isLog) std::cout << "[ + ] Creating config: " << id << std::endl;
+        if (isLog) std::cout << "[ + ] Creating config: " << id << std::endl;
 
         return true;
     }
@@ -269,7 +273,7 @@ bool Config::guildCreateConfig(const dpp::guild_create_t& event) {
  *
  */
 
-void Config::guildSaveAutoRole(const std::string& guild_id,
+void GuildSaveAutoRole(const std::string& guild_id,
                                const bool& autorole,
                                const dpp::snowflake& role_id) {
 
@@ -285,7 +289,7 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
         file.close();
     }
     else {
-        if (Config::isLog) std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
+        if (isLog) std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
         return;
     }
 
@@ -303,11 +307,11 @@ void Config::guildSaveAutoRole(const std::string& guild_id,
 }
 
 
-void Config::guildMemberCount(const std::string& guild_id, const short& pil, const dpp::snowflake& channel_id) {
+void GuildMemberCount(const std::string& guild_id, const short& pil, const dpp::snowflake& channel_id) {
 
     std::string path = guildPath + guild_id + ".json";
 
-    if (Config::isLog) std::cout << "[Debug]: parameter value...\n" << "\tguild_id: " << guild_id << "\n\tpil: " << pil << "\n\tchannel_id: " << channel_id << std::endl;
+    if (isLog) std::cout << "[Debug]: parameter value...\n" << "\tguild_id: " << guild_id << "\n\tpil: " << pil << "\n\tchannel_id: " << channel_id << std::endl;
 
     std::ifstream file(path);
 
@@ -318,7 +322,7 @@ void Config::guildMemberCount(const std::string& guild_id, const short& pil, con
         file.close();
     }
     else {
-        if (Config::isLog) std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
+        if (isLog) std::cout << "[ERROR] no guild config file found for: " << guild_id << std::endl;
         return;
     }
 
@@ -350,22 +354,22 @@ void Config::guildMemberCount(const std::string& guild_id, const short& pil, con
     out << fileJson.dump(4);
     out.close();
 
-    if (Config::isLog) std::cout << "[Debug]: data saved" << std::endl;
+    if (isLog) std::cout << "[Debug]: data saved" << std::endl;
 }
 
-GC Config::guildLoadConfig(const std::string& guild_id) {
+GC guildLoadConfig(const std::string& guild_id) {
 
     std::string path = guildPath + guild_id + ".json";
     GC data;
 
     std::ifstream file(path);
     if (file) {
-        if (Config::isLog) std::cout << "[INFO] Searching guild config..." <<std::endl;
+        if (isLog) std::cout << "[INFO] Searching guild config..." <<std::endl;
         nlohmann::json fileJson;
         file >> fileJson;
 
         data.name = fileJson.value("Name", "");
-        if (data.name != "") if (Config::isLog) std::cout << "opening " << data.name << " config" << std::endl;
+        if (data.name != "") if (isLog) std::cout << "opening " << data.name << " config" << std::endl;
         data.id = std::stoull(fileJson.value("ID", "0"));
         data.ownerID = std::stoull(fileJson.value("ownerID", "0"));
 
@@ -384,7 +388,7 @@ GC Config::guildLoadConfig(const std::string& guild_id) {
     return data;
 }
 
-void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id) {
+void SyncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id) {
 
     std::string path = guildPath + guild_id + ".json";
     //std::string repl;
@@ -393,12 +397,12 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
 
     std::ifstream file(path);
     if (file) {
-        if (Config::isLog) std::cout << "[INFO] Searching guild config..." <<std::endl;
+        if (isLog) std::cout << "[INFO] Searching guild config..." <<std::endl;
         file >> fileJson;
 
         data.name = fileJson.value("Name", "");
         if (data.name != "") {
-            if (Config::isLog) std::cout << "Database server found" << std::endl;
+            if (isLog) std::cout << "Database server found" << std::endl;
             bot.message_create(dpp::message(channel_id, "data ditemukan untuk server " + data.name));
         }
         data.id = std::stoull(fileJson.value("ID", "0"));
@@ -415,7 +419,7 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
 
         file.close();
     } else {
-        if (Config::isLog) std::cout << "database server not found" << std::endl;
+        if (isLog) std::cout << "database server not found" << std::endl;
         bot.message_create(dpp::message(channel_id, "database server tidak ditemukan"));
         return;
     }
@@ -442,4 +446,6 @@ void Config::syncGuildConfig(dpp::cluster& bot, const std::string& guild_id, con
     std::ofstream out(path);
     out << fileJson.dump(4);
     out.close();
+}
+
 }

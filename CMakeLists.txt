@@ -46,10 +46,9 @@ set(SRC_FILES
 # === Executable ===
 # target output: "bot"
 add_executable(bot ${SRC_FILES}
-    src/state/user_sessions.h src/state/user_sessions.cpp
-    src/state/button_sessions.h src/state/button_sessions.cpp
-    src/services/responses_chat.cpp
-    src/services/responses_ai.h src/services/responses_ai.cpp)
+    src/state/bot_state.h src/state/bot_state.cpp
+
+)
 
 # === Include directories ===
 # header files and implementation files base directory path

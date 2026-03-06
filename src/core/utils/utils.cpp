@@ -1,10 +1,13 @@
-#include "Utils.h"
+#include "utils.h"
 
-#include "../config/Config.h"
+#include "dpp/dpp.h"
 
-namespace Utils {
+#include "../config/config.h" // log
 
-std::string getRam() {
+namespace utils {
+
+std::string GetRam() {
+
     #ifdef __linux__
     std::ifstream core_file("/proc/self/status");
     std::string line;
@@ -35,7 +38,7 @@ std::string getRam() {
     return "???";
 }
 
-std::string getTime(const std::time_t& time) {
+std::string GetTime(const std::time_t& time) {
     std::time_t now = std::time(nullptr);
     std::time_t diff = now - time;
 
@@ -56,11 +59,11 @@ std::string getTime(const std::time_t& time) {
     return result.str();
 }
 
-std::string getPing(const dpp::cluster& bot) {
+std::string GetPing(const dpp::cluster& bot) {
     return (std::to_string(int(bot.rest_ping * 100)) + " ms");
 }
 
-std::string clearMention(const std::string& message, const std::string& id) {
+std::string ClearMention(const std::string& message, const std::string& id) {
     std::string content = message;
 
 
@@ -83,7 +86,7 @@ std::string clearMention(const std::string& message, const std::string& id) {
 
 
 
-int getDay() {
+int GetDay() {
     // timenow? (timestamps)
     std::time_t waktu = std::time(nullptr);
 
@@ -103,7 +106,7 @@ bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     for (const auto& user_mention : event.msg.mentions) {
             if (user_mention.first.id == bot.me.id) {
                 return true;
-                if (Config::isLog) std::cout << "bot mentioned" << std::endl;
+                if (config::isLog) std::cout << "bot mentioned" << std::endl;
             }
     }
 
@@ -111,7 +114,7 @@ bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     return false;
 }
 
-void changeChannelname( dpp::cluster& bot,
+voidCchangeChannelname( dpp::cluster& bot,
                               const dpp::snowflake& channel_id,
                               const std::string& sync_value,
                               const std::string& new_name) {
@@ -133,21 +136,21 @@ void changeChannelname( dpp::cluster& bot,
 
             bot.channel_edit(ch, [](const dpp::confirmation_callback_t& cc2) {
                 if (cc2.is_error()) {
-                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
+                    if (config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
 
                 } else {
-                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;;
+                    if (config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;;
 
                 }
 
             });
         } else {
-            if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
+            if (config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
         }
     });
 }
 
-void changeChannelname(dpp::cluster& bot,
+void ChangeChannelname(dpp::cluster& bot,
                                     const dpp::snowflake& channel_id,
                                     const std::string& new_name) {
 
@@ -160,16 +163,16 @@ void changeChannelname(dpp::cluster& bot,
 
             bot.channel_edit(ch, [](const dpp::confirmation_callback_t& cc2) {
                 if (cc2.is_error()) {
-                    if (Config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
+                    if (config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
 
                 } else {
-                    if (Config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;
+                    if (config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;
 
                 }
 
             });
         } else {
-            if (Config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
+            if (config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
         }
     });
 

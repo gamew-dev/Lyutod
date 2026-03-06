@@ -13,7 +13,7 @@
 
 // dpp placeholder
 namespace dpp {
-using snowflake = u_int64_t;
+using snowflake = uint64_t;
 }
 
 // Server session data wrapped on struct
