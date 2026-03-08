@@ -14,9 +14,9 @@
 #ifndef BOTHANDLER_H
 #define BOTHANDLER_H
 
-#include "../config/Config.h"
-#include "../utils/Utils.h"
-#include "../../responses/Responses.h"
+#include "../config/config.h""
+#include "../utils/utils.h"
+#include "../../services/responses_chat.h"
 #include "../../command/base_commands.h"
 #include "../../command/base_commands_ui.h"
 
@@ -56,6 +56,16 @@ class BotHandler
          checkSessions      (      dpp::cluster& bot,               /// Chatbot session and memory
                                  const bool& forced                  );
 
+    // =====================================================================================
+    // REFACTOR NEW LOGIC START HERE
+
+    void HandleOnReady();
+    void HandleOnMessageCreate();
+    void HandleOnSlashcommand();
+    void HandleOnButtonOnClick();
+    void HandleOnGuildMemberAdd();
+    void HandleOnGuildMemberRemove();
+    void HandleOnGuildCreate();
 
     private:
 

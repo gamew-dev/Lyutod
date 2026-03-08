@@ -30,7 +30,7 @@ struct ServerSession {
 };
 
 // Server session object wrapped as class
-class ServerSessionStore {
+class ServerSessionState {
     public:
     ServerSession& Get(dpp::snowflake guild_id);
     void Remove(dpp::snowflake guild_id);
