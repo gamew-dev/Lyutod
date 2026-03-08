@@ -20,6 +20,24 @@
 #include "../../command/base_commands.h"
 #include "../../command/base_commands_ui.h"
 
+namespace dpp {
+
+using snowflake = uint64_t; //final type
+
+struct cluster;
+struct ready_t;
+struct log_t;
+struct message_create_t;
+struct slashcommand_t;
+struct button_click_t;
+struct guild_member_add_t;
+struct guild_member_remove_t;
+struct guild_create_t;
+
+}
+
+
+
 class BotHandler
 {
     public:
@@ -59,13 +77,15 @@ class BotHandler
     // =====================================================================================
     // REFACTOR NEW LOGIC START HERE
 
-    void HandleOnReady();
-    void HandleOnMessageCreate();
-    void HandleOnSlashcommand();
-    void HandleOnButtonOnClick();
-    void HandleOnGuildMemberAdd();
-    void HandleOnGuildMemberRemove();
-    void HandleOnGuildCreate();
+    void OnReady(dpp::cluster& bot, const dpp::ready_t& event);
+    void OnLog(dpp::cluster& bot, const dpp::log_t& event);
+    void OnMessageCreate(dpp::cluster& bot, const dpp::message_create_t& event);
+    void OnSlashCommand(dpp::cluster& bot, const dpp::slashcommand_t& event);
+    void OnButtonClick(dpp::cluster& bot, const dpp::button_click_t& event);
+    void OnGuildMemberAdd(dpp::cluster& bot, const dpp::guild_member_add_t& event);
+    void OnGuildMemberRemove(dpp::cluster& bot, const dpp::guild_member_remove_t& event);
+    void OnGuildCreate(dpp::cluster& bot, const dpp::guild_create_t& event);
+    void OnTimer();
 
     private:
 

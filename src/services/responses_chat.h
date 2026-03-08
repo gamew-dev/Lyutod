@@ -8,7 +8,7 @@
 #include <random>
 
 namespace dpp {
-    class user;
+    struct user;
 }
 
 namespace responses_chat

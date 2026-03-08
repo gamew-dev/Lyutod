@@ -8,7 +8,7 @@
  */
 
 
-#include "core/bothandler/BotHandler.h"
+#include "core/bothandler/bot_handler.h"
 
 int main() {
 
@@ -49,6 +49,8 @@ int main() {
     // When the bot started active
     bot.on_ready([&bot, &handler](const dpp::ready_t& event) {
 
+        handler.OnReady(event);
+
         if (Config::isLog) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
 
         // Registering slash command
@@ -85,6 +87,7 @@ int main() {
     // When a message is created in any channel the bot can see, it will run this code
     bot.on_message_create([&bot, &handler](const dpp::message_create_t& event) {
 
+        handler.OnMessageCreate(event);
         // Avoid bot self reply
         if (event.msg.author.id == bot.me.id) return;
 
