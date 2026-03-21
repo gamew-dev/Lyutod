@@ -14,11 +14,11 @@
 #ifndef BOTHANDLER_H
 #define BOTHANDLER_H
 
-#include "../config/config.h""
-#include "../utils/utils.h"
-#include "../../services/responses_chat.h"
-#include "../../command/base_commands.h"
-#include "../../command/base_commands_ui.h"
+#include "config.h"
+#include "utils.h"
+#include "../services/responses_chat.h"
+#include "../command/base_commands.h"
+#include "../command/base_commands_ui.h"
 
 namespace dpp {
 

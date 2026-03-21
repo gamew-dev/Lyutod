@@ -8,7 +8,7 @@
  */
 
 
-#include "core/bothandler/bot_handler.h"
+#include "core/bot_handler.h"
 
 int main() {
 

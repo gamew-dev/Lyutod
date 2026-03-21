@@ -3,7 +3,7 @@
 
 #include "dpp/dpp.h"
 #include "dpp/unicode_emoji.h"
-#include "../core/utils/utils.h"
+#include "../core/utils.h"
 
 #include <random>
 

@@ -1,13 +1,12 @@
 #ifndef RESPONSES_AI_H
 #define RESPONSES_AI_H
 
-class responses_ai
-{
-public:
-    responses_ai();
 
 
+namespace responses_ai {
 
-};
+    void CreatePayload();
+
+}
 
 #endif // RESPONSES_AI_H
