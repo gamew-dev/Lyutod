@@ -14,3 +14,6 @@ public:
 };
 
 #endif // BOT_STATE_H
+
+// why the hell did i write this bot using c++
+// aaaaaarrghh
