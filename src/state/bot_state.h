@@ -4,12 +4,14 @@
 #include <chrono>
 
 
-class bot_state
+class BotSessionState
 {
 public:
-    bot_state();
+    BotSessionState();
 
     bool is_shutting_down_ = false;
+    bool is_logging = true;
+
     std::time_t start_time_;
 };
 

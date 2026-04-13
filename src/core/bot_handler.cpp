@@ -12,13 +12,21 @@
 
 #include "BotHandler.h"
 
+//#include "state/bot_state.h"
 
 ///ctor
-// only assign time value
-BotHandler::BotHandler() {
-    // assign the bot time start value when creating object
-    start = std::time(nullptr);
-}
+BotHandler::BotHandler(
+    BotSessionState& bot_state,
+    ButtonSessionState& button_state,
+    ServerSessionState& server_state,
+    UserSessionState& user_state
+)
+    : bot_state(bot_state),
+      button_state(button_state),
+      server_state(server_state),
+      user_state(user_state),
+      start(std::time(nullptr))
+{}
 
 
 /**
@@ -1074,4 +1082,42 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
 
 void BotHandler::handleLog(const std::string& line) {
     if (Config::isLog) std::cout << line << std::endl;
+}
+
+
+
+
+///-----------------------------------------------------------------------------------------
+// refactor start here
+
+void OnReady(dpp::cluster& bot, const dpp::ready_t& event) {
+
+    if (bot_state::isLog) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
+
+    // Registering slash command
+    // keep in mind as far as now, this code is still testing
+    // and some of the code is still hardcoded including this one
+
+    //1349036976627777557
+    //1270735247922692177
+
+    //handler.preRegSlash(bot, 1270735247922692177);
+    ///handler.preDelSlash(bot, 1349036976627777557);
+
+    // First time startup resence setting
+    bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
+
+    // Bot timer, for every 10 minutes bot is changing presence status
+    // and checking chatbot sessions
+    bot.start_timer([&bot, &handler](const dpp::timer& timer){
+
+        handler.updatePresence(bot);
+        Config::cooldownBsok = false;
+
+        if (!Config::isShutingDown) {
+            handler.checkSessions(bot, false);
+        }
+
+
+    },600);
 }

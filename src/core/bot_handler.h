@@ -43,7 +43,10 @@ class BotHandler
     public:
 
     /// ctor
-    BotHandler();
+    BotHandler(BotSessionState& bot_state,
+               ButtonSessionState& button_state,
+               ServerSessionState& server_state,
+               UserSessionState& user_state);
 
     void preRegSlash        (      dpp::cluster& bot,
                                     dpp::snowflake id)             , /// Slash command Register
@@ -87,7 +90,18 @@ class BotHandler
     void OnGuildCreate(dpp::cluster& bot, const dpp::guild_create_t& event);
     void OnTimer();
 
+
+
+
     private:
+
+    BotSessionState& bot_state;
+    ButtonSessionState& button_state;
+    ServerSessionState& server_state;
+    UserSessionState& user_state;
+
+
+    /// ---------------------------
 
     /// get bot time when the startup at
     //  the value will be init in ctr

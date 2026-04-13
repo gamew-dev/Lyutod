@@ -9,9 +9,25 @@
 
 
 #include "core/bot_handler.h"
+#include "state/bot_state.h"
+#include "state/button_sessions.h"
+#include "state/server_sessions.h"
+#include "state/user_sessions.h"
 
 int main() {
 
+    ///-----
+
+    BotSessionState bot_state;
+    ButtonSessionState button_state;
+    ServerSessionState server_state;
+    UserSessionState user_state;
+
+
+
+
+    ///-----
+    ///
     // Local variabel to save the token
     // I know it's bad conduct but whatever, later i fix it lol
     // TODO: maybe throw exception
