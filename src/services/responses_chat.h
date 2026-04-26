@@ -15,6 +15,7 @@ namespace responses_chat
 {
 
     std::string EmoteReact();
+    bool HandleMessage(std::string_view text);
     std::string MakeMessage(const std::string& keyword,
                             const dpp::user& user,
                             const bool& mention);

@@ -5,29 +5,14 @@
 //  keeps the chat history, last chat, last chat channel id
 //  and token usage
 
+#include "shared/data.h"
+
 #include <chrono>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <memory>
 
-// dpp placeholder
-namespace dpp {
-using snowflake = uint64_t;
-}
-
-// Server session data wrapped on struct
-struct ServerSession {
-    std::vector<std::string> history;
-    std::chrono::steady_clock::time_point last_activity;
-
-    dpp::snowflake guild_id = 0;
-    dpp::snowflake open_message_id = 0;
-    dpp::snowflake last_channel = 0;
-
-    int input_usage = 0;
-    int output_usage = 0;
-};
 
 // Server session object wrapped as class
 class ServerSessionState {

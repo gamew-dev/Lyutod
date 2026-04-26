@@ -67,22 +67,15 @@ using snowflake = uint64_t;
 namespace config
 {
     /// File/directory path
-    std::string clientPath = "data/client/config.json",
-                              userPath   = "data/ai/user/",
-                              serverPath = "data/ai/server/",
-                              guildPath  = "data/guild/";
+    std::string clientPath = "data/client/config.json"  ,
+                userPath   = "data/ai/user/"            ,
+                serverPath = "data/ai/server/"          ,
+                guildPath  = "data/guild/"              ;
 
-    bool isShutingDown = false; // move to bot runtime
-    bool cooldownBsok = false; // move to bot runtime
 
-      std::string botOwner,
-                              botToken,
-                              //botVersi,
-                              gptToken;
-      bool isLog;
 
     /// Bot config
-    bool ClientLoadConfig();
+    bool LoadBotConfig();
 
     /// User chatbot memory
     void UserUpdateMemory(const std::string& id,

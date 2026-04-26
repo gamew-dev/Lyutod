@@ -46,8 +46,7 @@ set(SRC_FILES
 # === Executable ===
 # target output: "bot"
 add_executable(bot ${SRC_FILES}
-    src/state/bot_state.h src/state/bot_state.cpp
-
+    src/shared/data.h
 )
 
 # === Include directories ===

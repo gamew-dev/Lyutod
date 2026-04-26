@@ -24,7 +24,7 @@ namespace config {
 *   See also: main.cpp
 *
 */
-bool ClientLoadConfig() {
+bool LoadBotConfig() {
 
 
     std::filesystem::create_directories(userPath);

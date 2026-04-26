@@ -5,6 +5,8 @@
 
 namespace responses_ai {
 
+
+    void IsNotActiveAndThereforeCannotBeUsedForNow();
     void CreatePayload();
 
 }
