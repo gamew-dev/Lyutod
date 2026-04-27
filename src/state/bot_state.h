@@ -22,6 +22,7 @@ public:
 
 private:
     // move into shared/state.h later
+    // or enum class
     std::vector <dpp::presence> presence {
 
         dpp::presence(dpp::ps_idle , dpp::at_watching  , "you..."),
