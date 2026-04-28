@@ -8,6 +8,28 @@ namespace dpp {
 using snowflake = uint64_t;
 }
 
+enum class PresenceStatus {
+    Idle,
+    Online,
+    Dnd
+};
+
+enum class ActivityType {
+    Watching,
+    Playing,
+    Listening,
+    Streaming,
+    Competing
+};
+
+struct PresenceData {
+    PresenceStatus status;
+    ActivityType type;
+    std::string text;
+};
+
+//----------------------------------------------------
+
 struct BotConfig {
     std::string bot_token;
     std::string gpt_token;

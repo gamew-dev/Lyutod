@@ -23,19 +23,7 @@ public:
 private:
     // move into shared/state.h later
     // or enum class
-    std::vector <dpp::presence> presence {
-
-        dpp::presence(dpp::ps_idle , dpp::at_watching  , "you..."),
-        dpp::presence(dpp::ps_idle , dpp::at_competing , "lomba turu"),
-        dpp::presence(dpp::ps_idle , dpp::at_listening , "your scream"),
-        dpp::presence(dpp::ps_idle , dpp::at_streaming , "onlyAirConditioner"),
-
-        dpp::presence(dpp::ps_idle , dpp::at_watching  , "the world is ending"),
-        dpp::presence(dpp::ps_idle , dpp::at_competing , "gooning tournament"),
-        dpp::presence(dpp::ps_idle , dpp::at_listening , "burning pc"),
-        dpp::presence(dpp::ps_idle , dpp::at_streaming , "a")
-
-    };
+    std::vector <PresenceData> presence;
 
     std::string bot_token_;
     std::string gpt_token_;
