@@ -8,6 +8,8 @@ namespace dpp {
 using snowflake = uint64_t;
 }
 
+//-----------------------------------------------------
+
 enum class PresenceStatus {
     Idle,
     Online,

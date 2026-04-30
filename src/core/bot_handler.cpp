@@ -10,7 +10,9 @@
 
 
 
-#include "BotHandler.h"
+#include "bot_handler.h".h"
+
+#include "utils.h"
 
 //#include "state/bot_state.h"
 
@@ -1127,6 +1129,14 @@ void OnLog(dpp::cluster& bot, const dpp::log_t& event) {
 }
 
 void OnMessageCreate(dpp::cluster& bot, const dpp::message_create_t& event) {
+
+    if (utils::IsMentioned(bot, event)) {
+        //do ai or something
+    } else {
+        // if has $ or syntax in first message then command...
+        // else, handle basic message
+    }
+
     // Initialize variables for the msg author and it's content
     const dpp::user& tokoh = event.msg.author;
     std::string text = event.msg.content,

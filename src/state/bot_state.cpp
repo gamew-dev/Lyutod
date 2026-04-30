@@ -4,7 +4,7 @@ BotSessionState::BotSessionState(const BotConfig& config)
 {
     bot_token_ = config.bot_token;
     gpt_token_ = config.gpt_token;
-    owner_id_; = config.owner_id;
+    owner_id_ = config.owner_id;
     start_time_ = std::time(nullptr);
 
     presence = {
@@ -31,4 +31,12 @@ const std::string& BotSessionState::GetGPTToken() const {
 
 const std::string& BotSessionState::GetOwnerID() const {
     return owner_id_;
+}
+
+const PresenceData& BotSessionState::GetPresence() const {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, presence.size() - 1);
+
+    return presence[dist(gen)];
 }

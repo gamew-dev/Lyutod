@@ -23,7 +23,7 @@
 
 namespace dpp {
 
-using snowflake = uint64_t; //final type
+using snowflake = uint64_t;
 
 struct cluster;
 struct ready_t;
@@ -92,8 +92,6 @@ class BotHandler
     void OnTimer();
 
 
-
-
     private:
 
     BotSessionState& bot_state;
@@ -101,50 +99,7 @@ class BotHandler
     ServerSessionState& server_state;
     UserSessionState& user_state;
 
-
-    /// ---------------------------
-
-    /// get bot time when the startup at
-    //  the value will be init in ctr
-    //  and used it some command ex: status
-    std::time_t start;
-
-
-    /// A struct to pair with UserSession map for chatbotSession
-    //  hold the user memory and last time chat value
-    struct UserSessionStruct {
-        std::string memory;
-        std::chrono::steady_clock::time_point last_activity;
-    };
-
-    /// A struct to pair with ServerSession map for chatbotSession
-    //  keeps the chat history, last chat, last chat channel id
-    //  and token usage
-    struct ServerSessionStruct {
-        std::vector<std::string> history;
-        std::chrono::steady_clock::time_point last_activity;
-
-        dpp::snowflake guildID = 0;
-        dpp::snowflake openMessageID = 0;
-        dpp::snowflake lastChannel = 0;
-
-        int inputUsage = 0;
-        int outputUsage = 0;
-    };
-
-    struct MessageSessionStruct {
-
-        dpp::snowflake owner;
-
-        std::string type;
-        std::string state;
-        int page = 0;
-
-        std::chrono::steady_clock::time_point last_activity;
-
-    };
-
-
+    /*
     void handleLog(const std::string& line);
     void makeAIRequest(dpp::cluster& bot,
                        dpp::snowflake channelID,
@@ -152,38 +107,8 @@ class BotHandler
                        std::shared_ptr<ServerSessionStruct> server,
                        std::string postdata,
                        dpp::http_headers headers);
+    */
 
-
-
-    /// The map for session pairin',
-    //  the first index will be using user and/or server's id. for example, user has an id of 123456789
-    //  therefore it will be UserSessions[123...9] = UserSessionStruct{"i like trains", 69 years ago}
-    //  same happen with the server session, good thing about u_map is there are no ordered index 1,2,3 like an array for looping
-    //  instead, it will check if it has value or not.
-    ///  @Todo:
-    std::unordered_map<dpp::snowflake, std::shared_ptr<UserSessionStruct>> UserSessions;
-    std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSessionStruct>> ServerSessions;
-
-    /// Map for active message
-    //  An active message that has an interface/interactive feature such as menu selection, button
-    //  edit, modal, etc
-    //  WIP...
-    std::unordered_map<dpp::snowflake, MessageSessionStruct> MessageSession;
-
-    /// Presence list that available for the bot
-    std::vector <dpp::presence> presence {
-
-        dpp::presence(dpp::ps_idle , dpp::at_watching  , "you..."),
-        dpp::presence(dpp::ps_idle , dpp::at_competing , "lomba turu"),
-        dpp::presence(dpp::ps_idle , dpp::at_listening , "your scream"),
-        dpp::presence(dpp::ps_idle , dpp::at_streaming , "onlyAirConditioner"),
-
-        dpp::presence(dpp::ps_idle , dpp::at_watching  , "the world is ending"),
-        dpp::presence(dpp::ps_idle , dpp::at_competing , "gooning tournament"),
-        dpp::presence(dpp::ps_idle , dpp::at_listening , "burning pc"),
-        dpp::presence(dpp::ps_idle , dpp::at_streaming , "a")
-
-    };
 
 };
 

@@ -20,9 +20,9 @@ public:
     const std::string& GetGPTToken() const;
     const std::string& GetOwnerID() const;
 
+    const PresenceData& GetPresence() const;
+
 private:
-    // move into shared/state.h later
-    // or enum class
     std::vector <PresenceData> presence;
 
     std::string bot_token_;
