@@ -22,18 +22,22 @@ namespace responses_chat
 
 
     std::unordered_map<std::string, std::vector<std::string>> pilihan = {
-        {"sambut", {
+        {"sambut", // greet
+            {
             "{user} hai sayang! <:wlwl:1370068430316765264>",
             "halo bubub {user} <:lup:1370432773814227014>",
             "woe anak mana loe {user} <:hmm:1370308187399520289>",
             "{user} member baru sungkem dulu sini ya <:y_y:1370304542914383924>",
             "awww {user}, yuk kenalan dulu.. <:waa:1370433197913145455>",
             "aww ada {user}, aku jadi malu <:aww:1370432517211033791>"
-        }},
-        {"panggil", {
+            }
+        },
+        {"panggil", // pinged (unused if used ai)
+            {
             "nggih?", "apasih", "Halo, {user}. Bagaimana kabarmu?",
             "<:hadir:1370082147834003528>", "<:ndatawu:1370304357052186624>", "iya halo", "gimanah?"
-        }},
+            }
+        },
         {"sepi", {
             "iyh <:turu:1370067202635595817>", "y", "Halo, {user}. Bagaimana kabarmu?",
             "<:hadir:1370082147834003528>", "<:ndatawu:1370304357052186624>"
