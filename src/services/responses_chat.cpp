@@ -14,7 +14,7 @@ namespace responses_chat {
     }
 
 
-    bool HandleMessage(std::string_view text) {
+    std::string HandleMessage(std::string_view text) {
         // Initialize variables for the msg author and it's content
         const dpp::user& tokoh = event.msg.author;
         std::string text = event.msg.content,
@@ -209,9 +209,10 @@ namespace responses_chat {
         }
     }
 
-    std::string MakeMessage(const std::string& keyword,
-                            const dpp::user& user,
-                            const bool& mention) {
+    std::string MakeMessage(std::string_view keyword,
+                            std::string_view user_nick,
+                            std::string_view user_id,
+                            bool mention) {
 
         //std::cout << "log: keyword = " << keyword << std::endl;
 
@@ -232,7 +233,7 @@ namespace responses_chat {
         size_t pos = jawab.find(placeholder);
 
         if (pos != std::string::npos) {
-            std::string pengganti = mention ? user.get_mention() : user.username;
+            std::string pengganti = mention ? ("<@"+user_id+">") : user_nick;
             jawab.replace(pos, placeholder.length(), pengganti);
         }
 

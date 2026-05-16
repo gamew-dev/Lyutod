@@ -13,6 +13,8 @@
 #include "bot_handler.h".h"
 
 #include "utils.h"
+#include "../services/responses_chat.h"
+
 
 //#include "state/bot_state.h"
 
@@ -1130,20 +1132,28 @@ void OnLog(dpp::cluster& bot, const dpp::log_t& event) {
 
 void OnMessageCreate(dpp::cluster& bot, const dpp::message_create_t& event) {
 
-    if (utils::IsMentioned(bot, event)) {
-        //do ai or something
-    } else {
-        // if has $ or syntax in first message then command...
-        // else, handle basic message
-    }
 
     // Initialize variables for the msg author and it's content
     const dpp::user& tokoh = event.msg.author;
     std::string text = event.msg.content,
-                repl;
+                repl = "";
 
     // Lowercasing the message
     std::transform(text.begin(), text.end(), text.begin(), ::tolower);
+
+    if (utils::IsMentioned(bot, event)) {
+        //do ai or something
+    } else if (text.rfind("$", 0) == 0) {
+        // starts with $
+    } else {
+
+        repl = responses_chat::HandleMessage(text);
+        // else, handle basic message
+    }
+
+
+
+
 
 
     // i think i should've used else if instead of all if, we'll do that later ^_^

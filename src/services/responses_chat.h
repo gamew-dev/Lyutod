@@ -15,10 +15,12 @@ namespace responses_chat
 {
 
     std::string EmoteReact();
-    bool HandleMessage(std::string_view text);
-    std::string MakeMessage(const std::string& keyword,
-                            const dpp::user& user,
-                            const bool& mention);
+    std::string GetEmote();
+    std::string HandleMessage(std::string_view text);
+    std::string MakeMessage(std::string_view keyword,
+                            std::string_view user_nick,
+                            std::string_view user_id,
+                            bool mention);
 
 
     std::unordered_map<std::string, std::vector<std::string>> pilihan = {
@@ -38,10 +40,12 @@ namespace responses_chat
             "<:hadir:1370082147834003528>", "<:ndatawu:1370304357052186624>", "iya halo", "gimanah?"
             }
         },
-        {"sepi", {
+        {"sepi", // dead chat
+            {
             "iyh <:turu:1370067202635595817>", "y", "Halo, {user}. Bagaimana kabarmu?",
             "<:hadir:1370082147834003528>", "<:ndatawu:1370304357052186624>"
-        }},
+            }
+        },
         {"sapa", {
             "halo juga {user}", "hai hai ^_^", "halo {user}, bagaimana kabarmu?",
             "<:iyah:1370304877615386704> halo"
