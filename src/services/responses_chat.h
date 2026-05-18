@@ -1,15 +1,10 @@
 #ifndef RESPONSES_H
 #define RESPONSES_H
 
-#include "dpp/dpp.h"
 #include "dpp/unicode_emoji.h"
-#include "../core/utils.h"
 
 #include <random>
 
-namespace dpp {
-    struct user;
-}
 
 namespace responses_chat
 {
@@ -86,30 +81,9 @@ namespace responses_chat
         }}
     };
     // this is for react
-    std::vector<std::string> emot = {
-        dpp::unicode_emoji::pleading_face,
-        dpp::unicode_emoji::nerd,
-        dpp::unicode_emoji::melting_face,
-        dpp::unicode_emoji::thinking_face,
-        dpp::unicode_emoji::skull,
-        dpp::unicode_emoji::zany_face,
-        dpp::unicode_emoji::dizzy_face,
-        dpp::unicode_emoji::face_with_spiral_eyes,
-        dpp::unicode_emoji::face_exhaling,
-        dpp::unicode_emoji::expressionless,
-        dpp::unicode_emoji::rolling_eyes,
-        dpp::unicode_emoji::open_mouth,
-        dpp::unicode_emoji::pleading_face,
-        dpp::unicode_emoji::weary,
-        dpp::unicode_emoji::confounded
-    };
+    std::vector<std::string> emot;
 
-    std::vector<std::string> emot2 = {
-        dpp::unicode_emoji::pregnant_man,
-        dpp::unicode_emoji::eggplant,
-        dpp::unicode_emoji::fish,
-        dpp::unicode_emoji::wilted_flower
-    };
+    std::vector<std::string> emot2;
 }
 
 #endif // RESPONSES_H

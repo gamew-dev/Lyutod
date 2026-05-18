@@ -1,9 +1,35 @@
 #include "responses_chat.h"
 
 #include "dpp/dpp.h"
-
+#include "dpp/unicode_emoji.h"
 
 namespace responses_chat {
+
+    emot = {
+        dpp::unicode_emoji::pleading_face,
+        dpp::unicode_emoji::nerd,
+        dpp::unicode_emoji::melting_face,
+        dpp::unicode_emoji::thinking_face,
+        dpp::unicode_emoji::skull,
+        dpp::unicode_emoji::zany_face,
+        dpp::unicode_emoji::dizzy_face,
+        dpp::unicode_emoji::face_with_spiral_eyes,
+        dpp::unicode_emoji::face_exhaling,
+        dpp::unicode_emoji::expressionless,
+        dpp::unicode_emoji::rolling_eyes,
+        dpp::unicode_emoji::open_mouth,
+        dpp::unicode_emoji::pleading_face,
+        dpp::unicode_emoji::weary,
+        dpp::unicode_emoji::confounded
+    };
+
+    emot2 = {
+        dpp::unicode_emoji::pregnant_man,
+        dpp::unicode_emoji::eggplant,
+        dpp::unicode_emoji::fish,
+        dpp::unicode_emoji::wilted_flower
+    };
+
 
     std::string EmoteReact() {
         static std::random_device rd;
@@ -15,22 +41,13 @@ namespace responses_chat {
 
 
     std::string HandleMessage(std::string_view text) {
-        // Initialize variables for the msg author and it's content
-        const dpp::user& tokoh = event.msg.author;
-        std::string text = event.msg.content,
-                    repl;
-
-        // Lowercasing the message
-        std::transform(text.begin(), text.end(), text.begin(), ::tolower);
-
 
         // i think i should've used else if instead of all if, we'll do that later ^_^
         if (
             text == "halo" || text == "hai"  ||
             text == "woi"  || text == "hi"    )
             {
-                repl = Responses::makeMsg("sapa", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "sapa";
             }
 
 
@@ -38,84 +55,38 @@ namespace responses_chat {
             text.find("jawa")  != std::string::npos || text.find("jwa") != std::string::npos  ||
             text.find("jw")    != std::string::npos || text.find("jaua") != std::string::npos )
             {
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
-                //std::clog << "react test" << std::endl;
-            }
-
-
-        // yet another hardcoded experiment
-        if (
-            text == "test" || text == "tes")
-            {
-                dpp::message aaa(event.msg.channel_id, "p");
-
-                bot.message_add_reaction(event.msg.id, event.msg.channel_id, Responses::emoteReact());
-
-                aaa.add_component(
-                    dpp::component().add_component(
-                        dpp::component()
-                            .set_label("Tes")
-                            .set_type(dpp::cot_button)
-                            .set_emoji(Responses::emoteReact())
-                            .set_style(dpp::cos_success )
-
-                            .set_id("ID_tes")
-                    )
-                );
-
-                bot.message_create(aaa,[&](const dpp::confirmation_callback_t& cb) {
-                    if (cb.is_error()) return;
-
-                    const dpp::message& sent = std::get<dpp::message>(cb.value);
-
-                    MessageSessionStruct session;
-                        session.owner = event.msg.author.id;
-                        session.type = "testttttt";
-                        session.state = "stateless";
-                        session.page = -1;
-                        session.last_activity = std::chrono::steady_clock::now();
-
-                    MessageSession[sent.id] = session;
-
-                });
-
-
+                return "react";
             }
 
         if (
             text == "sefi" || text == "sfi"   ||
             text == "sepi" || text == "spi"    )
             {
-                repl = Responses::makeMsg("sepi", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "sepi";
             }
 
         if (
             text == "pagi" || text == "pgi")
             {
-                repl = Responses::makeMsg("pagi", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "pagi";
             }
 
         if (
             text == "siang" || text == "siyang")
             {
-                repl = Responses::makeMsg("siang", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "siang";
             }
 
         if (
             text == "sore" || text == "sre" || text == "petang")
             {
-                repl = Responses::makeMsg("sore", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "sore";
             }
 
         if (
             text == "malam" || text == "mlm" || text == "mlam")
             {
-                repl = Responses::makeMsg("malam", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "malam";
             }
 
         if (
@@ -124,8 +95,7 @@ namespace responses_chat {
             text == "turu"  || text == "turu"  || text == "tr"    ||
             text == "tuur"  || text == "utru"  || text == "bobko"  )
             {
-                repl = Responses::makeMsg("bobok", tokoh, false);
-                bot.message_create(dpp::message(event.msg.channel_id, repl));
+                return "bobok";
             }
 
         /// Shutdown command
@@ -133,6 +103,7 @@ namespace responses_chat {
         //  the function is still experiment and i dont know hos stable it is
         //  usage: shutdown <option>
         //  ex: shutdown now, shutdown 30s, shutdown 5m, other than that it will be treated as default: 60s
+        /*
         if (text.rfind("$shutdown", 0) == 0) {
 
             /// Bot owner
@@ -206,6 +177,7 @@ namespace responses_chat {
                 repl = Responses::makeMsg("prohibited", tokoh, false);
                 bot.message_create(dpp::message(event.msg.channel_id, repl));
             }
+            */
         }
     }
 
@@ -237,6 +209,7 @@ namespace responses_chat {
             jawab.replace(pos, placeholder.length(), pengganti);
         }
 
+        /*
         // Tambahan reaksi hari Sabtu & Minggu
         int hari = Utils::getDay();
         if (hari == 6 && !Config::cooldownBsok) { // Sabtu
@@ -246,7 +219,7 @@ namespace responses_chat {
             jawab += "\nbsok senin <:mengsedih:1370066473959297024>";
             Config::cooldownBsok = true;
         }
-
+        */
         return jawab;
     }
 
