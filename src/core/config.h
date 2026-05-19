@@ -19,43 +19,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "shared/data.h"
+
 #include <string> // std::string
 #include <vector> // std::vector
 
-
-/// Client config struct
-//  The struct that store bot information
-//  currently has no use????
-struct CC {
-    std::string botOwner,
-                botToken,
-                //botVersion,
-
-                gptToken;
-
-    bool isLog;
-};
-
-
-/// Guild config struct
-//  The GC struct (Guild Config) stores guild-specific data such as
-//  IDs, owner information, member count channel, and auto-role settings.
-struct GC {
-    std::string name;
-    dpp::snowflake id,
-                ownerID;
-
-    bool autoRoleEnabled;
-    std::string autoRoleName;
-    dpp::snowflake autoRoleID;
-
-    dpp::snowflake memberCountChannel1,
-                   memberCountChannel2,
-                   memberCountChannel3;
-
-    dpp::snowflake loggerChannel;
-
-};
 
 namespace dpp {
 class cluster;
@@ -73,9 +41,8 @@ namespace config
                 guildPath  = "data/guild/"              ;
 
 
-
     /// Bot config
-    bool LoadBotConfig();
+    BotConfig LoadBotConfig();
 
     /// User chatbot memory
     void UserUpdateMemory(const std::string& id,
@@ -112,7 +79,7 @@ namespace config
     /// Server config getter
     //  i need to find an other way
     //  TODO: develop better implementation
-     GC guildLoadConfig(const std::string& guild_id);
+     //GC guildLoadConfig(const std::string& guild_id);
 }
 
 #endif // CONFIG_H

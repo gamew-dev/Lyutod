@@ -8,13 +8,18 @@
  *  @author Hissats
  */
 
-
-
 #include "bot_handler.h".h"
 
 #include "utils.h"
 #include "../services/responses_chat.h"
+#include "../services/responses_ai.h"
 
+#include "state/bot_state.h"
+#include "state/button_sessions.h"
+#include "state/server_sessions.h"
+#include "state/user_sessions.h"
+
+#include <dpp/dpp.h>
 
 //#include "state/bot_state.h"
 
@@ -44,6 +49,7 @@ BotHandler::BotHandler(
  *  @param message event class that has who sends it, what its content, etc etc
  *
  */
+
 void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     // Initialize variables for the msg author and it's content
@@ -1096,7 +1102,7 @@ void BotHandler::handleLog(const std::string& line) {
 
 void OnReady(dpp::cluster& bot, const dpp::ready_t& event) {
 
-    if (bot_state::is_logging) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
+    //if (bot_state::is_logging) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
 
     // Registering slash command
     // keep in mind as far as now, this code is still testing
@@ -1113,6 +1119,7 @@ void OnReady(dpp::cluster& bot, const dpp::ready_t& event) {
 
     // Bot timer, for every 10 minutes bot is changing presence status
     // and checking chatbot sessions
+    /*
     bot.start_timer([&bot, &handler](const dpp::timer& timer){
 
         handler.updatePresence(bot);
@@ -1124,6 +1131,7 @@ void OnReady(dpp::cluster& bot, const dpp::ready_t& event) {
 
 
     },600);
+    */
 }
 
 void OnLog(dpp::cluster& bot, const dpp::log_t& event) {
@@ -1144,10 +1152,20 @@ void OnMessageCreate(dpp::cluster& bot, const dpp::message_create_t& event) {
         //do ai or something
     } else if (text.rfind("$", 0) == 0) {
         // starts with $
+        bot.message_create(dpp::message(event.msg.channel_id, responses_chat::GetEmote()));
     } else {
 
         repl = responses_chat::HandleMessage(text);
 
+        if (repl == "react") {
+            bot.message_add_reaction(event.msg.id, event.msg.channel_id, responses_chat::GetEmote());
+        } else {
+            std::string user_name = event.msg.author.global_name;
+            std::string user_id = std::to_string(event.msg.author.id);
+            std::string answer = responses_chat::MakeMessage(repl, user_name, user_id, false);
+
+            bot.message_create(dpp::message(event.msg.channel_id, answer));
+        }
         // else, handle basic message
     }
 

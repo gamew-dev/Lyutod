@@ -1,11 +1,10 @@
 #include "responses_chat.h"
 
-#include "dpp/dpp.h"
 #include "dpp/unicode_emoji.h"
 
 namespace responses_chat {
 
-    emot = {
+    const std::vector<std::string> emot = {
         dpp::unicode_emoji::pleading_face,
         dpp::unicode_emoji::nerd,
         dpp::unicode_emoji::melting_face,
@@ -23,7 +22,7 @@ namespace responses_chat {
         dpp::unicode_emoji::confounded
     };
 
-    emot2 = {
+    const std::vector<std::string> emot2 = {
         dpp::unicode_emoji::pregnant_man,
         dpp::unicode_emoji::eggplant,
         dpp::unicode_emoji::fish,
@@ -31,7 +30,7 @@ namespace responses_chat {
     };
 
 
-    std::string EmoteReact() {
+    std::string GetEmote() {
         static std::random_device rd;
         static std::mt19937 gen(rd());
         std::uniform_int_distribution<> distrib(0, emot.size() - 1);
@@ -49,7 +48,6 @@ namespace responses_chat {
             {
                 return "sapa";
             }
-
 
         if (
             text.find("jawa")  != std::string::npos || text.find("jwa") != std::string::npos  ||

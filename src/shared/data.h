@@ -36,6 +36,7 @@ struct BotConfig {
     std::string bot_token;
     std::string gpt_token;
     std::string owner_id;
+    bool valid = false;
 };
 
 struct ButtonSession {

@@ -13,13 +13,6 @@
 
 #ifndef BOTHANDLER_H
 #define BOTHANDLER_H
-/*
-#include "config.h"
-#include "utils.h"
-#include "../services/responses_chat.h"
-#include "../command/base_commands.h"
-#include "../command/base_commands_ui.h"
-*/
 
 namespace dpp {
 
@@ -37,7 +30,10 @@ struct guild_create_t;
 
 }
 
-
+class BotSessionState;
+class ButtonSessionState;
+class ServerSessionState;
+class UserSessionState;
 
 class BotHandler
 {

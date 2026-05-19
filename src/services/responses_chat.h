@@ -9,7 +9,7 @@
 namespace responses_chat
 {
 
-    std::string EmoteReact();
+    //std::string EmoteReact();
     std::string GetEmote();
     std::string HandleMessage(std::string_view text);
     std::string MakeMessage(std::string_view keyword,
@@ -81,9 +81,9 @@ namespace responses_chat
         }}
     };
     // this is for react
-    std::vector<std::string> emot;
+    extern const std::vector<std::string> emot;
 
-    std::vector<std::string> emot2;
+    extern const std::vector<std::string> emot2;
 }
 
 #endif // RESPONSES_H

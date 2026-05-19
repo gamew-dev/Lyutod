@@ -24,25 +24,31 @@ namespace config {
 *   See also: main.cpp
 *
 */
-bool LoadBotConfig() {
+BotConfig LoadBotConfig() {
 
 
     std::filesystem::create_directories(userPath);
     std::filesystem::create_directories(serverPath);
     std::filesystem::create_directories(guildPath);
 
+    BotConfig _config;
+
     std::ifstream file(clientPath);
     if (file) {
         if (isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
         nlohmann::json fileJson;
         file >> fileJson;
-        botOwner = fileJson.value("botOwner", "");
-        botToken = fileJson.value("botToken", "");
+        _config.owner_id = fileJson.value("botOwner", "");
+        _config.bot_token = fileJson.value("botToken", "");
         //botVersi = fileJson.value("botVersi", "");
-        gptToken = fileJson.value("gptToken", "");
-        isLog = fileJson.value("isLog", false);
+        _config.gpt_token = fileJson.value("gptToken", "");
+        //isLog = fileJson.value("isLog", false);
 
-        return true;
+        if (!cfg.bot_token.empty()) {
+            _config.valid = true;
+        }
+
+        return _config;
 
     }
     else {
@@ -52,12 +58,13 @@ bool LoadBotConfig() {
         filejson["botToken"] = "";
         //filejson["botVersi"] = "";
         filejson["gptToken"] = "";
-        filejson["isLog"] = false;
+        //filejson["isLog"] = false;
 
         std::ofstream file(clientPath);
         file << filejson.dump(4);
 
-        return false;
+        _config.valid = false;
+        return _config;
     }
 
 }

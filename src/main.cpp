@@ -9,6 +9,10 @@
 
 
 #include "core/bot_handler.h"
+#include "core/config.h"
+
+#include "shared/data.h"
+
 #include "state/bot_state.h"
 #include "state/button_sessions.h"
 #include "state/server_sessions.h"
@@ -18,36 +22,18 @@ int main() {
 
     ///-----
 
-    BotSessionState bot_state;
+    BotConfig cfg = config::LoadBotConfig();
+
+    if (!cfg.valid) return 1;
+
+    dpp::cluster bot(cfg.bot_token, dpp::i_all_intents);
+
+    BotSessionState bot_state(cfg);
     ButtonSessionState button_state;
     ServerSessionState server_state;
     UserSessionState user_state;
 
-
-
-
-    ///-----
-    ///
-    // Local variabel to save the token
-    // I know it's bad conduct but whatever, later i fix it lol
-    // TODO: maybe throw exception
-    std::string token;
-
-    // Load bot config, the function return true if the config valid
-    if (Config::clientLoadConfig()) {
-        token = Config::botToken;
-    }
-    else {
-        if (Config::isLog) std::cout << "no token files found" << std::endl;
-        return 1;
-    }
-
-    // Initialize the bot object
-    dpp::cluster bot(token, dpp::i_all_intents);
-    // Initialize custom class Bothandler object
-    // the BotHandler class is a event handler designed to process the input
-    // given by the event, more on it in the file @BotHandler.h/cpp
-    BotHandler handler;
+    BotHandler handler(bot_state, button_state, server_state, user_state);
 
 
     // From now on, you are gonna see most bot event logic "bot.on_something".
@@ -65,36 +51,7 @@ int main() {
     // When the bot started active
     bot.on_ready([&bot, &handler](const dpp::ready_t& event) {
 
-        handler.OnReady(event);
-
-        if (Config::isLog) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
-
-        // Registering slash command
-        // keep in mind as far as now, this code is still testing
-        // and some of the code is still hardcoded including this one
-
-        //1349036976627777557
-        //1270735247922692177
-
-        //handler.preRegSlash(bot, 1270735247922692177);
-        ///handler.preDelSlash(bot, 1349036976627777557);
-
-        // First time startup resence setting
-        bot.set_presence(dpp::presence(dpp::ps_online  , dpp::at_custom   , "hello world"));
-
-        // Bot timer, for every 10 minutes bot is changing presence status
-        // and checking chatbot sessions
-        bot.start_timer([&bot, &handler](const dpp::timer& timer){
-
-            handler.updatePresence(bot);
-            Config::cooldownBsok = false;
-
-            if (!Config::isShutingDown) {
-                handler.checkSessions(bot, false);
-            }
-
-
-        },600);
+        handler.OnReady(bot, event);
 
     }); //on-ready
 
@@ -103,30 +60,14 @@ int main() {
     // When a message is created in any channel the bot can see, it will run this code
     bot.on_message_create([&bot, &handler](const dpp::message_create_t& event) {
 
-        handler.OnMessageCreate(event);
         // Avoid bot self reply
         if (event.msg.author.id == bot.me.id) return;
-
-
-        if (Config::isLog) std::cout << event.msg.author.global_name << ": " << event.msg.content << std::endl;
-
-        // Throw the event for InputHandler to manage
-        // for every message that mentions the bot, it
-        // will be treat as chatbot for ai
-        if (Utils::isMentioned(bot, event)) {
-            std::cout << "bot Mentioned" << std::endl;
-
-            handler.handleAiRequest(bot, event);
-        } else {
-
-            handler.handleMessage(bot, event);
-        }
-
+        handler.OnMessageCreate(bot, event);
 
     }); // chat
 
 
-
+    /*
     // When the slash command is triggered this will run
 
     bot.on_slashcommand([&bot, &handler](const dpp::slashcommand_t& event) {
@@ -176,7 +117,7 @@ int main() {
         }
 
     });
-
+    */
     // Start the bot
     bot.start(dpp::st_wait);
 }
