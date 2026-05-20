@@ -5,7 +5,7 @@
 
 class ButtonSessionState {
 public:
-    button_sessions();
+    ButtonSessionState();
     ButtonSession& Get(const std::string& event_id);
 
 };

@@ -14,6 +14,8 @@
 #ifndef BOTHANDLER_H
 #define BOTHANDLER_H
 
+#include <cstdint>
+
 namespace dpp {
 
 using snowflake = uint64_t;
@@ -44,7 +46,7 @@ class BotHandler
                ButtonSessionState& button_state,
                ServerSessionState& server_state,
                UserSessionState& user_state);
-
+    /*
     void preRegSlash        (      dpp::cluster& bot,
                                     dpp::snowflake id)             , /// Slash command Register
 
@@ -73,7 +75,7 @@ class BotHandler
 
          checkSessions      (      dpp::cluster& bot,               /// Chatbot session and memory
                                  const bool& forced                  );
-
+    */
     // =====================================================================================
     // REFACTOR NEW LOGIC START HERE
 

@@ -4,8 +4,10 @@
 #include <string> // string
 #include <chrono> // time_t
 
+#include <cstdint>
+
 namespace dpp {
-using snowflake = uint64_t;
+using snowflake = u_int64_t;
 }
 
 //-----------------------------------------------------

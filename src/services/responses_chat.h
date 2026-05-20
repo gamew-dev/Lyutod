@@ -4,7 +4,7 @@
 #include "dpp/unicode_emoji.h"
 
 #include <random>
-
+#include <unordered_map>
 
 namespace responses_chat
 {

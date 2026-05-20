@@ -6,6 +6,8 @@
 #include <chrono> // time_t
 #include <string> // string
 
+
+
 class BotSessionState
 {
 public:

@@ -8,7 +8,7 @@
  *  @author Hissats
  */
 
-#include "bot_handler.h".h"
+#include "bot_handler.h"
 
 #include "utils.h"
 #include "../services/responses_chat.h"
@@ -20,6 +20,7 @@
 #include "state/user_sessions.h"
 
 #include <dpp/dpp.h>
+
 
 //#include "state/bot_state.h"
 
@@ -33,8 +34,7 @@ BotHandler::BotHandler(
     : bot_state(bot_state),
       button_state(button_state),
       server_state(server_state),
-      user_state(user_state),
-      start(std::time(nullptr))
+      user_state(user_state)
 {}
 
 
@@ -49,7 +49,7 @@ BotHandler::BotHandler(
  *  @param message event class that has who sends it, what its content, etc etc
  *
  */
-
+/*
 void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     // Initialize variables for the msg author and it's content
@@ -245,7 +245,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
         }
     }
 }
-
+*/
 
 
 /**
@@ -261,6 +261,7 @@ void BotHandler::handleMessage(dpp::cluster& bot, const dpp::message_create_t& e
  *         async scopings
  */
 
+/*
 void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t& event) {
 
     /// basic variable
@@ -455,8 +456,8 @@ void BotHandler::handleAiRequest(dpp::cluster& bot, const dpp::message_create_t&
     }
 
 }
-
-
+*/
+/*
 void BotHandler::makeAIRequest(dpp::cluster &bot,
                                dpp::snowflake channelID,
                                std::shared_ptr<UserSessionStruct> user,
@@ -562,7 +563,7 @@ void BotHandler::makeAIRequest(dpp::cluster &bot,
         );
 
 }
-
+*/
 
 
 /**
@@ -575,7 +576,7 @@ void BotHandler::makeAIRequest(dpp::cluster &bot,
  *  @param slashcommand event class
  *
  */
-
+/*
 void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     std::string command = event.command.get_command_name();
@@ -615,7 +616,7 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
     }
 
 }
-
+*/
 /**
  *  handleButtonEvent
  *
@@ -625,7 +626,7 @@ void BotHandler::handleSlash(dpp::cluster& bot, const dpp::slashcommand_t& event
  *  @param button click event class
  *
  */
-
+/*
 void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t& event) {
 
     auto session = MessageSession[event.command.msg.id];
@@ -647,7 +648,7 @@ void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t&
     }
 
 }
-
+*/
 /**
  *  handleGuildNewMem
  *
@@ -658,7 +659,7 @@ void BotHandler::handleButtonEvent(dpp::cluster& bot, const dpp::button_click_t&
  *  @param guild member add event class
  *
  */
-
+/*
 void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_add_t& event) {
 
     /// Basic variable
@@ -814,7 +815,7 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
 
     /// end here
 }
-
+*/
 /**
  *  handleGuildRemMem
  *
@@ -825,7 +826,7 @@ void BotHandler::handleGuildNewMem(dpp::cluster& bot, const dpp::guild_member_ad
  *  @param guild member remove event class
  *
  */
-
+/*
 void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_remove_t& event) {
 
     const dpp::snowflake server = event.removing_guild.id;
@@ -949,6 +950,7 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
         });
 }
 
+*/
 
 /**
  *  updatePresence
@@ -959,7 +961,7 @@ void BotHandler::handleGuildRemMem(dpp::cluster& bot, const dpp::guild_member_re
  *  @param the bot itself
  *
  */
-
+/*
 void BotHandler::updatePresence(dpp::cluster& bot) {
 
     std::random_device rd;
@@ -969,11 +971,12 @@ void BotHandler::updatePresence(dpp::cluster& bot) {
     bot.set_presence(presence[dist(gen)]);
     if (Config::isLog) std::cout << "[LOG] Updating presence status..." << std::endl;
 }
-
+*/
 
 /**
 TESTING ONLY, HARDCODED COMMAND
 */
+/*
 void BotHandler::preRegSlash(dpp::cluster& bot, dpp::snowflake id) {
 
     std::vector<dpp::slashcommand> _commands;
@@ -1001,7 +1004,7 @@ void BotHandler::preDelSlash(dpp::cluster& bot, dpp::snowflake id) {
     if (Config::isLog) std::cout << "Berhasil menghapus semua commands!\n";
 
 }
-
+*/
 /**
  *  checkSessions
  *
@@ -1014,7 +1017,7 @@ void BotHandler::preDelSlash(dpp::cluster& bot, dpp::snowflake id) {
  *  @param is forced to stop boolean value
  *
  */
-
+/*
 void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
     /// Time getter
     auto now = std::chrono::steady_clock::now();
@@ -1085,15 +1088,15 @@ void BotHandler::checkSessions(dpp::cluster& bot, const bool& forced) {
 }
 
 
-
+*/
 
 
 /// Private
-
+/*
 void BotHandler::handleLog(const std::string& line) {
     if (Config::isLog) std::cout << line << std::endl;
 }
-
+*/
 
 
 

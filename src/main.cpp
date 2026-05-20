@@ -28,6 +28,8 @@ int main() {
 
     dpp::cluster bot(cfg.bot_token, dpp::i_all_intents);
 
+    //-------
+
     BotSessionState bot_state(cfg);
     ButtonSessionState button_state;
     ServerSessionState server_state;
