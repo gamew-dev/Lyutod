@@ -1,5 +1,8 @@
 #include "responses_chat.h"
 
+#include <random>
+#include <ctime>
+
 #include "dpp/unicode_emoji.h"
 
 namespace responses_chat {
@@ -176,20 +179,23 @@ namespace responses_chat {
                 bot.message_create(dpp::message(event.msg.channel_id, repl));
             }
             */
+
+            return "prohibited";
+
         }
     }
 
     std::string MakeMessage(std::string_view keyword,
                             std::string_view user_nick,
-                            std::string_view user_id,
+                            const std::string& user_id,
                             bool mention) {
 
         //std::cout << "log: keyword = " << keyword << std::endl;
 
-        auto cari = Responses::pilihan.find(keyword);
-        if (cari == Responses::pilihan.end() || cari->second.empty()) {
+        auto cari = responses_chat::pilihan.find(keyword);
+        if (cari == responses_chat::pilihan.end() || cari->second.empty()) {
             // keyword not found :bobok:
-            return "<@"+Config::botOwner+">";
+            return "aoa cona";
         }
 
         // random generator

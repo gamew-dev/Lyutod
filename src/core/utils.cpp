@@ -2,7 +2,7 @@
 
 #include "dpp/dpp.h"
 
-#include "../config/config.h" // log
+#include "config.h"
 
 namespace utils {
 
@@ -114,7 +114,7 @@ bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     return false;
 }
 
-voidCchangeChannelname( dpp::cluster& bot,
+void voidCchangeChannelname( dpp::cluster& bot,
                               const dpp::snowflake& channel_id,
                               const std::string& sync_value,
                               const std::string& new_name) {
@@ -136,16 +136,16 @@ voidCchangeChannelname( dpp::cluster& bot,
 
             bot.channel_edit(ch, [](const dpp::confirmation_callback_t& cc2) {
                 if (cc2.is_error()) {
-                    if (config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
+                    //if (config::isLog) std::cout << "[Debug]: human only error..." << std::endl;
 
                 } else {
-                    if (config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;;
+                    //if (config::isLog) std::cout << "[Debug]: human only updated..." << std::endl;;
 
                 }
 
             });
         } else {
-            if (config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
+            //if (config::isLog) std::cout << "[Debug]: Error get human channel" << std::endl;
         }
     });
 }

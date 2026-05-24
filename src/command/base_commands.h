@@ -15,9 +15,9 @@
 #define COMMANDS_H
 
 #include "dpp/dpp.h"
-#include "../core/config/Config.h"
-#include "../responses/Responses.h"
-#include "../core/utils/Utils.h"
+#include "../core/config.h"
+#include "../services/responses_chat.h"
+#include "../core/utils.h"
 
 class Commands {
 

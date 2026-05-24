@@ -10,7 +10,6 @@
 namespace dpp {
     class cluster;
     struct message_create_t;
-    using snowflake = uint64_t;
 }
 
 namespace utils
@@ -30,12 +29,12 @@ int  GetDay(); // get day (0 - 6) format
 bool IsMentioned(dpp::cluster& bot,
                  const dpp::message_create_t& event);
 void ChangeChannelName(dpp::cluster& bot,
-                       const dpp::snowflake& channel_id,
+                       const u_int64_t& channel_id,
                        const std::string& sync_value,
                        const std::string& new_name);
 
 void ChangeChannelName(dpp::cluster& bot,
-                       const dpp::snowflake& channel_id,
+                       const u_int64_t& channel_id,
                        const std::string& new_name);
 
 }

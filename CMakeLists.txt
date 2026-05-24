@@ -37,7 +37,7 @@ file(GLOB_RECURSE RESP_SRC
 
 set(SRC_FILES
     ${CORE_SRC}
-    ${CMD_SRC}
+   # ${CMD_SRC}
     ${STATE_SRC}
     ${RESP_SRC}
     src/main.cpp

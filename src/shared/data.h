@@ -3,12 +3,9 @@
 
 #include <string> // string
 #include <chrono> // time_t
+#include <vector> //vector
 
 #include <cstdint>
-
-namespace dpp {
-using snowflake = u_int64_t;
-}
 
 //-----------------------------------------------------
 
@@ -43,7 +40,7 @@ struct BotConfig {
 
 struct ButtonSession {
 
-    dpp::snowflake owner;
+    u_int64_t owner;
 
     std::string type;
     std::string state;
@@ -58,9 +55,9 @@ struct ServerSession {
     std::vector<std::string> history;
     std::chrono::steady_clock::time_point last_activity;
 
-    dpp::snowflake guild_id = 0;
-    dpp::snowflake open_message_id = 0;
-    dpp::snowflake last_channel = 0;
+    u_int64_t guild_id = 0;
+    u_int64_t open_message_id = 0;
+    u_int64_t last_channel = 0;
 
     int input_usage = 0;
     int output_usage = 0;

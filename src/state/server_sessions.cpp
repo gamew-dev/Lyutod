@@ -1,4 +1,4 @@
-#include "state/server_sessions.h".h"
+#include "state/server_sessions.h"
 /*
 ServerSession& ServerSessionStore::Get(dpp::snowflake guild_id) {
     auto it = data_.find(guild_id);

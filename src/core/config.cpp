@@ -35,7 +35,7 @@ BotConfig LoadBotConfig() {
 
     std::ifstream file(clientPath);
     if (file) {
-        if (isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
+        //if (isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
         nlohmann::json fileJson;
         file >> fileJson;
         _config.owner_id = fileJson.value("botOwner", "");
@@ -44,7 +44,7 @@ BotConfig LoadBotConfig() {
         _config.gpt_token = fileJson.value("gptToken", "");
         //isLog = fileJson.value("isLog", false);
 
-        if (!cfg.bot_token.empty()) {
+        if (!_config.bot_token.empty()) {
             _config.valid = true;
         }
 
@@ -52,7 +52,7 @@ BotConfig LoadBotConfig() {
 
     }
     else {
-        if (isLog) std::cout << "[INFO] Creating new bot config..." << std::endl;
+        //if (isLog) std::cout << "[INFO] Creating new bot config..." << std::endl;
         nlohmann::json filejson;
         filejson["botOwner"] = "";
         filejson["botToken"] = "";
@@ -363,7 +363,7 @@ void GuildMemberCount(const std::string& guild_id, const short& pil, const dpp::
 
     if (isLog) std::cout << "[Debug]: data saved" << std::endl;
 }
-
+/*
 GC guildLoadConfig(const std::string& guild_id) {
 
     std::string path = guildPath + guild_id + ".json";
@@ -394,7 +394,9 @@ GC guildLoadConfig(const std::string& guild_id) {
 
     return data;
 }
+*/
 
+/*
 void SyncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::snowflake& channel_id) {
 
     std::string path = guildPath + guild_id + ".json";
@@ -454,5 +456,5 @@ void SyncGuildConfig(dpp::cluster& bot, const std::string& guild_id, const dpp::
     out << fileJson.dump(4);
     out.close();
 }
-
+*/
 }

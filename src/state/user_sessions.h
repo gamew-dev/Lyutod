@@ -10,6 +10,7 @@
 
 class UserSessionState {
     public:
+    UserSessionState();
     UserSession& Get(const std::string& user_id);
     void Remove(const std::string& user_id);
 

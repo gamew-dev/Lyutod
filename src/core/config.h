@@ -28,12 +28,14 @@
 namespace dpp {
 class cluster;
 struct guild_create_t;
-using snowflake = uint64_t;
 }
 
 
 namespace config
 {
+
+bool isLog = false;
+
     /// File/directory path
     std::string clientPath = "data/client/config.json"  ,
                 userPath   = "data/ai/user/"            ,
@@ -63,18 +65,18 @@ namespace config
 
          GuildSaveAutoRole(const std::string& guild_id,
                            const bool&        autorole,
-                           const dpp::snowflake& role_id),
+                           const u_int64_t& role_id),
 
          GuildMemberCount (const std::string& guild_id,
                            const short& pil,
-                           const dpp::snowflake& channel_id);
+                           const u_int64_t& channel_id);
 
 
     /// Server sync guild
     //  sync database with server
      void SyncGuildConfig(dpp::cluster& bot,
                           const std::string& guild_id,
-                          const dpp::snowflake& channel_id = 0);
+                          const u_int64_t& channel_id = 0);
 
     /// Server config getter
     //  i need to find an other way

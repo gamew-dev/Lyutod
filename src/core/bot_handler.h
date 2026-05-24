@@ -18,8 +18,6 @@
 
 namespace dpp {
 
-using snowflake = uint64_t;
-
 struct cluster;
 struct ready_t;
 struct log_t;

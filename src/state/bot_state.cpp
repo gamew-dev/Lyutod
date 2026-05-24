@@ -1,5 +1,7 @@
 #include "bot_state.h"
 
+#include <random>
+
 BotSessionState::BotSessionState(const BotConfig& config)
 {
     bot_token_ = config.bot_token;

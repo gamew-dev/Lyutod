@@ -17,15 +17,15 @@
 // Server session object wrapped as class
 class ServerSessionState {
     public:
-    ServerSession& Get(dpp::snowflake guild_id);
-    void Remove(dpp::snowflake guild_id);
+    ServerSession& Get(u_int64_t guild_id);
+    void Remove(u_int64_t guild_id);
     void Cleanup();
 
     template<typename Fn>
     void ForEach(Fn fn);
 
     private:
-    std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSession>> data_; //unique_ptr
+    std::unordered_map<u_int64_t, std::shared_ptr<ServerSession>> data_; //unique_ptr
     //std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSession>> ServerSessions;
 };
 
