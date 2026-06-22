@@ -1,6 +1,7 @@
 #include "base_commands.h"
+#include <dpp/dpp.h>
 
-void Commands::command_say( dpp::cluster& bot, const dpp::slashcommand_t& event) {
+void commands::command_say( dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     std::string pesan = std::get<std::string>(event.get_parameter("pesan"));
     dpp::snowflake channel_id = std::get<dpp::snowflake>(event.get_parameter("channel"));

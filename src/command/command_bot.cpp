@@ -1,6 +1,8 @@
 #include "base_commands.h"
+#include <dpp/dpp.h>
 
-void Commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dpp::slashcommand_t& event) {
+
+void commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     //event.thinking();
 

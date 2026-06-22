@@ -11,18 +11,21 @@
 #include "core/bot_handler.h"
 #include "core/config.h"
 
-#include "shared/data.h"
+#include "shared/common.h"
 
 #include "state/bot_state.h"
 #include "state/button_sessions.h"
 #include "state/server_sessions.h"
 #include "state/user_sessions.h"
 
+#include <iostream>
+#include "dpp/dpp.h"
+
 int main() {
 
     ///-----
 
-    BotConfig cfg = config::LoadBotConfig();
+    BotConfigStructData cfg = config::LoadBotConfig();
 
     if (!cfg.valid) return 1;
 
@@ -45,7 +48,7 @@ int main() {
     // D++ built in log system, though in this function i only filtered the [Info] only
     bot.on_log([](const dpp::log_t& event) {
         if (event.severity == dpp::ll_info) {
-                if (Config::isLog) std::cout << "[INFO] " << event.message << std::endl;
+                std::cout << "[INFO] " << event.message << std::endl;
             }
     });
 

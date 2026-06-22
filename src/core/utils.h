@@ -24,6 +24,8 @@ std::string GetPing(const dpp::cluster& bot)    ; // get latency
 std::string ClearMention(const std::string& message,
                          const std::string& id);
 
+std::string GetStatus();
+
 int  GetDay(); // get day (0 - 6) format
 
 bool IsMentioned(dpp::cluster& bot,

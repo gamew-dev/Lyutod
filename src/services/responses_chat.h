@@ -12,13 +12,13 @@ namespace responses_chat
     //std::string EmoteReact();
     std::string GetEmote();
     std::string HandleMessage(std::string_view text);
-    std::string MakeMessage(std::string_view keyword,
-                            std::string_view user_nick,
-                            std::string_view user_id,
+    std::string MakeMessage(const std::string& keyword,
+                            const std::string& user_nick,
+                            const std::string& user_id,
                             bool mention);
 
 
-    std::unordered_map<std::string, std::vector<std::string>> pilihan = {
+    inline std::unordered_map<std::string, std::vector<std::string>> pilihan = {
         {"sambut", // greet
             {
             "{user} hai sayang! <:wlwl:1370068430316765264>",

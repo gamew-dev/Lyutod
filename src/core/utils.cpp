@@ -1,6 +1,6 @@
 #include "utils.h"
 
-#include "dpp/dpp.h"
+#include <dpp/dpp.h>
 
 #include "config.h"
 
@@ -84,7 +84,9 @@ std::string ClearMention(const std::string& message, const std::string& id) {
     return content;
 }
 
+std::string GetStatus() {
 
+}
 
 int GetDay() {
     // timenow? (timestamps)
@@ -100,7 +102,7 @@ int GetDay() {
     return hari->tm_wday;
 }
 
-bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
+bool IsMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
 
 
     for (const auto& user_mention : event.msg.mentions) {
@@ -114,7 +116,7 @@ bool isMentioned(dpp::cluster& bot, const dpp::message_create_t& event) {
     return false;
 }
 
-void voidCchangeChannelname( dpp::cluster& bot,
+void ChangeChannelName( dpp::cluster& bot,
                               const dpp::snowflake& channel_id,
                               const std::string& sync_value,
                               const std::string& new_name) {
@@ -150,7 +152,7 @@ void voidCchangeChannelname( dpp::cluster& bot,
     });
 }
 
-void ChangeChannelname(dpp::cluster& bot,
+void ChangeChannelName(dpp::cluster& bot,
                                     const dpp::snowflake& channel_id,
                                     const std::string& new_name) {
 

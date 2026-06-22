@@ -1,7 +1,7 @@
 #ifndef BOT_STATE_H
 #define BOT_STATE_H
 
-#include "shared/data.h"
+#include "shared/common.h"
 
 #include <chrono> // time_t
 #include <string> // string

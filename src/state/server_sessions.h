@@ -5,7 +5,7 @@
 //  keeps the chat history, last chat, last chat channel id
 //  and token usage
 
-#include "shared/data.h"
+#include "shared/common.h"
 
 #include <chrono>
 #include <string>
@@ -17,7 +17,7 @@
 // Server session object wrapped as class
 class ServerSessionState {
     public:
-    ServerSession& Get(u_int64_t guild_id);
+    ServerSessionStructData& Get(u_int64_t guild_id);
     void Remove(u_int64_t guild_id);
     void Cleanup();
 

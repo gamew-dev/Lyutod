@@ -19,32 +19,32 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "shared/data.h"
+#include "shared/common.h"
 
 #include <string> // std::string
 #include <vector> // std::vector
 
 
 namespace dpp {
-class cluster;
-struct guild_create_t;
+    class cluster;
+    struct guild_create_t;
 }
 
 
 namespace config
 {
 
-bool isLog = false;
+    inline bool isLog = false;
 
     /// File/directory path
-    std::string clientPath = "data/client/config.json"  ,
+    inline std::string clientPath = "data/client/config.json"  ,
                 userPath   = "data/ai/user/"            ,
                 serverPath = "data/ai/server/"          ,
                 guildPath  = "data/guild/"              ;
 
 
     /// Bot config
-    BotConfig LoadBotConfig();
+    BotConfigStructData LoadBotConfig();
 
     /// User chatbot memory
     void UserUpdateMemory(const std::string& id,

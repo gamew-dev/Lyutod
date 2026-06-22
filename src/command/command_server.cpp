@@ -1,6 +1,7 @@
 #include "base_commands.h"
+#include <dpp/dpp.h>
 
-void Commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& event) {
+void commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     dpp::command_interaction cmd_data = event.command.get_command_interaction();
 

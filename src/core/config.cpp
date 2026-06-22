@@ -24,47 +24,98 @@ namespace config {
 *   See also: main.cpp
 *
 */
-BotConfig LoadBotConfig() {
+BotConfigStructData LoadBotConfig() {
 
+    namespace fs = std::filesystem;
 
-    std::filesystem::create_directories(userPath);
-    std::filesystem::create_directories(serverPath);
-    std::filesystem::create_directories(guildPath);
+    BotConfigStructData _config;
 
-    BotConfig _config;
+    fs::create_directories(userPath);
+    fs::create_directories(serverPath);
+    fs::create_directories(guildPath);
 
     std::ifstream file(clientPath);
-    if (file) {
-        //if (isLog) std::cout << "[INFO] Reading bot config..." <<std::endl;
-        nlohmann::json fileJson;
-        file >> fileJson;
-        _config.owner_id = fileJson.value("botOwner", "");
-        _config.bot_token = fileJson.value("botToken", "");
-        //botVersi = fileJson.value("botVersi", "");
-        _config.gpt_token = fileJson.value("gptToken", "");
-        //isLog = fileJson.value("isLog", false);
 
-        if (!_config.bot_token.empty()) {
-            _config.valid = true;
-        }
-
-        return _config;
-
-    }
-    else {
-        //if (isLog) std::cout << "[INFO] Creating new bot config..." << std::endl;
-        nlohmann::json filejson;
-        filejson["botOwner"] = "";
-        filejson["botToken"] = "";
-        //filejson["botVersi"] = "";
-        filejson["gptToken"] = "";
-        //filejson["isLog"] = false;
-
-        std::ofstream file(clientPath);
-        file << filejson.dump(4);
+    if (!file) {
+        std::cout << "eror membaca file";
 
         _config.valid = false;
         return _config;
+    }
+
+    nlohmann::json file_json_data;
+
+    if (file) {
+
+        try {
+            file >> file_json_data;
+        } catch (const json::parse_error& e) {
+            std::cout << "eror parse config.json: " << e.what() << '\n';
+            _config.valid = false;
+            return _config;
+        }
+
+        std::cout << "[INFO] Reading bot config..." <<std::endl;
+
+        /// --- BOT -----------------------------------------
+
+        if (j.contains("bot")) {
+            const auto& bot = j["bot"];
+            _config.owner_id          = bot.value("owner_id", "");
+            _config.bot_token         = bot.value("token", "");
+            _config.version           = bot.value("version", "");
+            _config.log_enabled       = bot.value("log_enabled", false);
+            _config.status_channel_id = bot.value("status_channel_id", "");
+        }
+
+        /// --- BOT -----------------------------------------
+
+        if (j.contains("ai")) {
+            const auto& ai = j["ai"];
+            _config.chat_enabled    = ai.value("enabled", false);
+            _config.ai_token        = ai.value("token", "");
+            //_config.ai.active_provider = ai.value("active_provider", "");
+            //_config.ai.active_model    = ai.value("active_model", "");
+
+            /*
+
+            if (ai.contains("providers") && ai["providers"].contains(_config.ai.active_provider)) {
+                const auto& provider = ai["providers"][_config.ai.active_provider];
+                _config.ai.base_url = provider.value("base_url", "");
+
+                if (provider.contains("models")) {
+                    for (const auto& [alias, model_json] : provider["models"].items()) {
+                        _config.ai.models[alias] = ParseModel(model_json);
+                    }
+                }
+            }
+
+            // memory & history
+            if (ai.contains("memory")) {
+                _config.ai.memory_max_items = ai["memory"].value("max_items", 20);
+                _config.ai.memory_dedup     = ai["memory"].value("dedup_enabled", true);
+            }
+            if (ai.contains("history")) {
+                _config.ai.history_max_items = ai["history"].value("max_items", 10);
+            }
+
+            */
+        }
+
+        /// --- Feature -----------------------------------------
+            if (j.contains("features")) {
+                const auto& f = j["features"];
+                _config.chat_enabled        = f.value("msg_chatbot", false);
+                _config.commands_enabled    = f.value("slashcommand", false);
+                _config.autorole_enabled    = f.value("autorole", false);
+                _config.cencus_enabled      = f.value("census", false);
+            }
+
+            _config.valid = !cfg.bot_token.empty();
+            return _config;
+
+
+
     }
 
 }

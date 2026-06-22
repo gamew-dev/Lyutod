@@ -180,13 +180,11 @@ namespace responses_chat {
             }
             */
 
-            return "prohibited";
-
-        }
+        return "-";
     }
 
-    std::string MakeMessage(std::string_view keyword,
-                            std::string_view user_nick,
+    std::string MakeMessage(const std::string& keyword,
+                            const std::string& user_nick,
                             const std::string& user_id,
                             bool mention) {
 

@@ -37,7 +37,7 @@ file(GLOB_RECURSE RESP_SRC
 
 set(SRC_FILES
     ${CORE_SRC}
-   # ${CMD_SRC}
+    ${CMD_SRC}
     ${STATE_SRC}
     ${RESP_SRC}
     src/main.cpp
@@ -46,7 +46,8 @@ set(SRC_FILES
 # === Executable ===
 # target output: "bot"
 add_executable(bot ${SRC_FILES}
-    src/shared/data.h
+    src/shared/common.h
+    src/command/base_commands.cpp
 )
 
 # === Include directories ===

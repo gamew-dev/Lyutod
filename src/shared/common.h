@@ -1,5 +1,5 @@
-#ifndef DATA_H
-#define DATA_H
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <string> // string
 #include <chrono> // time_t
@@ -31,14 +31,25 @@ struct PresenceData {
 
 //----------------------------------------------------
 
-struct BotConfig {
-    std::string bot_token;
-    std::string gpt_token;
+
+
+struct BotConfigStructData {
     std::string owner_id;
+    std::string bot_token;
+    std::string ai_token;
+    std::string version;
+
+    bool chat_enabled;
+    bool ai_enabled;
+    bool commands_enabled;
+    bool autorole_enabled;
+    bool cencus_enabled;
+
+
     bool valid = false;
 };
 
-struct ButtonSession {
+struct ButtonSessionStructData {
 
     u_int64_t owner;
 
@@ -51,7 +62,7 @@ struct ButtonSession {
 };
 
 // Server session data wrapped on struct
-struct ServerSession {
+struct ServerSessionStructData {
     std::vector<std::string> history;
     std::chrono::steady_clock::time_point last_activity;
 
@@ -63,9 +74,9 @@ struct ServerSession {
     int output_usage = 0;
 };
 
-struct UserSession {
+struct UserSessionStructData {
     std::string memory;
     std::chrono::steady_clock::time_point last_activity;
 };
 
-#endif // DATA_H
+#endif // COMMON_H
