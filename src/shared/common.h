@@ -45,7 +45,6 @@ struct BotConfigStructData {
     bool autorole_enabled;
     bool cencus_enabled;
 
-
     bool valid = false;
 };
 

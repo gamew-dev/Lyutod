@@ -11,6 +11,7 @@
 #include "bot_handler.h"
 
 #include "utils.h"
+#include "../command/base_commands.h"
 #include "../services/responses_chat.h"
 #include "../services/responses_ai.h"
 
@@ -31,10 +32,10 @@ BotHandler::BotHandler(
     ServerSessionState& server_state,
     UserSessionState& user_state
 )
-    : bot_state(bot_state),
-      button_state(button_state),
-      server_state(server_state),
-      user_state(user_state)
+    : bot_state_(bot_state),
+      button_state_(button_state),
+      server_state_(server_state),
+      user_state_(user_state)
 {}
 
 
@@ -1177,7 +1178,41 @@ void BotHandler::OnMessageCreate(dpp::cluster& bot, const dpp::message_create_t&
         // else, handle basic message
     }
 
-
-
 }
 
+void BotHandler::OnSlashCommand(dpp::cluster& bot, const dpp::slashcommand_t& event) {
+    std::string command = event.command.get_command_name();
+
+
+    if (command == "bot") {
+        commands::command_bot(bot_state_.start_time_, bot, event);
+    }
+
+    else if (command == "server") {
+        //commands::command_server(bot, event);
+    }
+
+    else if (command == "say") {
+        commands::command_say(bot, event);
+    }
+
+    else if (command == "autorole") {
+        //commands::command_autorole(bot, event);
+    }
+
+    else if (command == "user") {
+        //commands::command_user(bot, event);
+    }
+
+    else if (command == "sensus") {
+        //commands::command_census(bot, event);
+    }
+
+    else if (command == "guild") {
+        //commands::command_guild(bot, event);
+    }
+
+    else if (command == "chatbot") {
+        //commands::command_chatbot(bot, event);
+    }
+}

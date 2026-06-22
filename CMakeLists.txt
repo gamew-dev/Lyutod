@@ -47,7 +47,6 @@ set(SRC_FILES
 # target output: "bot"
 add_executable(bot ${SRC_FILES}
     src/shared/common.h
-    src/command/base_commands.cpp
 )
 
 # === Include directories ===

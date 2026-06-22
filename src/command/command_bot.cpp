@@ -1,4 +1,7 @@
 #include "base_commands.h"
+
+#include "../core/utils.h"
+
 #include <dpp/dpp.h>
 
 
@@ -21,7 +24,7 @@ void commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dp
 
 
     if (subcommand.name == "status") {
-        std::string title = "Lyudya " + Responses::emoteReact();
+        std::string title = "Lyudya";
         dpp::embed status = dpp::embed()
             .set_color(dpp::colors::red_blood)
             .set_title(title)
@@ -37,16 +40,16 @@ void commands::command_bot(const std::time_t& start, dpp::cluster& bot, const dp
 
             .add_field(
                     "Uptime Bot",
-                    Utils::getTime(start)
+                    utils::GetTime(start)
             )
             .add_field(
                     "Latency",
-                    Utils::getPing(bot),
+                    utils::GetPing(bot),
                     true
             )
             .add_field(
                     "Memory",
-                    Utils::getRam(),
+                    utils::GetRam(),
                     true
             )
             //.set_image("https://dpp.dev/DPP-Logo.png")

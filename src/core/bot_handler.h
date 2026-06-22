@@ -44,38 +44,6 @@ class BotHandler
                ButtonSessionState& button_state,
                ServerSessionState& server_state,
                UserSessionState& user_state);
-    /*
-    void preRegSlash        (      dpp::cluster& bot,
-                                    dpp::snowflake id)             , /// Slash command Register
-
-         preDelSlash        (      dpp::cluster& bot,
-                                    dpp::snowflake id)             , /// Slash command Deletion
-
-         handleSlash        (      dpp::cluster& bot,               /// Handling slash command
-                                 const dpp::slashcommand_t& event    ) ,
-
-         handleMessage      (      dpp::cluster& bot,               /// Message type event
-                                 const dpp::message_create_t& event  ) ,
-
-         handleAiRequest    (      dpp::cluster& bot,               /// Manage chatbot event
-                                 const dpp::message_create_t& event  ) ,
-
-         handleGuildNewMem  (      dpp::cluster& bot,               /// When someone join server
-                                 const dpp::guild_member_add_t& event) ,
-
-         handleGuildRemMem  (      dpp::cluster& bot,               /// When someone leave server
-                                 const dpp::guild_member_remove_t& event),
-
-         handleButtonEvent  (      dpp::cluster& bot,               /// Button pressed
-                                 const dpp::button_click_t& event    ) ,
-
-         updatePresence     (      dpp::cluster& bot             ) ,/// Presence
-
-         checkSessions      (      dpp::cluster& bot,               /// Chatbot session and memory
-                                 const bool& forced                  );
-    */
-    // =====================================================================================
-    // REFACTOR NEW LOGIC START HERE
 
     void OnReady(dpp::cluster& bot, const dpp::ready_t& event);
     void OnLog(dpp::cluster& bot, const dpp::log_t& event);
@@ -90,21 +58,10 @@ class BotHandler
 
     private:
 
-    BotSessionState& bot_state;
-    ButtonSessionState& button_state;
-    ServerSessionState& server_state;
-    UserSessionState& user_state;
-
-    /*
-    void handleLog(const std::string& line);
-    void makeAIRequest(dpp::cluster& bot,
-                       dpp::snowflake channelID,
-                       std::shared_ptr<UserSessionStruct> user,
-                       std::shared_ptr<ServerSessionStruct> server,
-                       std::string postdata,
-                       dpp::http_headers headers);
-    */
-
+    BotSessionState& bot_state_;
+    ButtonSessionState& button_state_;
+    ServerSessionState& server_state_;
+    UserSessionState& user_state_;
 
 };
 

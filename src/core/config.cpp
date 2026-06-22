@@ -49,7 +49,7 @@ BotConfigStructData LoadBotConfig() {
 
         try {
             file >> file_json_data;
-        } catch (const json::parse_error& e) {
+        } catch (const nlohmann::json::parse_error& e) {
             std::cout << "eror parse config.json: " << e.what() << '\n';
             _config.valid = false;
             return _config;
@@ -59,19 +59,19 @@ BotConfigStructData LoadBotConfig() {
 
         /// --- BOT -----------------------------------------
 
-        if (j.contains("bot")) {
-            const auto& bot = j["bot"];
+        if (file_json_data.contains("bot")) {
+            const auto& bot = file_json_data["bot"];
             _config.owner_id          = bot.value("owner_id", "");
             _config.bot_token         = bot.value("token", "");
             _config.version           = bot.value("version", "");
-            _config.log_enabled       = bot.value("log_enabled", false);
-            _config.status_channel_id = bot.value("status_channel_id", "");
+            //_config.log_enabled       = bot.value("log_enabled", false);
+            //_config.status_channel_id = bot.value("status_channel_id", "");
         }
 
         /// --- BOT -----------------------------------------
 
-        if (j.contains("ai")) {
-            const auto& ai = j["ai"];
+        if (file_json_data.contains("ai")) {
+            const auto& ai = file_json_data["ai"];
             _config.chat_enabled    = ai.value("enabled", false);
             _config.ai_token        = ai.value("token", "");
             //_config.ai.active_provider = ai.value("active_provider", "");
@@ -103,21 +103,21 @@ BotConfigStructData LoadBotConfig() {
         }
 
         /// --- Feature -----------------------------------------
-            if (j.contains("features")) {
-                const auto& f = j["features"];
+            if (file_json_data.contains("features")) {
+                const auto& f = file_json_data["features"];
                 _config.chat_enabled        = f.value("msg_chatbot", false);
                 _config.commands_enabled    = f.value("slashcommand", false);
                 _config.autorole_enabled    = f.value("autorole", false);
                 _config.cencus_enabled      = f.value("census", false);
             }
 
-            _config.valid = !cfg.bot_token.empty();
-            return _config;
+            _config.valid = !_config.bot_token.empty();
+
 
 
 
     }
-
+    return _config;
 }
 
 /**

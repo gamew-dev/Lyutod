@@ -1,5 +1,6 @@
 #include "base_commands.h"
 #include <dpp/dpp.h>
+/*
 
 void commands::command_chatbot (dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
@@ -52,3 +53,4 @@ void commands::command_chatbot (dpp::cluster& bot, const dpp::slashcommand_t& ev
     }
 
 }
+*/

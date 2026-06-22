@@ -1,6 +1,6 @@
 #include "base_commands.h"
 #include <dpp/dpp.h>
-
+/*
 void commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     dpp::command_interaction cmd_data = event.command.get_command_interaction();
@@ -61,10 +61,10 @@ void commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& even
 
             .set_timestamp(time(0));
 
-                /* Create a message with the content as our new embed. */
+
             dpp::message msg(event.command.channel_id, status);
 
-                /* Reply to the user with the message, containing our embed. */
+
             event.reply(msg);
     }
 
@@ -76,3 +76,5 @@ void commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& even
 
 
 }
+
+*/

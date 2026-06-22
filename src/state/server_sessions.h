@@ -25,7 +25,7 @@ class ServerSessionState {
     void ForEach(Fn fn);
 
     private:
-    std::unordered_map<u_int64_t, std::shared_ptr<ServerSession>> data_; //unique_ptr
+    std::unordered_map<u_int64_t, std::shared_ptr<ServerSessionStructData>> data_; //unique_ptr
     //std::unordered_map<dpp::snowflake, std::shared_ptr<ServerSession>> ServerSessions;
 };
 

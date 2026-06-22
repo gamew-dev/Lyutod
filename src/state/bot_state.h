@@ -11,7 +11,7 @@
 class BotSessionState
 {
 public:
-    BotSessionState(const BotConfig& config);
+    BotSessionState(const BotConfigStructData& config);
 
     bool is_shutting_down_ = false;
     bool is_logging = true;
@@ -19,7 +19,7 @@ public:
     std::time_t start_time_;
 
     const std::string& GetBotToken() const;
-    const std::string& GetGPTToken() const;
+    const std::string& GetAIToken() const;
     const std::string& GetOwnerID() const;
 
     const PresenceData& GetPresence() const;
@@ -28,7 +28,7 @@ private:
     std::vector <PresenceData> presence;
 
     std::string bot_token_;
-    std::string gpt_token_;
+    std::string ai_token_;
     std::string owner_id_;
 
 

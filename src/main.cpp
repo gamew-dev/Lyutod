@@ -72,15 +72,15 @@ int main() {
     }); // chat
 
 
-    /*
+
     // When the slash command is triggered this will run
 
     bot.on_slashcommand([&bot, &handler](const dpp::slashcommand_t& event) {
 
-        handler.handleSlash(bot, event);
+        handler.OnSlashCommand(bot, event);
     }); //slash command
 
-
+    /*
     // Button clicked...
     bot.on_button_click([&bot, &handler] (const dpp::button_click_t& event) {
 

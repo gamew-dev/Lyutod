@@ -16,7 +16,9 @@
 
 #include "../core/config.h"
 #include "../services/responses_chat.h"
-#include "../core/utils.h"
+
+
+#include <map>
 
 namespace dpp{
     struct slashcommand_t;

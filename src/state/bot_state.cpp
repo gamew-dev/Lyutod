@@ -2,10 +2,10 @@
 
 #include <random>
 
-BotSessionState::BotSessionState(const BotConfig& config)
+BotSessionState::BotSessionState(const BotConfigStructData &config)
 {
     bot_token_ = config.bot_token;
-    gpt_token_ = config.gpt_token;
+    ai_token_ = config.ai_token;
     owner_id_ = config.owner_id;
     start_time_ = std::time(nullptr);
 
@@ -27,8 +27,8 @@ const std::string& BotSessionState::GetBotToken() const {
     return bot_token_;
 }
 
-const std::string& BotSessionState::GetGPTToken() const {
-    return gpt_token_;
+const std::string& BotSessionState::GetAIToken() const {
+    return ai_token_;
 }
 
 const std::string& BotSessionState::GetOwnerID() const {

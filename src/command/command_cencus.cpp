@@ -1,6 +1,7 @@
 #include "base_commands.h"
 #include <dpp/dpp.h>
 
+/*
 void commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     event.thinking();
@@ -26,7 +27,7 @@ void commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
         ///
 
 
-        if (Config::isLog) std::cout << "[Debug]: " << "add selected" << std::endl;
+        //if (Config::isLog) std::cout << "[Debug]: " << "add selected" << std::endl;
 
         /// parameter value getter
         std::string mode = std::get<std::string>(event.get_parameter("mode"));
@@ -379,4 +380,4 @@ void commands::command_census(dpp::cluster& bot, const dpp::slashcommand_t& even
 
     event.reply("ha");
 }
-
+*/

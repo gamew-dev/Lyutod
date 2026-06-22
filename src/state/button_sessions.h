@@ -6,7 +6,7 @@
 class ButtonSessionState {
 public:
     ButtonSessionState();
-    ButtonSession& Get(const std::string& event_id);
+    ButtonSessionStructData& Get(const std::string& event_id);
 
 };
 

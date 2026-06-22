@@ -1,7 +1,10 @@
 #include "base_commands.h"
+
+#include "../core/config.h"
+
 #include <dpp/dpp.h>
 
-
+/*
 void commands::command_autorole(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     event.thinking();
@@ -52,3 +55,4 @@ void commands::command_autorole(dpp::cluster& bot, const dpp::slashcommand_t& ev
         Config::guildSaveAutoRole(std::to_string(guild_id), false, 0);
     }
 }
+*/
