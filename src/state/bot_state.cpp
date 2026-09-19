@@ -4,9 +4,9 @@
 
 BotSessionState::BotSessionState(const BotConfigStructData &config)
 {
-    bot_token_ = config.bot_token;
-    ai_token_ = config.ai_token;
-    owner_id_ = config.owner_id;
+
+    config_ = config;
+
     start_time_ = std::time(nullptr);
 
     presence = {
@@ -24,15 +24,15 @@ BotSessionState::BotSessionState(const BotConfigStructData &config)
 }
 
 const std::string& BotSessionState::GetBotToken() const {
-    return bot_token_;
+    return config_.bot_token;
 }
 
 const std::string& BotSessionState::GetAIToken() const {
-    return ai_token_;
+    return config_.ai_token;
 }
 
 const std::string& BotSessionState::GetOwnerID() const {
-    return owner_id_;
+    return config_.owner_id;
 }
 
 const PresenceData& BotSessionState::GetPresence() const {

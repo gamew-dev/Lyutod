@@ -1,6 +1,6 @@
 #include "base_commands.h"
 #include <dpp/dpp.h>
-/*
+
 void commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 
     dpp::command_interaction cmd_data = event.command.get_command_interaction();
@@ -76,5 +76,3 @@ void commands::command_server(dpp::cluster& bot, const dpp::slashcommand_t& even
 
 
 }
-
-*/

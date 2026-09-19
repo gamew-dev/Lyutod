@@ -5,8 +5,8 @@
 
 #include <string>
 #include <chrono>
-
-
+#include <unordered_map>
+#include <memory>
 
 class UserSessionState {
     public:
@@ -17,6 +17,7 @@ class UserSessionState {
 
 
     private:
+    std::unordered_map<u_int64_t, std::shared_ptr<UserSessionStructData>> data_;
 
 };
 

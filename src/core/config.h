@@ -61,22 +61,23 @@ namespace config
 
     bool GuildCreateConfig(const dpp::guild_create_t& event);
 
-    void GuildRemoveConfig(const std::string& guild_id),
+    void GuildRemoveConfig(const std::string& guild_id);
 
-         GuildSaveAutoRole(const std::string& guild_id,
+    void GuildSaveAutoRole(const std::string& guild_id,
                            const bool&        autorole,
-                           const u_int64_t& role_id),
+                           const u_int64_t& role_id);
 
-         GuildMemberCount (const std::string& guild_id,
+    void GuildMemberCount (const std::string& guild_id,
                            const short& pil,
                            const u_int64_t& channel_id);
 
 
+
     /// Server sync guild
     //  sync database with server
-     void SyncGuildConfig(dpp::cluster& bot,
-                          const std::string& guild_id,
-                          const u_int64_t& channel_id = 0);
+    void SyncGuildConfig(dpp::cluster& bot,
+                        const std::string& guild_id,
+                        const u_int64_t& channel_id = 0);
 
     /// Server config getter
     //  i need to find an other way

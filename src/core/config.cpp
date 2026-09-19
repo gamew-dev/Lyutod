@@ -72,7 +72,7 @@ BotConfigStructData LoadBotConfig() {
 
         if (file_json_data.contains("ai")) {
             const auto& ai = file_json_data["ai"];
-            _config.chat_enabled    = ai.value("enabled", false);
+            _config.is_chat_enabled    = ai.value("enabled", false);
             _config.ai_token        = ai.value("token", "");
             //_config.ai.active_provider = ai.value("active_provider", "");
             //_config.ai.active_model    = ai.value("active_model", "");
@@ -105,10 +105,10 @@ BotConfigStructData LoadBotConfig() {
         /// --- Feature -----------------------------------------
             if (file_json_data.contains("features")) {
                 const auto& f = file_json_data["features"];
-                _config.chat_enabled        = f.value("msg_chatbot", false);
-                _config.commands_enabled    = f.value("slashcommand", false);
-                _config.autorole_enabled    = f.value("autorole", false);
-                _config.cencus_enabled      = f.value("census", false);
+                _config.is_chat_enabled        = f.value("msg_chatbot", false);
+                _config.is_commands_enabled    = f.value("slashcommand", false);
+                _config.is_autorole_enabled    = f.value("autorole", false);
+                _config.is_cencus_enabled      = f.value("census", false);
             }
 
             _config.valid = !_config.bot_token.empty();

@@ -32,20 +32,26 @@ struct PresenceData {
 //----------------------------------------------------
 
 
-
 struct BotConfigStructData {
     std::string owner_id;
     std::string bot_token;
     std::string ai_token;
     std::string version;
 
-    bool chat_enabled;
-    bool ai_enabled;
-    bool commands_enabled;
-    bool autorole_enabled;
-    bool cencus_enabled;
+    bool is_chat_enabled;
+    bool is_ai_enabled;
+    bool is_commands_enabled;
+    bool is_autorole_enabled;
+    bool is_cencus_enabled;
 
     bool valid = false;
+};
+
+struct GuildConfigStructData {
+    std::string server_id;
+    std::string server_name;
+    std::string owner_id;
+
 };
 
 struct ButtonSessionStructData {

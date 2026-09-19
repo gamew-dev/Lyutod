@@ -27,10 +27,7 @@ public:
 private:
     std::vector <PresenceData> presence;
 
-    std::string bot_token_;
-    std::string ai_token_;
-    std::string owner_id_;
-
+    BotConfigStructData config_;
 
 };
 
