@@ -2,7 +2,7 @@
 #include <dpp/dpp.h>
 
 void commands::command_user(dpp::cluster& bot, const dpp::slashcommand_t& event) {
-
+    (void)bot;
     dpp::command_interaction cmd_data = event.command.get_command_interaction();
 
     /// Check

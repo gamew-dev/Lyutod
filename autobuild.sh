@@ -19,8 +19,12 @@ if [ ! -f Makefile ]; then
 fi
 
 
-echo "--= Building project =--"
-cmake --build . -j$(nproc)
+# Use half of CPU cores to oh my pc moment
+CORES=$(nproc)
+JOBS=$(( CORES > 1 ? CORES / 2 : 1 ))
+
+echo "--= Building project (using $JOBS cores) =--"
+cmake --build . -j"$JOBS"
 
 
 cd ..

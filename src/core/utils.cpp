@@ -85,7 +85,7 @@ std::string ClearMention(const std::string& message, const std::string& id) {
 }
 
 std::string GetStatus() {
-
+    return "🟢 healthy";
 }
 
 int GetDay() {

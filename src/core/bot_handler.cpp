@@ -1105,6 +1105,7 @@ void BotHandler::handleLog(const std::string& line) {
 // refactor start here
 
 void BotHandler::OnReady(dpp::cluster& bot, const dpp::ready_t& event) {
+    (void)event;
 
     //if (bot_state::is_logging) std::cout << "\e[0;33m"<<"[INFO]" << "\e[0m" << " Starting bot..." << std::endl;
 
@@ -1139,7 +1140,8 @@ void BotHandler::OnReady(dpp::cluster& bot, const dpp::ready_t& event) {
 }
 
 void BotHandler::OnLog(dpp::cluster& bot, const dpp::log_t& event) {
-
+    (void)bot;
+    (void)event;
 }
 
 void BotHandler::OnMessageCreate(dpp::cluster& bot, const dpp::message_create_t& event) {
