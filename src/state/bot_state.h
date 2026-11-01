@@ -11,23 +11,25 @@
 class BotSessionState
 {
 public:
-    BotSessionState(const BotConfigStructData& config);
+  BotSessionState(const BotConfigStructData& config);
 
-    bool is_shutting_down_ = false;
-    bool is_logging = true;
+  bool is_shutting_down_ = false;
+  bool is_logging = true;
 
-    std::time_t start_time_;
+  std::time_t start_time_;
 
-    const std::string& GetBotToken() const;
-    const std::string& GetAIToken() const;
-    const std::string& GetOwnerID() const;
+  const std::string& GetBotToken() const;
+  const std::string& GetAIToken() const;
+  const std::string& GetOwnerID() const;
 
-    const PresenceData& GetPresence() const;
+  const std::string& GetBotVersion() const;
+
+  const PresenceData& GetPresence() const;
 
 private:
-    std::vector <PresenceData> presence;
+  std::vector <PresenceData> presence;
 
-    BotConfigStructData config_;
+  BotConfigStructData config_;
 
 };
 

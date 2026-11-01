@@ -27,15 +27,15 @@
 
 ///ctor
 BotHandler::BotHandler(
-    BotSessionState& bot_state,
-    ButtonSessionState& button_state,
-    ServerSessionState& server_state,
-    UserSessionState& user_state
+  BotSessionState& bot_state,
+  ButtonSessionState& button_state,
+  ServerSessionState& server_state,
+  UserSessionState& user_state
 )
-    : bot_state_(bot_state),
-      button_state_(button_state),
-      server_state_(server_state),
-      user_state_(user_state)
+  :bot_state_(bot_state),
+    button_state_(button_state),
+    server_state_(server_state),
+    user_state_(user_state)
 {}
 
 

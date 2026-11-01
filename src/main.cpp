@@ -23,9 +23,9 @@
 
 int main() {
 
-    ///-----
+  ///-----
 
-    BotConfigStructData cfg = config::LoadBotConfig();
+  BotConfigStructData cfg = config::LoadBotConfig();
 
     if (!cfg.valid) return 1;
 
