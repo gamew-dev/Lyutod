@@ -183,46 +183,46 @@ namespace responses_chat {
         return "-";
     }
 
-    std::string MakeMessage(const std::string& keyword,
-                            const std::string& user_nick,
-                            const std::string& user_id,
-                            bool mention) {
+  std::string MakeMessage(const std::string& keyword,
+                          const std::string& user_nick,
+                          const std::string& user_id,
+                          bool mention) {
 
-        //std::cout << "log: keyword = " << keyword << std::endl;
+    //std::cout << "log: keyword = " << keyword << std::endl;
 
-        auto cari = responses_chat::pilihan.find(keyword);
-        if (cari == responses_chat::pilihan.end() || cari->second.empty()) {
-            // keyword not found :bobok:
-            return "aoa cona";
-        }
-
-        // random generator
-        static std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
-        std::uniform_int_distribution<> dist(0, static_cast<int>(cari->second.size()) - 1);
-
-        std::string jawab = cari->second[dist(rng)];
-
-        // ganti placeholder {user}
-        const std::string placeholder = "{user}";
-        size_t pos = jawab.find(placeholder);
-
-        if (pos != std::string::npos) {
-            std::string pengganti = mention ? ("<@"+user_id+">") : user_nick;
-            jawab.replace(pos, placeholder.length(), pengganti);
-        }
-
-        /*
-        // Tambahan reaksi hari Sabtu & Minggu
-        int hari = Utils::getDay();
-        if (hari == 6 && !Config::cooldownBsok) { // Sabtu
-            jawab += "\nbsok minggu <a:a_nice:1370082910991945778>";
-            Config::cooldownBsok = true;
-        } else if (hari == 0 && !Config::cooldownBsok) { // Minggu
-            jawab += "\nbsok senin <:mengsedih:1370066473959297024>";
-            Config::cooldownBsok = true;
-        }
-        */
-        return jawab;
+    auto cari = responses_chat::pilihan.find(keyword);
+    if (cari == responses_chat::pilihan.end() || cari->second.empty()) {
+        // keyword not found :bobok:
+        return "aoa cona";
     }
+
+    // random generator
+    static std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
+    std::uniform_int_distribution<> dist(0, static_cast<int>(cari->second.size()) - 1);
+
+    std::string jawab = cari->second[dist(rng)];
+
+    // ganti placeholder {user}
+    const std::string placeholder = "{user}";
+    size_t pos = jawab.find(placeholder);
+
+    if (pos != std::string::npos) {
+        std::string pengganti = mention ? ("<@"+user_id+">") : user_nick;
+        jawab.replace(pos, placeholder.length(), pengganti);
+    }
+
+    /*
+    // Tambahan reaksi hari Sabtu & Minggu
+    int hari = Utils::getDay();
+    if (hari == 6 && !Config::cooldownBsok) { // Sabtu
+        jawab += "\nbsok minggu <a:a_nice:1370082910991945778>";
+        Config::cooldownBsok = true;
+    } else if (hari == 0 && !Config::cooldownBsok) { // Minggu
+        jawab += "\nbsok senin <:mengsedih:1370066473959297024>";
+        Config::cooldownBsok = true;
+    }
+    */
+    return jawab;
+  }
 
 }
